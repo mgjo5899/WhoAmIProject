@@ -1,0 +1,4 @@
+### [https://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/views.html](https://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/views.html)
+
+- We added some more URLs, but we also removed the view code from the application startup code in tutorial/__init__.py. Our views, and their view registrations (via decorators) are now in a module views.py, which is scanned via config.scan('.views').
+- Earlier we saw config.add_view as one way to configure a view. This section introduces @view_config. Pyramid's configuration supports imperative configuration, such as the config.add_view in the previous example. You can also use declarative configuration, in which a Python decorator is placed on the line above the view. Both approaches result in the same final configuration, thus usually, it is simply a matter of taste.
