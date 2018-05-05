@@ -2,7 +2,7 @@
 Pyramid backend
 
 # I'm on...
-- [https://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/jinja2.html](https://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/jinja2.html)
+- [https://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/static_assets.html](https://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/static_assets.html)
 
 # Chapter summaries
 1. hello_world
@@ -40,3 +40,6 @@ Pyramid backend
 - Learned rounting
 - In __init__.py we changed the route declartion to `/howdy/{first}/{last}`
 - `self.request.matchdict['first']` gives whatever was in that `{first}` part of the URL
+
+11. jinja2
+- Learned that Pyramid support different templating languages, such as Chameleon and Jinja2
