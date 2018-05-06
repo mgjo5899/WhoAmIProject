@@ -2,7 +2,7 @@
 Pyramid backend
 
 # I'm on...
-- [https://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/static_assets.html](https://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/static_assets.html)
+- [https://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/logging.html](https://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/logging.html)
 
 # Chapter summaries
 1. hello_world
@@ -43,3 +43,17 @@ Pyramid backend
 
 11. jinja2
 - Learned that Pyramid support different templating languages, such as Chameleon and Jinja2
+
+12. static_assets
+- Specified map requests under http://localhost.6543/static/ to files and directories inside a static directory inside our tutorial package
+- `${request.static_url('tutorial:static/app.css')}`
+
+13. json
+- Used JSON renderer instead of Chameleon or Jinja2
+- Added a route /howdy.json to an exact same view (overriding view)
+- Files with the .pt extension are considered to be Chameleon templates.
+
+14. more_view_classes
+- Used POST
+- Used parameter information in the request
+- Centralized part of the view configuration to the class level with `@view_defaults`
