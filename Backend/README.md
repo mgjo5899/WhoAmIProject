@@ -1,3 +1,4 @@
 # Backend
-- Pyramid
-- SQLAlchemy
+- Flask
+    - SQLAlchemy
+- SQLite

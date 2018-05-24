@@ -6,8 +6,9 @@
 
 ## Technologies
 - Frontend: React JS
-- Backend: Pyramid (Python)
-- Database: MySQL (Mongo DB)
+- Backend: Flask (Python)
+- Database: SQLite
+- ORM: SQLAlchemy
 
 ## Services in mind
 - Spotify
