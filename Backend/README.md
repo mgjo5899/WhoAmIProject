@@ -1,4 +1,3 @@
 # Backend
 - Flask
-    - SQLAlchemy
 - SQLite
