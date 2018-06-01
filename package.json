@@ -22,7 +22,10 @@
   },
   "homepage": "https://github.com/mgjo5899/WhoAmIProject#readme",
   "dependencies": {
+    "@material-ui/core": "^1.1.0",
+    "@material-ui/icons": "^1.1.0",
     "react": "^16.3.2",
-    "react-dom": "^16.3.2"
+    "react-dom": "^16.3.2",
+    "typeface-roboto": "0.0.54"
   }
 }
