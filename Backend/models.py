@@ -1,7 +1,7 @@
 import sqlite3 as sql
 
 def register_user(username,password):
-    con = sql.connect("database.db")
+    con = sql.connect("db/database.db")
     cur = con.cursor()
     cur.execute("INSERT INTO users (username,password) VALUES (?,?)", (username,password))
     con.commit()
