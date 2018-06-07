@@ -3,8 +3,22 @@ import LoginForm from './components/LoginForm';
 import { HashRouter, Route } from 'react-router-dom';
 
 import NavBar from './components/NavBar';
+import axios from 'axios'
 
-class LoginPage extends Component<InternalProps> {
+class LoginPage extends Component {
+
+  componentWillMount() {
+    axios.post('http://localhost:5000/register', {
+        user: 'Fred',
+        lastName: 'Flintstone'
+      })
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   render() {
     return (
