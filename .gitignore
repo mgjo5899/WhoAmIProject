@@ -1,3 +1,7 @@
+########## YARN
+yarn.lock
+yarn-error.log
+
 ########## Node
 package-lock.json
 
