@@ -136,6 +136,4 @@ def home():
         return jsonify(rtn_val)
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
-home()
+    app.run(debug=True, host='0.0.0.0')
