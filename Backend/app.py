@@ -9,15 +9,18 @@ CORS(app)
 
 @app.route('/register', methods=['POST'])
 def home():
-    if request.method=='POST':
-        username = request.form['username']
-        password = request.form['password']
-        dbHandler.register_user(username, password)
-        users = dbHandler.retrieve_users()
 
-        return jsonify(users)
-    else:
-        return jsonify(errcode="wrong_request_method")
+
+    #username = request.form['username']
+    #password = request.form['password']
+    print('req')
+    #dbHandler.register_user(username, password)
+    #users = dbHandler.retrieve_users()
+
+    return 'dd'#username#'ddd'#request.form#'ddd'#jsonify(users)
+
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True)
+
+home()
