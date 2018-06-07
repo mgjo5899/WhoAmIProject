@@ -10,9 +10,11 @@ then
     echo "docker rm all"
     docker rm $(docker ps -q -a)
 
+    echo "docker rmi all"
+    docker rmi $(docker images -q)
+
     echo "docker build backend"
     docker build -t backend .
 fi
 
 ###############################
-#docker rmi $(docker images -q)
