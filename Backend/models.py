@@ -2,6 +2,21 @@ import sqlite3 as sql
 import werkzeug.security as sec
 
 USER_DB = "db/userdata.db"
+HASH_METHOD = 'sha256'
+
+def signin_user(username, password):
+    user = check_user(username)
+
+    if len(user) == 0:
+        return False
+
+    user = user[0]
+    hash_str = '{}${}'.format(HASH_METHOD, user[1])
+
+    if not sec.check_password_hash(hash_str, password):
+        return False
+
+    return True
 
 def check_user(username):
     con = sql.connect(USER_DB)
@@ -18,7 +33,7 @@ def register_user(username, password, email):
         return False
 
     # Hashing
-    hashed_pw = sec.generate_password_hash(password, method='sha256')[7:]
+    hashed_pw = sec.generate_password_hash(password, method=HASH_METHOD)[7:]
 
     con = sql.connect(USER_DB)
     cur = con.cursor()
@@ -46,7 +61,7 @@ def delete_user(username, password):
         return False
 
     user = user[0]
-    hash_str = 'sha256$' + user[1]
+    hash_str = '{}${}'.format(HASH_METHOD, user[1])
 
     if not sec.check_password_hash(hash_str, password):
         return False
@@ -67,14 +82,14 @@ def modify_user(username, password, new_password):
 
     user = user[0]
     print(user)
-    hash_str = 'sha256$' + user[1]
+    hash_str = '{}${}'.format(HASH_METHOD, user[1])
 
     if not sec.check_password_hash(hash_str, password):
         print('wrong password')
         return False
 
     # Hashing
-    hashed_pw = sec.generate_password_hash(new_password, method='sha256')[7:]
+    hashed_pw = sec.generate_password_hash(new_password, method=HASH_METHOD)[7:]
 
     con = sql.connect(USER_DB)
     cur = con.cursor()
