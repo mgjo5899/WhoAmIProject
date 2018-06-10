@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import LoginForm from './components/LoginForm';
 import { HashRouter, Route } from 'react-router-dom';
 
 import NavBar from '../../common/NavBar';
 import axios from 'axios'
+import RegisterForm from './components/RegisterForm';
 
-class LoginPage extends Component {
+class RegisterPage extends Component {
 
   componentWillMount() {
+      /*
     axios.post('http://localhost:5000/register', {
         user: 'Fred',
         lastName: 'Flintstone'
@@ -18,6 +19,7 @@ class LoginPage extends Component {
       .catch(function (error) {
         console.log(error);
       });
+      */
   }
 
   render() {
@@ -26,7 +28,7 @@ class LoginPage extends Component {
         <NavBar />
        	<div className="row">
        		<div style={{display: 'flex', justifyContent: 'center'}} className="col-md-4 col-md-offset-4">
-       			<LoginForm />
+       			<RegisterForm />
        		</div>
        	</div>
       </div>
@@ -34,4 +36,4 @@ class LoginPage extends Component {
   }
 }
 
-export default LoginPage;
+export default RegisterPage;

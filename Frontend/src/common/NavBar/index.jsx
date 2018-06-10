@@ -26,8 +26,8 @@ const Navbar = () => (
     </div>
 
     <div className="right-link-container">
-      <Link to="#">Sign In</Link>
-      <Link to="#">Register</Link>
+      <Link to="/sign_in">Sign In</Link>
+      <Link to="/sign_up">Register</Link>
     </div>
   </div>
 );

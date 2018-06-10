@@ -2,6 +2,15 @@ import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import TextFieldGroup from '../../../../common/TextFieldGroup'
 
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppBar from 'material-ui/AppBar';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+
+const style = {
+	'margin-top': 25,
+};
+
 class LoginForm extends React.Component {
 
 	constructor(props) {
@@ -32,27 +41,26 @@ class LoginForm extends React.Component {
 		const { errors, identifier, password, isLoading } = this.state
 
 		return (
-			<form onSubmit={this.onSubmit}>
-				<h1>Login</h1>
-
-				<TextFieldGroup
-					field="identifier"
-					label="Username / Email"
-					value={identifier}
-					error={errors.identifier}
-					onChange={this.onChange}
-				/>
-
-				<TextFieldGroup
-					field="password"
-					label="password"
-					value={password}
-					error={errors.password}
-					onChange={this.onChange}
-				/>
-
-				<div className="form-group"><Button disabled={isLoading}>Login</Button></div>
-			</form>
+			<div>
+			<MuiThemeProvider>
+			  <div>
+			   <TextField
+				 hintText="Enter your Username"
+				 floatingLabelText="Username"
+				 onChange = {(event,newValue) => this.setState({username:newValue})}
+				 />
+			   <br/>
+				 <TextField
+				   type="password"
+				   hintText="Enter your Password"
+				   floatingLabelText="Password"
+				   onChange = {(event,newValue) => this.setState({password:newValue})}
+				   />
+				 <br/>
+				 <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
+			 </div>
+			 </MuiThemeProvider>
+		  </div>
 	);
 }
 } 	
