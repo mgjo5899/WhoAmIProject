@@ -4,18 +4,11 @@ from flask import request
 from flask_cors import CORS
 import models as dbHandler
 import json
-import re
+
+from utils import valid_email_format
 
 app = Flask(__name__)
 CORS(app)
-
-def valid_email_format(email):
-    result = re.fullmatch('([a-zA-Z0-9\-%_\+]+(\.[a-zA-Z0-9\-%_\+]+)*)@([a-zA-Z0-9\-]+)\.([a-zA-Z0-9\-]{2,})', email)
-
-    if result == None:
-        return False
-    elif result.group(0) == email:
-        return True
 
 @app.route('/signin', methods=['POST'])
 def signin():
