@@ -14,7 +14,7 @@ def valid_email_format(email):
 
     if result == None:
         return False
-    elif result[0] == email:
+    elif result.group(0) == email:
         return True
 
 @app.route('/signin', methods=['POST'])
