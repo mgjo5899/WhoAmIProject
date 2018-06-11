@@ -40,12 +40,12 @@ class LoginForm extends React.Component {
 			.then(function (response) {
 
 			console.log(response);
-			if(response.data.code === 200){
+			if(response.data.status === "Successful"){
 				console.log("Login successfull");
 			}
 
 			else{
-				console.log("Username does not exists");
+				console.log("There is no user with the given username and password");
 				//alert("Username does not exist");
 			}
 			}
