@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { HashRouter, Route } from 'react-router-dom';
 
 import NavBar from '../../common/NavBar';
-import axios from 'axios'
+import axios from 'axios';
 import RegisterForm from './components/RegisterForm';
 
 class RegisterPage extends Component {
