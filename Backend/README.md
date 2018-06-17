@@ -18,7 +18,7 @@
     - Access MySQL shell
         - `mysql -u root -p` and type the password you've set up during installation
     - Add yourself as an admin user to MySQL server
-        - `CREATE USER 'newuser'@'localhost';`
+        - `CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';`
         - `GRANT ALL PRIVILEGES ON \*.\* TO 'newuser'@'localhost';`
 2. Set up a Python 3 virtual environment
     - Create virtual environment at the designated directory
@@ -32,3 +32,6 @@
     - Set up `PYTHONPATH` in `activate` file
         - Add a line `export PYTHONPATH="<directory_to_Backend_folder>" at the end of `activate` file
         - This is a temporary solution for resolving Backend module imports; will need to exchange it with `setup.py` later
+
+## Note
+- If you cannot access the local MySQL server with the SQL browser, try the following [solution](https://stackoverflow.com/questions/49194719/authentication-plugin-caching-sha2-password-cannot-be-loaded)
