@@ -1,11 +1,12 @@
 # Backend
 
 ## Technologies
-| ---------:  |-------:    |
-| *Language*  | Python 3   |
-| *Framework* | Flask      |
-| *Database*  | MySQL      |
-| *ORM*       | SQLAlchemy |
+|               |            |
+| :--           | :--        |
+| **Language**  | Python 3   |
+| **Framework** | Flask      |
+| **Database**  | MySQL      |
+| **ORM**       | SQLAlchemy |
 
 ## Installation
 1. Set up MySQL server
