@@ -15,16 +15,16 @@ def check_user(username, password=None):
     # No user with the given username
     if user == None:
         rtn_val['status'] = False
-        rtn_val['error'] = "There is no user with the given username"
+        rtn_val['message'] = "There is no user with the given username"
     # Password is not matching
     elif password != None:
         hash_str = '{}${}'.format(HASH_METHOD, user.password)
 
         if not check_pw_hash(hash_str, password):
             rtn_val['status'] = False
-            rtn_val['error'] = "The given password does not match with the user's password"
+            rtn_val['message'] = "The given password does not match with the user's password"
 
-    if 'error' not in rtn_val:
+    if 'message' not in rtn_val:
         rtn_val['status'] = True
 
     session.close()
@@ -38,7 +38,7 @@ def register_user(username, password, email):
 
     if check_user(username)['status']:
         rtn_val['status'] = False
-        rtn_val['error'] = "Given username already exists"
+        rtn_val['message'] = "Given username already exists"
     else:
         # Hashing
         hashed_pw = get_pw_hash(password)
