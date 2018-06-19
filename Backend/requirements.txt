@@ -7,4 +7,5 @@ MarkupSafe==1.0
 PyMySQL==0.8.1
 six==1.11.0
 SQLAlchemy==1.2.8
+SQLAlchemy-Utils==0.33.3
 Werkzeug==0.14.1
