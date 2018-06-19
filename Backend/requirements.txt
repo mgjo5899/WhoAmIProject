@@ -1,2 +1,10 @@
-flask
-flask-cors
+click==6.7
+Flask==1.0.2
+Flask-Cors==3.0.6
+itsdangerous==0.24
+Jinja2==2.10
+MarkupSafe==1.0
+PyMySQL==0.8.1
+six==1.11.0
+SQLAlchemy==1.2.8
+Werkzeug==0.14.1
