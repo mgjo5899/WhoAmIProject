@@ -1,5 +1,6 @@
 from sqlalchemy_utils.functions import create_database, drop_database
 from sqlalchemy_utils.functions import database_exists
+from werkzeug.security import generate_password_hash, check_password_hash
 import re
 
 from db.base import Base, engine, get_db_url
@@ -44,7 +45,7 @@ def reset_db():
 
 # Hashing related
 def get_pw_hash(password):
-    return sec.generate_password_hash(password, HASH_METHOD)[7:]
+    return generate_password_hash(password, HASH_METHOD)[7:]
 
 def check_pw_hash(has_str, password):
-    return sec.check_password_hash(has_str, password)
+    return check_password_hash(has_str, password)
