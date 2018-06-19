@@ -1,101 +1,111 @@
-import sqlite3 as sql
-import werkzeug.security as sec
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
 
-USER_DB = "db/userdata.db"
-HASH_METHOD = 'sha256'
+from db.user import User
+from db.base import Session
+from utils import HASH_METHOD
+from utils import get_pw_hash, check_pw_hash
 
-def signin_user(username, password):
-    user = check_user(username)
+# GOOD
+def check_user(username, password=None):
+    session = Session()
+    rtn_val = {}
+    user = session.query(User).filter(User.username == username).first()
 
-    if len(user) == 0:
-        return False
+    # No user with the given username
+    if user == None:
+        rtn_val['status'] = False
+        rtn_val['error'] = "There is no user with the given username"
+    # Password is not matching
+    elif password != None:
+        hash_str = '{}${}'.format(HASH_METHOD, user.password)
 
-    user = user[0]
-    hash_str = '{}${}'.format(HASH_METHOD, user[1])
+        if not check_pw_hash(hash_str, password):
+            rtn_val['status'] = False
+            rtn_val['error'] = "The given password does not match with the user's password"
 
-    if not sec.check_password_hash(hash_str, password):
-        return False
+    if 'error' not in rtn_val:
+        rtn_val['status'] = True
 
-    return True
+    session.close()
 
-def check_user(username):
-    con = sql.connect(USER_DB)
-    cur = con.cursor()
-    cur.execute("SELECT username, password \
-                 FROM users WHERE username = (?)", (username,))
-    user = cur.fetchall()
-    con.close()
+    return rtn_val
 
-    return user
-
+# GOOD
 def register_user(username, password, email):
-    if len(check_user(username)) != 0:
-        return False
+    session = Session()
+    rtn_val = {}
 
-    # Hashing
-    hashed_pw = sec.generate_password_hash(password, method=HASH_METHOD)[7:]
+    if check_user(username)['status']:
+        rtn_val['status'] = False
+        rtn_val['error'] = "Given username already exists"
+    else:
+        # Hashing
+        hashed_pw = get_pw_hash(password)
 
-    con = sql.connect(USER_DB)
-    cur = con.cursor()
-    cur.execute("INSERT INTO users \
-                (username, email, password) VALUES (?,?,?)", \
-                (username, email, hashed_pw))
-    con.commit()
-    con.close()
+        new_user = User(username=username, email=email, password=hashed_pw)
+        session.add(new_user)
+        session.commit()
 
-    return True
+        rtn_val['status'] = True
 
-def retrieve_users():
-	con = sql.connect(USER_DB)
-	cur = con.cursor()
-	cur.execute("SELECT username, email FROM users")
-	users = cur.fetchall()
-	con.close()
+    session.close()
 
-	return users
+    return rtn_val
 
-def delete_user(username, password):
-    user = check_user(username)
+# Good
+def signin_user(username, password):
+    return check_user(username, password=password)
 
-    if len(user) == 0:
-        return False
-
-    user = user[0]
-    hash_str = '{}${}'.format(HASH_METHOD, user[1])
-
-    if not sec.check_password_hash(hash_str, password):
-        return False
+# Good
+def get_users():
+    session = Session()
+    rtn_val = {}
+    users = session.query(User).all()
     
-    con = sql.connect(USER_DB)
-    cur = con.cursor()
-    cur.execute("DELETE FROM users WHERE username = (?)", (username,))
-    con.commit()
-    con.close()
+    rtn_val['status'] = True
+    rtn_val['users'] = []
 
-    return True
+    for user in users:
+        curr_user = {}
+        curr_user['username'] = user.username
+        curr_user['email'] = user.email
+        rtn_val['users'].append(curr_user)
 
-def modify_user(username, password, new_password):
-    user = check_user(username)
+    session.close()
 
-    if len(user) == 0:
-        return False
+    return rtn_val
 
-    user = user[0]
-    print(user)
-    hash_str = '{}${}'.format(HASH_METHOD, user[1])
+# Good
+def delete_user(username, password):
+    session = Session()
+    rtn_val = check_user(username, password)
 
-    if not sec.check_password_hash(hash_str, password):
-        print('wrong password')
-        return False
+    if rtn_val['status']:
+        user = session.query(User).filter(User.username == username).first()
+        session.delete(user)
+        session.commit()
+        rtn_val['deleted_user'] = {}
+        rtn_val['deleted_user']['username'] = user.username
+        rtn_val['deleted_user']['email'] = user.email
 
-    # Hashing
-    hashed_pw = sec.generate_password_hash(new_password, method=HASH_METHOD)[7:]
+    session.close()
 
-    con = sql.connect(USER_DB)
-    cur = con.cursor()
-    cur.execute("UPDATE users SET password = ? \
-                 WHERE username = ?", (hashed_pw, username))
-    con.commit()
-    con.close()
+    return rtn_val
 
-    return True
+# Good
+def modify_password(username, password, new_password):
+    session = Session()
+    rtn_val = check_user(username, password)
+
+    if check_user(username):
+        user = session.query(User).filter(User.username == username).first()
+        
+        # Hashing
+        hashed_pw = get_pw_hash(new_password)
+        user.password = hashed_pw
+        session.commit()
+
+    session.close()
+
+    return rtn_val
