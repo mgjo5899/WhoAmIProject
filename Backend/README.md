@@ -20,7 +20,7 @@
     - Add yourself as an admin user to MySQL server
         - `CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';`
             - If you want to set up user without password, leave password area as empty string.  Not specifying `IDENTIFIED BY` part will cause trouble in accessing database when on a SQL browser.
-        - `GRANT ALL PRIVILEGES ON \*.\* TO 'newuser'@'localhost';`
+        - `GRANT ALL PRIVILEGES ON *.* TO 'newuser'@'localhost';`
 2. Set up a Python 3 virtual environment
     - Create virtual environment at the designated directory
         - `python3 -m venv <directory_to_the_new_virtual_env>`
