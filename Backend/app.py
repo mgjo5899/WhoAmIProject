@@ -2,10 +2,10 @@ from flask import Flask
 from flask import jsonify
 from flask import request
 from flask_cors import CORS
-from models import check_user, register_user, signin_user, get_users
-from models import delete_user, modify_password
 import json
 
+from models import register_user, signin_user, get_users
+from models import delete_user, modify_password
 from utils import valid_email_format
 
 app = Flask(__name__)
@@ -32,14 +32,14 @@ def signin():
 
     req = get_req_data()
 
-    if 'username' in req and 'password' in req:
-        username = req['username']
+    if 'email' in req and 'password' in req:
+        email = req['email']
         password = req['password']
 
-        rtn_val = signin_user(username, password)
+        rtn_val = signin_user(email, password)
     else:
         rtn_val['status'] = False
-        rtn_val['message'] = "Request is missing either username or password"
+        rtn_val['message'] = "Request is missing either email or password"
 
     return jsonify(rtn_val)
 
@@ -62,15 +62,15 @@ def home():
         print("Possibly GET request")
 
     if request.method == 'PUT':
-        if 'username' in req and 'password' in req and 'new_password' in req:
-            username = req['username']
+        if 'email' in req and 'password' in req and 'new_password' in req:
+            username = req['email']
             password = req['password']
             new_password = req['new_password']
 
-            rtn_val = modify_password(username, password, new_password)
+            rtn_val = modify_password(email, password, new_password)
         else:
             rtn_val['status'] = False
-            rtn_val['message'] = "Request is missing either username, password, \
+            rtn_val['message'] = "Request is missing either email, password, \
                                                                    or new_password"
             
     elif request.method == 'POST':
@@ -82,27 +82,21 @@ def home():
             if not valid_email_format(email):
                 rtn_val['status'] = False
                 rtn_val['message'] = "Email is not in a valid format"
-            elif not register_user(username, password, email):
-                rtn_val['status'] = False
-                rtn_val['message'] = "There is a user with the given username"
             else:
-                rtn_val['status'] = True
-
-            users = get_users()
-            rtn_val['current users'] = users
+                rtn_val = register_user(username, password, email)
         else:
             rtn_val['status'] = False
             rtn_val['message'] = "Request is missing either username, password, or email"
 
     elif request.method == 'DELETE':
-        if 'username' in req and 'password' in req:
-            username = req['username']
+        if 'email' in req and 'password' in req:
+            username = req['email']
             password = req['password']
 
-            rtn_val = delete_user(username,password)
+            rtn_val = delete_user(email, password)
         else:
             rtn_val['status'] = False
-            rtn_val['message'] = "Request is missing either username or password"
+            rtn_val['message'] = "Request is missing either email or password"
 
     elif request.method == 'GET':
         rtn_val = get_users()
