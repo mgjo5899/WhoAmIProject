@@ -37,10 +37,10 @@ def db_checks():
     create_tables()
 
 def reset_db():
-    if database_exists(db_url):
+    if database_exists(get_db_url()):
         rm_database()
 
-    new_database()
+    create_new_database()
     create_tables()
 
 # Hashing related
