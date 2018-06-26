@@ -17,16 +17,22 @@ class LoginForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			identifier: '',
 			username: '',
 			password: '',
-			errors: {},
-			isLoading: false
 		};
 
 		this.handleClick = this.handleClick.bind(this);
 	}
 	
+	fakeLogin = e => {
+		const { username, password } = this.state;
+		e.preventDefault();
+		if (!username) {
+		  return alert("Type your username.");
+		}
+		this.props.doLogin(username, password);
+		this.setState({ username: "", password: "" });
+	  };
 
 	handleClick(){
 
@@ -39,15 +45,16 @@ class LoginForm extends React.Component {
 		})
 			.then(function (response) {
 
-			console.log(response);
-			if(response.data.status === "Successful"){
-				console.log("Login successfull");
-			}
+				console.log(response);
+				if(response.data.status === "Successful"){
+					console.log("Login successfull");
+					this.setState({loggedOn:true})
+				}
 
-			else{
-				console.log("There is no user with the given username and password");
-				//alert("Username does not exist");
-			}
+				else{
+					console.log("There is no user with the given username and password");
+					//alert("Username does not exist");
+				}
 			}
 		)
 		.catch(function (error) {
@@ -75,12 +82,12 @@ class LoginForm extends React.Component {
 				   onChange = {(event,newValue) => this.setState({password:newValue})}
 				   />
 				 <br/>
-				 <RaisedButton label="Submit" primary={true} style={style} onClick={this.handleClick}/>
+				 <RaisedButton label="Submit" primary={true} style={style} onClick={this.fakeLogin}/>
 			 </div>
 			 </MuiThemeProvider>
 		  </div>
-	);
-}
+		);
+	}
 } 	
 
 export default LoginForm;

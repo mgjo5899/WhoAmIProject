@@ -16,9 +16,9 @@ class App extends Component {
 
           <HashRouter>
             <div>
-              <Route path="/" exact component={APITest} />
-              <Route path="/sign_up" component={RegisterPage} />
-              <Route path="/sign_in" component={LoginPage} />
+              <Route path="/" exact component={LoginPage} />
+              <Route path="/signup" component={RegisterPage} />
+              <Route path="/signin" component={LoginPage} />
             </div>
           </HashRouter>
 

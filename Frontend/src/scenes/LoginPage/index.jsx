@@ -2,36 +2,48 @@ import React, { Component } from 'react';
 import LoginForm from './components/LoginForm';
 import { HashRouter, Route } from 'react-router-dom';
 
+
+import { connect } from "react-redux";
+
+
+import { doLogin, doLogout } from "../../actions/auth";
+
 import NavBar from '../../common/NavBar';
 import axios from 'axios'
 
-class LoginPage extends Component {
+//class LoginPage extends Component {
+//
+//  render() {
+//    return (
+//      <div>
+//        <NavBar />
+//       	<div className="row">
+//       		<div style={{display: 'flex', justifyContent: 'center'}} className="col-md-4 col-md-offset-4">
+//       			<LoginForm />
+//       		</div>
+//       	</div>
+//      </div>
+//    );
+//  }
+//}
 
-  componentWillMount() {
-    axios.post('http://localhost:5000/register', {
-        user: 'Fred',
-        lastName: 'Flintstone'
-      })
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
+const LoginPage = ({ auth, doLogin, doLogout }) => (
 
-  render() {
-    return (
-      <div>
-        <NavBar />
-       	<div className="row">
-       		<div style={{display: 'flex', justifyContent: 'center'}} className="col-md-4 col-md-offset-4">
-       			<LoginForm />
-       		</div>
+    <div>
+
+      <NavBar/>
+     	<div className="row">
+     		<div style={{display: 'flex', justifyContent: 'center'}} className="col-md-4 col-md-offset-4">
+     			<LoginForm doLogin={doLogin} doLogout={doLogout} auth={auth} />
+     		</div>
        	</div>
       </div>
-    );
-  }
-}
 
-export default LoginPage;
+);
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, { doLogin, doLogout })(LoginPage);
+
+//export default LoginPage;
