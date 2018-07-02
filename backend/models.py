@@ -15,15 +15,16 @@ def signin_user(email, password):
     if user == None:
         rtn_val['status'] = False
         rtn_val['message'] = "There is no user with the given email address"
-    # Password is not matching
-    hash_str = '{}${}'.format(HASH_METHOD, user.password)
+    else:
+        # Password is not matching
+        hash_str = '{}${}'.format(HASH_METHOD, user.password)
 
-    if not check_pw_hash(hash_str, password):
-        rtn_val['status'] = False
-        rtn_val['message'] = "Could not log into the account with the given password"
+        if not check_pw_hash(hash_str, password):
+            rtn_val['status'] = False
+            rtn_val['message'] = "Could not log into the account with the given password"
 
-    if 'status' not in rtn_val:
-        rtn_val['status'] = True
+        if 'status' not in rtn_val:
+            rtn_val['status'] = True
 
     session.close()
 
