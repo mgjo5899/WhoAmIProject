@@ -6,7 +6,7 @@ import json
 
 from models import register_user, signin_user, get_users
 from models import delete_user, modify_password
-from utils import valid_email_format
+from utils import valid_email_format, db_checks
 
 app = Flask(__name__)
 CORS(app)
@@ -63,7 +63,7 @@ def home():
 
     if request.method == 'PUT':
         if 'email' in req and 'password' in req and 'new_password' in req:
-            username = req['email']
+            email = req['email']
             password = req['password']
             new_password = req['new_password']
 
@@ -90,7 +90,7 @@ def home():
 
     elif request.method == 'DELETE':
         if 'email' in req and 'password' in req:
-            username = req['email']
+            email = req['email']
             password = req['password']
 
             rtn_val = delete_user(email, password)
@@ -104,4 +104,6 @@ def home():
     return jsonify(rtn_val)
 
 if __name__ == '__main__':
+    print("Database checking...")
+    db_checks()
     app.run(debug=True, host='0.0.0.0', port=8000)
