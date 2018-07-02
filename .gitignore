@@ -5,6 +5,9 @@ yarn-error.log
 ########## Node
 package-lock.json
 
+########## VSCODE
+*.vscode
+
 # Logs
 logs
 *.log

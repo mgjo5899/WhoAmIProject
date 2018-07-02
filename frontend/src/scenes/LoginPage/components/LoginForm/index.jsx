@@ -17,43 +17,15 @@ class LoginForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			identifier: '',
 			username: '',
 			password: '',
-			errors: {},
-			isLoading: false
 		};
 
 		this.handleClick = this.handleClick.bind(this);
 	}
-	
 
 	handleClick(){
-
-		var self = this;
-
-		axios.post('http://localhost:5000/signin', 
-		{
-			username:this.state.username, 
-			password:this.state.password
-		})
-			.then(function (response) {
-
-			console.log(response);
-			if(response.data.status === "Successful"){
-				console.log("Login successfull");
-			}
-
-			else{
-				console.log("There is no user with the given username and password");
-				//alert("Username does not exist");
-			}
-			}
-		)
-		.catch(function (error) {
-
-		console.log(error);
-		});
+		this.props.doLogin(this.state.username, this.state.password);
 	}
 
 	render() {
@@ -79,8 +51,8 @@ class LoginForm extends React.Component {
 			 </div>
 			 </MuiThemeProvider>
 		  </div>
-	);
-}
+		);
+	}
 } 	
 
 export default LoginForm;
