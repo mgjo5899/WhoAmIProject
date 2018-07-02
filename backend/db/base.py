@@ -10,12 +10,12 @@ def get_db_url():
     
     user = os.environ['MYSQL_USER']
 
-    if 'MYSQL_PW' in os.environ:
-        pw = ':' + os.environ['MYSQL_PW']
-        DB_URL =  "mysql+pymysql://{}{}@localhost/whoamiproject".format(user, pw)
-    else:
-        DB_URL =  "mysql+pymysql://{}@localhost/whoamiproject".format(user)
-        
+    if 'MYSQL_PASSWORD' in os.environ:
+        print("Please set an environment variable MYSQL_PASSWORD")
+        exit(1)
+
+    pw = os.environ['MYSQL_PW']
+    DB_URL =  "mysql+pymysql://{}:{}@localhost/whoamiproject".format(user, pw)
 
     return DB_URL
 
