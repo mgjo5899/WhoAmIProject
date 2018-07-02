@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 DOCKER_PROCESS=$(docker ps | head -1)
 
 if [ ${DOCKER_PROCESS:0:9} == "CONTAINER" ]

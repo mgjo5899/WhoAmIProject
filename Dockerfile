@@ -18,6 +18,4 @@ ENV LANG=C.UTF-8
 
 WORKDIR /Backend
 
-RUN sqlite3 db/userdata.db < db/schema.sql
-
 ENTRYPOINT ["python3", "app.py"]
