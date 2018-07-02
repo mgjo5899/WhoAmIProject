@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+    database:
+        build: ./database
+        ports:
+            - "3306:3306"
+        environment:
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+            - MYSQL_DATABASE=whoamiproject
+            - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+            - MYSQL_ROOT_HOST=% # Spent quite a lot of time finding this flag!!! allows non-docker accesses
+    backend:
+        build: ./backend
+        command: python app.py
+        environment:
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+            - MYSQL_HOST=database
+        ports:
+            - "8000:8000"
+        depends_on:
+            - database
+        links:
+            - database
