@@ -4,8 +4,8 @@ from flask import request
 from flask_cors import CORS
 import json
 
-from models import register_user, signin_user, get_users
-from models import delete_user, modify_password
+from manage import register_user, signin_user, get_users
+from manage import delete_user, modify_password
 from utils import valid_email_format, db_checks
 
 app = Flask(__name__)

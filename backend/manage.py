@@ -25,6 +25,7 @@ def signin_user(email, password):
 
         if 'status' not in rtn_val:
             rtn_val['status'] = True
+            rtn_val['username'] = user.username
 
     session.close()
 
