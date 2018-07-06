@@ -3,8 +3,8 @@ from sqlalchemy_utils.functions import database_exists
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 
-from db.base import Base, engine, get_db_url
-from db.user import User
+from models.base import Base, engine, get_db_url
+from models.user import User
 
 HASH_METHOD = 'sha256'
 

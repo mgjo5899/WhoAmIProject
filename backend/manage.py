@@ -1,8 +1,8 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 
-from db.user import User
-from db.base import Session
+from models.user import User
+from models.base import Session
 from utils import HASH_METHOD
 from utils import get_pw_hash, check_pw_hash
 

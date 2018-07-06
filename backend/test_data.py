@@ -1,4 +1,4 @@
-import models
+import manage
 import utils
 
 # Checking database
@@ -21,4 +21,4 @@ users = {
 for name in users:
     print(name, users[name])
     user = users[name]
-    print(models.register_user(name, user[1], user[0]))
+    print(manage.register_user(name, user[1], user[0]))
