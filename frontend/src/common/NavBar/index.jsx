@@ -14,22 +14,48 @@ const Link = props => (
   </NavLink>
 );
 
-const Navbar = () => (
-  <div className="navbar">
-    <div className="logo-container">
-    </div>
+class Navbar extends React.Component {
 
-    <div className="left-link-container">
-      <Link to="/i/about">ABOUT</Link>
-      <Link to="/i/#">MENU 2</Link>
-      <Link to="/i/#">MENU 3</Link>
-    </div>
 
-    <div className="right-link-container">
-      <Link to="/signin">Sign In</Link>
-      <Link to="/signup">Register</Link>
-    </div>
-  </div>
-);
+  render() {
+    if (this.props.auth.isLoggedIn) {
+      return(
+        <div className="navbar">
+          <div className="logo-container">
+          </div>
+          
+          <div className="left-link-container">
+            <Link to="/i/about">ABOUT</Link>
+            <Link to="/i/#">MENU 2</Link>
+            <Link to="/i/#">MENU 3</Link>
+          </div>
+  
+          <div className="right-link-container">
+            <Link to="/signup">Welcome, {this.props.auth.username}!</Link>
+            <Link to="/signin">Sign Out</Link>
+          </div>
+        </div>
+      );
+    } else {
+      return(
+        <div className="navbar">
+          <div className="logo-container">
+          </div>
+          
+          <div className="left-link-container">
+            <Link to="/i/about">ABOUT</Link>
+            <Link to="/i/#">MENU 2</Link>
+            <Link to="/i/#">MENU 3</Link>
+          </div>
+  
+          <div className="right-link-container">
+            <Link to="/signin">Sign In</Link>
+            <Link to="/signup">Register</Link>
+          </div>
+        </div>
+      );
+    }
+  }
+}
 
 export default Navbar;

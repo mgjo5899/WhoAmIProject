@@ -17,21 +17,24 @@ const fakeLoginRequest = (username, password) => {
 }
 
 
-export const doLogin = (username, password) => {
+export const doLogin = (email, password) => {
     return dispatch => {
-        axios.post('http://localhost:5000/signin', {
-            username: username,
+        axios.post('http://localhost:8000/signin', {
+            email: email,
             password: password
         })
             .then((response)=>{
-                dispatch({
-                    type: types.AUTH_LOGIN,
-                    username: response.username
-                })
+                if (response.data.status === true) {
+                    dispatch({
+                        type: types.AUTH_LOGIN,
+                        username: response.data.username
+                    })
+                } else {
+                    console.log(response.data.message);
+                }
             })
             .catch((error)=>{
                 console.log("There is no user with the given username and password");
-                //alert("Username does not exist");
             })
     };
 };

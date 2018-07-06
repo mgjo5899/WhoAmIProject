@@ -12,7 +12,7 @@ const style = {
 	'marginTop': 25,
 };
 
-class LoginForm extends React.Component {
+class Dashboard extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -34,20 +34,7 @@ class LoginForm extends React.Component {
 			<div>
 			<MuiThemeProvider>
 			  <div>
-			   <TextField
-				 hintText="Enter your Email"
-				 floatingLabelText="Email"
-				 onChange = {(event,newValue) => this.setState({email:newValue})}
-				 />
-			   <br/>
-				 <TextField
-				   type="password"
-				   hintText="Enter your Password"
-				   floatingLabelText="Password"
-				   onChange = {(event,newValue) => this.setState({password:newValue})}
-				   />
-				 <br/>
-				 <RaisedButton label="Submit" primary={true} style={style} onClick={this.handleClick}/>
+			  	Welcome to Dashboard
 			 </div>
 			 </MuiThemeProvider>
 		  </div>

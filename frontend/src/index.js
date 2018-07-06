@@ -19,9 +19,6 @@ import { Provider } from 'react-redux';
 
 console.log('init state', store.getState());
 store.subscribe(()=>console.log(store.getState()));
-store.dispatch(actions.doLogin('yjyj', '1234'));
-store.dispatch(actions.doLogout());
-
 
 ReactDOM.render(
     // Instead of passing store as a props into the App component,
