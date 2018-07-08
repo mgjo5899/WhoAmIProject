@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
-import TextFieldGroup from '../../../../common/TextFieldGroup'
-
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import AppBar from 'material-ui/AppBar';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
-import axios from 'axios';
+import {
+	Card,
+	CardPrimaryAction,
+	CardMedia,
+	CardAction,
+	CardActions,
+	CardActionButtons,
+	CardActionIcons
+} from 'rmwc/Card';
+  
 
 const style = {
 	'marginTop': 25,
 };
+
 
 class Dashboard extends React.Component {
 
@@ -28,13 +32,32 @@ class Dashboard extends React.Component {
 		this.props.doLogin(this.state.email, this.state.password);
 	}
 
-	render() {
+	verificationMessage = () => (
+		<div style={{
+			'textAlign':'center',
+			'backgroundColor':'gray',
+			'borderWidth': '1px',
+			'padding':'1em',
+			'marginTop': '1em',
+			'borderRadius':'15px',
+			'backgroundColor':'#F7F3CA'
+		}}>
+			<h4>Verify Your Email Address</h4>
+			<p>We have sent a verification mail to <b>{this.props.auth.email}</b>. Please activate your account with the link in this email.</p>
+		</div>
+	);
 
+	render() {
 		return (
 			<div>
 			<MuiThemeProvider>
 			  <div>
-			  	Welcome to Dashboard
+				{
+					!this.props.auth.isConfirmed
+						? this.verificationMessage()
+						: ( <div/> )
+				}
+			  	<h1 style={{'textAlign':'center'}}>{this.props.auth.username}'s Dashboard</h1>
 			 </div>
 			 </MuiThemeProvider>
 		  </div>
@@ -42,4 +65,4 @@ class Dashboard extends React.Component {
 	}
 } 	
 
-export default LoginForm;
+export default Dashboard;

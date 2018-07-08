@@ -16,6 +16,15 @@ const Link = props => (
 
 class Navbar extends React.Component {
 
+  constructor(props) {
+		super(props);
+
+		this.handleLogout = this.handleLogout.bind(this);
+	}
+
+  handleLogout() {
+    this.props.doLogout()
+  }
 
   render() {
     if (this.props.auth.isLoggedIn) {
@@ -32,7 +41,7 @@ class Navbar extends React.Component {
   
           <div className="right-link-container">
             <Link to="/signup">Welcome, {this.props.auth.username}!</Link>
-            <Link to="/signin">Sign Out</Link>
+            <Link to="/signin" onClick={this.handleLogout}>Sign Out</Link>
           </div>
         </div>
       );

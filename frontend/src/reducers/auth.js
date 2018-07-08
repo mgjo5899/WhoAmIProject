@@ -4,7 +4,10 @@ import * as types from "../actions/types";
 
 const initialState = {
   username: "",
-  isLoggedIn: false
+  email: "",
+  isLoggedIn: false,
+  isConfirmed: false,
+  statusMessage: "",
 };
 
 const authReducer = (state = initialState, action) => {
@@ -12,11 +15,20 @@ const authReducer = (state = initialState, action) => {
     case types.AUTH_LOGIN:
       return {
         ...state, // Preserve states that are unchanged
-        username: action.username, // Values to be changed
+        username: action.username, // Values to be changed,
+        email: action.email,
         isLoggedIn: true
       };
     case types.AUTH_LOGOUT:
       return initialState;
+    case types.AUTH_REGISTER:
+      return {
+        ...state,
+        username: action.username,
+        email: action.email,
+        isLoggedIn: true,
+        statusMessage: action.statusMessage,
+      }
     default:
       return state;
   }
