@@ -16,11 +16,16 @@ def get_db_url():
         print("Please set an environment variable MYSQL_HOST")
         exit(1)
 
+    if 'MYSQL_PORT' not in os.environ:
+        print("Please set an environment variable MYSQL_HOST")
+        exit(1)
+
     user = os.environ['MYSQL_USER']
     pw = os.environ['MYSQL_PASSWORD']
     db_host = os.environ['MYSQL_HOST']
+    db_port = os.environ['MYSQL_PORT']
 
-    DB_URL =  "mysql+pymysql://{}:{}@{}/whoamiproject".format(user, pw, db_host)
+    DB_URL =  "mysql+pymysql://{}:{}@{}:{}/whoamiproject".format(user, pw, db_host, db_port)
 
     return DB_URL
 
