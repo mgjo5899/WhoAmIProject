@@ -2,25 +2,23 @@ version: '3'
 
 services:
     database:
-        build: ./database
+        image: mysql:5.7
         ports:
             - "3306:3306"
         environment:
-            - MYSQL_USER
-            - MYSQL_PASSWORD
+            - MYSQL_USER=admin
+            - MYSQL_PASSWORD=adminpw1
             - MYSQL_DATABASE=whoamiproject
-            - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
-            - MYSQL_ROOT_HOST=% # Spent quite a lot of time finding this flag!!! allows non-docker accesses
+            - MYSQL_ROOT_PASSWORD=adminpw1
+            - MYSQL_ROOT_HOST=% # allows non-docker accesses
     backend:
         build: ./backend
-        command: python app.py
         environment:
-            - MYSQL_USER
-            - MYSQL_PASSWORD
+            - MYSQL_USER=admin
+            - MYSQL_PASSWORD=adminpw1
             - MYSQL_HOST=database
+            - MYSQL_PORT=3306
         ports:
             - "8000:8000"
-        depends_on:
-            - database
         links:
             - database
