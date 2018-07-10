@@ -37,8 +37,9 @@ def erase_tables():
     meta = Base.metadata
 
     for table in reversed(meta.sorted_tables):
-        print('Clear table {}'.format(table.name))
-        session.execute(table.delete())
+        if engine.dialect.has_table(engine, table.name):
+            print('Clear table {}'.format(table.name))
+            session.execute(table.delete())
     session.commit()
     session.close()
 
