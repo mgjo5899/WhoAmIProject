@@ -2,7 +2,7 @@ import manage
 import utils
 
 # Checking database
-utils.db_checks()
+utils.reset_db()
 
 # Populating fake user table
 users = {
