@@ -3,7 +3,7 @@ from sqlalchemy_utils.functions import database_exists
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 
-from models.base import Base, engine, get_db_url
+from models.base import Base, engine, get_db_url, Session
 from models.user import User
 
 HASH_METHOD = 'sha256'
@@ -20,15 +20,11 @@ def valid_email_format(email):
 # DB related
 def create_tables():
     print("Creating tables if not found")
-    Base.metadata.create_all(engine)
+    Base.metadata.create_all(bind=engine)
 
 def create_new_database():
     print("Creating new whoamiproject database")
     create_database(get_db_url())
-
-def rm_database():
-    print("Removing whoamiproject database")
-    drop_database(get_db_url())
 
 def db_checks():
     if not database_exists(get_db_url()):
@@ -36,11 +32,21 @@ def db_checks():
 
     create_tables()
 
-def reset_db():
-    if database_exists(get_db_url()):
-        rm_database()
+def erase_tables():
+    session = Session()
+    meta = Base.metadata
 
-    create_new_database()
+    for table in reversed(meta.sorted_tables):
+        print('Clear table {}'.format(table.name))
+        session.execute(table.delete())
+    session.commit()
+    session.close()
+
+def reset_db():
+    if not database_exists(get_db_url()):
+        create_new_database()
+
+    erase_tables()
     create_tables()
 
 # Hashing related
