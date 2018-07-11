@@ -1,10 +1,13 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
+from itsdangerous import URLSafeTimedSerializer
+import time
 
 from models.user import User
 from models.base import Session
 from utils import HASH_METHOD
 from utils import get_pw_hash, check_pw_hash
+
 
 def signin_user(email, password):
     session = Session()
@@ -58,6 +61,20 @@ def check_email(email):
         rtn_val['message'] = "There is no user with the given email address"
     else:
         rtn_val['status'] = True
+
+    session.close()
+
+    return rtn_val
+
+def confirm_email(email):
+    session = Session()
+    rtn_val = check_email(email)
+
+    if rtn_val['status']:
+        user = session.query(User).filter(User.email == email).first()
+        user.confirmed = True
+        user.confirmed_on = time.strftime('%Y-%m-%d %H:%M:%S')
+        session.commit()
 
     session.close()
 

@@ -1,12 +1,17 @@
 from sqlalchemy_utils.functions import create_database, drop_database
 from sqlalchemy_utils.functions import database_exists
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import URLSafeTimedSerializer
+from flask_mail import Mail
 import re
 
 from models.base import Base, engine, get_db_url, Session
 from models.user import User
 
+
 HASH_METHOD = 'sha256'
+SECRET_KEY = 'my_precious'
+SECURITY_PASSWORD_SALT = 'my_precious_two'
 
 # Regular expression search related
 def valid_email_format(email):
@@ -50,9 +55,28 @@ def reset_db():
     erase_tables()
     create_tables()
 
+
 # Hashing related
 def get_pw_hash(password):
     return generate_password_hash(password, HASH_METHOD)[7:]
 
 def check_pw_hash(has_str, password):
     return check_password_hash(has_str, password)
+
+
+# Confirmation token related
+def generate_confirmation_token(email):
+    serializer = URLSafeTimedSerializer(SECRET_KEY)
+    return serializer.dumps(email, salt=SECURITY_PASSWORD_SALT)
+
+def confirm_token(token, expiration=3600):
+    serializer = URLSafeTimedSerializer(SECRET_KEY)
+    try:
+        email = serializer.loads(
+            token,
+            salt=SECURITY_PASSWORD_SALT,
+            max_age=expiration
+        )
+    except:
+        return False
+    return email
