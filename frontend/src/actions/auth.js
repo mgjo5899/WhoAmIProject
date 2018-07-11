@@ -3,13 +3,12 @@ import axios from 'axios';
 
 export const registerUser = (username, email, password) => {
     return dispatch => {
-        axios.post('http://localhost:8000/users', {
+        axios.post('http://localhost:8000/register', {
             username: username,
             email: email,
             password: password
         })
             .then((response)=>{
-                console.log('reg response', response)
                 if (response.data.status === true) {
                     dispatch({
                         type: types.AUTH_REGISTER,
@@ -42,6 +41,7 @@ export const doLogin = (email, password) => {
                         type: types.AUTH_LOGIN,
                         username: response.data.username,
                         email: email,
+                        confirmed: response.data.confirmed,
                     })
                 } else {
                     console.log(response.data.message);

@@ -17,7 +17,8 @@ const authReducer = (state = initialState, action) => {
         ...state, // Preserve states that are unchanged
         username: action.username, // Values to be changed,
         email: action.email,
-        isLoggedIn: true
+        isLoggedIn: true,
+        isConfirmed: action.confirmed,
       };
     case types.AUTH_LOGOUT:
       return initialState;
