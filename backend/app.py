@@ -84,7 +84,7 @@ def register():
 
             if rtn_val['status']:
                 token = generate_confirmation_token(email)
-                confirm_url = 'http://127.0.0.1:3000/confirm/' + token
+                confirm_url = 'http://127.0.0.1:8000/confirm/' + token
                 html = render_template('activate.html', confirm_url=confirm_url)
                 subject = "Please confirm your email"
                 send_email(email, subject, html)
