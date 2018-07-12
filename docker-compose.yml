@@ -22,3 +22,9 @@ services:
             - "8000:8000"
         links:
             - database
+    frontend:
+        build: ./frontend
+        ports:
+            - "3000:3000"
+        links:
+            - database
