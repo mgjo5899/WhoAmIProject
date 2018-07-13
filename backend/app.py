@@ -6,7 +6,7 @@ import json
 
 from manage import register_user, signin_user, get_users
 from manage import delete_user, modify_password
-from manage import confirm_email
+from manage import confirm_email, check_email
 from utils import valid_email_format, db_checks
 from utils import generate_confirmation_token, confirm_token
 
@@ -38,13 +38,19 @@ def get_req_data():
 
     return req
 
-def send_email(to, subject, template):
+def send_email(email):
+    token = generate_confirmation_token(email)
+    confirm_url = 'http://127.0.0.1:8000/confirm/' + token
+    template = render_template('activate.html', confirm_url=confirm_url)
+    subject = "Please confirm your email"
+
     msg = Message(
             subject,
-            recipients=[to],
+            recipients=[email],
             html=template,
             sender=MAIL_DEFAULT_SENDER
     )
+
     mail.send(msg)
 
 @app.route('/confirm/<token>', methods=['GET'])
@@ -60,11 +66,31 @@ def email_confirmation(token):
         rtn_val = confirm_email(email)
 
     if rtn_val['status']:
+        # Confirmed
         redirect_url = 'http://127.0.0.1:3000/#/signin'
     else:
+        # Not confirmed
         redirect_url = 'http://127.0.0.1:3000/#/signup'
 
     return redirect(redirect_url)
+
+@app.route('/resend', methods=['POST'])
+def resend_confirmation():
+    rtn_val = {}
+    req = get_req_data()
+
+    if 'email' in req:
+        email = req['email']
+        rtn_val = check_email(email)
+
+        if rtn_val['status']:
+            send_email(email)
+            rtn_val['message'] = "The confirmation email has been sent again"
+    else:
+        rtn_val['status'] = False
+        rtn_val['message'] = "Request is missing email"
+
+    return jsonify(rtn_val)
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -83,11 +109,7 @@ def register():
             rtn_val = register_user(username, password, email)
 
             if rtn_val['status']:
-                token = generate_confirmation_token(email)
-                confirm_url = 'http://127.0.0.1:8000/confirm/' + token
-                html = render_template('activate.html', confirm_url=confirm_url)
-                subject = "Please confirm your email"
-                send_email(email, subject, html)
+                send_email(email)
     else:
         rtn_val['status'] = False
         rtn_val['message'] = "Request is missing either username, password, or email"
