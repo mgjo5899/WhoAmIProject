@@ -9,7 +9,7 @@ from utils import HASH_METHOD
 from utils import get_pw_hash, check_pw_hash
 
 
-def signin_user(email, password):
+def signin_user(email, password, hashed=False):
     session = Session()
     rtn_val = {}
     user = session.query(User).filter(User.email == email).first()
@@ -19,17 +19,20 @@ def signin_user(email, password):
         rtn_val['status'] = False
         rtn_val['message'] = "There is no user with the given email address"
     else:
-        # Password is not matching
-        hash_str = '{}${}'.format(HASH_METHOD, user.password)
+        if not hashed:
+            hash_str = '{}${}'.format(HASH_METHOD, user.password)
 
-        if not check_pw_hash(hash_str, password):
+            if not check_pw_hash(hash_str, password):
+                rtn_val['status'] = False
+                rtn_val['message'] = "Could not log into the account with the given password"
+        elif hashed and password != user.password:
             rtn_val['status'] = False
-            rtn_val['message'] = "Could not log into the account with the given password"
 
         if 'status' not in rtn_val:
             rtn_val['status'] = True
             rtn_val['username'] = user.username
             rtn_val['confirmed'] = user.confirmed
+            rtn_val['pw'] = user.password
 
     session.close()
 
