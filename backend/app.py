@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, redirect
+from flask import Flask, session, jsonify, request, redirect
 from flask import render_template
 from flask_cors import CORS
 from flask_mail import Message, Mail
@@ -7,15 +7,16 @@ import json
 from manage import register_user, signin_user, get_users
 from manage import delete_user, modify_password
 from manage import confirm_email, check_email
-from utils import valid_email_format, db_checks
+from utils import valid_email_format, db_checks, db_close
 from utils import generate_confirmation_token, confirm_token
 
 app = Flask(__name__)
+app.secret_key = b'gkdlakdlspdladlwmwhtpq'       # secret key for session
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'whoamiapp2580'
-app.config['MAIL_PASSWORD'] = 'gnsalswjddma2580'
+app.config['MAIL_USERNAME'] = 'whoamiapp2580'    # project username in gmail
+app.config['MAIL_PASSWORD'] = 'gnsalswjddma2580' # 훈민정음2580
 
 mail = Mail(app)
 CORS(app)
@@ -116,20 +117,39 @@ def register():
 
     return jsonify(rtn_val)
 
-@app.route('/signin', methods=['POST'])
+@app.route('/signin', methods=['GET', 'POST'])
 def signin():
     rtn_val = {}
+    print('session: ', session)
 
-    req = get_req_data()
+    if request.method == 'GET':
+        if 'email' in session and 'password' in session:
+            if signin_user(session['email'], session['password'], hashed=True):
+                rtn_val['status'] = True
+                rtn_val['message'] = "Already signed in"
+                rtn_val['email'] = session['email']
+            else:
+                rtn_val['status'] = False
+                rtn_val['message'] = "Incorrect credential in session token"
+        else:
+            rtn_val['status'] = False
+            rtn_val['message'] = "Not signed in"
+    elif request.method == 'POST':
+        req = get_req_data()
 
-    if 'email' in req and 'password' in req:
-        email = req['email']
-        password = req['password']
+        if 'email' in req and 'password' in req:
+            email = req['email']
+            password = req['password']
 
-        rtn_val = signin_user(email, password)
-    else:
-        rtn_val['status'] = False
-        rtn_val['message'] = "Request is missing either email or password"
+            rtn_val = signin_user(email, password)
+
+            if rtn_val['status']:
+                session['email'] = email
+                session['password'] = rtn_val['pw']
+                _ = rtn_val.pop('pw')
+        else:
+            rtn_val['status'] = False
+            rtn_val['message'] = "Request is missing either email or password"
 
     return jsonify(rtn_val)
 
@@ -170,3 +190,4 @@ if __name__ == '__main__':
     print("Database checking...")
     db_checks()
     app.run(debug=True, host='0.0.0.0', port=8000)
+    db_close()
