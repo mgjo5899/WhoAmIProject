@@ -37,6 +37,9 @@ def db_checks():
 
     create_tables()
 
+def db_close():
+    engine.dispose()
+
 def erase_tables():
     session = Session()
     meta = Base.metadata
@@ -60,8 +63,8 @@ def reset_db():
 def get_pw_hash(password):
     return generate_password_hash(password, HASH_METHOD)[7:]
 
-def check_pw_hash(has_str, password):
-    return check_password_hash(has_str, password)
+def check_pw_hash(hash_str, password):
+    return check_password_hash(hash_str, password)
 
 
 # Confirmation token related
