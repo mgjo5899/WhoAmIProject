@@ -13,21 +13,20 @@ const style = {
 };
 
 class LoginForm extends React.Component {
-
+    
 	constructor(props) {
 		super(props);
 		this.state = {
 			email: '',
 			password: '',
 		};
-
 		this.handleClick = this.handleClick.bind(this);
 	}
 
 	handleClick(){
 		this.props.doLogin(this.state.email, this.state.password);
 	}
-
+    
 	render() {
 
 		return (

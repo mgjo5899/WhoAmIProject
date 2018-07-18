@@ -3,10 +3,14 @@ import axios from 'axios';
 
 export const registerUser = (username, email, password) => {
     return dispatch => {
-        axios.post('http://localhost:8000/register', {
-            username: username,
-            email: email,
-            password: password
+        axios('http://localhost:8000/register', {
+            method: "post",
+            withCredentials: true,
+            data: {
+                username: username,
+                email: email,
+                password: password
+            }
         })
             .then((response)=>{
                 if (response.data.status === true) {
@@ -31,9 +35,13 @@ export const registerUser = (username, email, password) => {
 
 export const doLogin = (email, password) => {
     return dispatch => {
-        axios.post('http://localhost:8000/signin', {
-            email: email,
-            password: password
+        axios('http://localhost:8000/signin', {
+            method: "post",
+            withCredentials: true,
+            data: {
+                email: email,
+                password: password
+            }
         })
             .then((response)=>{
                 if (response.data.status === true) {
