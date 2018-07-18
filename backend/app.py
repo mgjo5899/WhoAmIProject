@@ -85,7 +85,7 @@ def reset_password():
         email = session['email']
         new_password = req['new_password']
 
-        rtn_val = modify_password(email, password, new_password)
+        rtn_val = modify_password(email, new_password)
     else:
         rtn_val['status'] = False
         rtn_val['message'] = "Request is missing either email, password, \

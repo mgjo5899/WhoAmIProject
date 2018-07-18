@@ -144,9 +144,9 @@ def delete_user(email, password):
 
     return rtn_val
 
-def modify_password(email, password, new_password):
+def modify_password(email, new_password):
     session = Session()
-    rtn_val = signin_user(email, password)
+    rtn_val = check_email(email)
 
     if rtn_val['status']:
         user = session.query(User).filter(User.email == email).first()
