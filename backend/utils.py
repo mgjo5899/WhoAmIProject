@@ -68,7 +68,7 @@ def check_pw_hash(hash_str, password):
 
 
 # Confirmation token related
-def generate_confirmation_token(email):
+def generate_email_token(email):
     serializer = URLSafeTimedSerializer(SECRET_KEY)
     return serializer.dumps(email, salt=SECURITY_PASSWORD_SALT)
 
