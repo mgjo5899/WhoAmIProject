@@ -5,7 +5,6 @@ export const registerUser = (username, email, password) => {
     return dispatch => {
         axios('http://localhost:8000/register', {
             method: "post",
-            withCredentials: true,
             data: {
                 username: username,
                 email: email,
@@ -28,7 +27,7 @@ export const registerUser = (username, email, password) => {
                 }
             })
             .catch((error)=>{
-                console.log("There is no user with the given username and password");
+                console.log(error);
             })
     };
 };
@@ -37,7 +36,7 @@ export const doLogin = (email, password) => {
     return dispatch => {
         axios('http://localhost:8000/signin', {
             method: "post",
-            withCredentials: true,
+            //withCredentials: true,
             data: {
                 email: email,
                 password: password
@@ -56,10 +55,11 @@ export const doLogin = (email, password) => {
                 }
             })
             .catch((error)=>{
-                console.log("There is no user with the given username and password");
+                console.log(error);
             })
     };
 };
+
 
 export const doLogout = () => ({
   type: types.AUTH_LOGOUT,
