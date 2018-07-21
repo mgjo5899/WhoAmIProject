@@ -2,22 +2,27 @@ FROM python:3.6-alpine
 
 RUN apk add --no-cache bash
 
-EXPOSE 8000
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV VERSION=0.0.1
 
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+ADD Pipfile* /tmp/
+RUN pip install pipenv
+RUN cd /tmp && \
+    pipenv install --system
 
-RUN mkdir /backend
-WORKDIR /backend
+WORKDIR /tmp
 
-ADD . .
+COPY dist/whoami-backend-${VERSION}.tar.gz ./
+RUN tar xopf whoami-backend-${VERSION}.tar.gz
+RUN pip install --no-cache whoami-backend-${VERSION}.tar.gz
 
-RUN pip install -r requirements.txt
+RUN mv whoami-backend-${VERSION}/whoami_back /backend
 
-RUN mv entrypoint.sh /entrypoint.sh
+ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-RUN mv wait-for-it.sh /wait-for-it.sh
+ADD wait-for-it.sh /wait-for-it.sh
 RUN chmod +x /wait-for-it.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
