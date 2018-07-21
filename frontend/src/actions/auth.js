@@ -15,11 +15,13 @@ export const registerUser = (username, email, password) => {
                 if (response.data.status === true) {
                     dispatch({
                         type: types.AUTH_REGISTER,
+                        isLoggedIn: true,
                         username: username, // TODO: need to change to response.data.username,
                         email: email   
                     })
                 } else {
                     dispatch({
+                        isLoggedIn: false,
                         type: types.AUTH_REGISTER,
                         statusMessage: response.data.message
                     })

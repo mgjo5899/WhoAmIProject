@@ -42,7 +42,7 @@ class Navbar extends React.Component {
           <div className="right-link-container">
             <Link to="/signup">Welcome, {this.props.auth.username}!</Link>
             <Link to="/settings">Edit Profile</Link>
-            <Link to="/signin" onClick={this.handleLogout}>Sign Out</Link>
+            <Link to="/" onClick={this.handleLogout}>Sign Out</Link>
           </div>
         </div>
       );
