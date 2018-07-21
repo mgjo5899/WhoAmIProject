@@ -3,6 +3,7 @@ import os
 from setuptools import setup, find_packages
 
 project_root = os.path.abspath(os.path.dirname(__file__))
+VERSION = open(os.path.join(project_root, 'VERSION')).read()
 
 requires = [
     'blinker==1.4',
@@ -22,7 +23,7 @@ requires = [
 
 setup(
     name='whoami-backend',
-    version='0.0.1',
+    version=VERSION,
     packages=find_packages(),
     include_package_data=True,
     install_requires=requires
