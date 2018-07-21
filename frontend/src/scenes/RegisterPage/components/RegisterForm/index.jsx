@@ -15,7 +15,8 @@ class RegisterForm extends React.Component {
       username: '',
       email: '',
 			password: '',
-			isLoading: false
+      isLoading: false,
+      canSubmit: false,
     };
     
     this.handleClick = this.handleClick.bind(this);
@@ -33,24 +34,26 @@ class RegisterForm extends React.Component {
                 <TextField
                   hintText="Enter your Username"
                   floatingLabelText="Username"
-                  onChange = {(event,newValue) => this.setState({username:newValue})}
+                  onChange = {(event, newValue) => this.setState({username:newValue})}
                 />
                 <br/>
                 <TextField
                   hintText="Enter your Email"
                   type="email"
                   floatingLabelText="Email"
-                  onChange = {(event,newValue) => this.setState({email:newValue})}
+                  onChange = {(event, newValue) => this.setState({email:newValue})}
                 />
                 <br/>
                 <TextField
                   type = "password"
                   hintText="Enter your Password"
                   floatingLabelText="Password"
-                  onChange = {(event,newValue) => this.setState({password:newValue})}
+                  onChange = {(event, newValue) => this.setState({password:newValue})}
                 />
                 <br/>
                 <RaisedButton label="Submit" primary={true} style={style} onClick={this.handleClick}/>
+                <br/>
+                <p style={{'textAlign':'center', 'color':'red'}}>{this.props.auth.statusMessage}</p>
               </div>
               </MuiThemeProvider>
           </div>

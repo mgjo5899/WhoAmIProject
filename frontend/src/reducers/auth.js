@@ -25,9 +25,9 @@ const authReducer = (state = initialState, action) => {
     case types.AUTH_REGISTER:
       return {
         ...state,
+        isLoggedIn: action.isLoggedIn,
         username: action.username,
         email: action.email,
-        isLoggedIn: true,
         statusMessage: action.statusMessage,
       }
     default:
