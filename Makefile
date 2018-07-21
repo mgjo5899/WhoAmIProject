@@ -1,4 +1,5 @@
-VERSION:=$(shell cat VERSION)
+BACK_VERSION:=$(shell cat backend/VERSION)
+FRONT_VERSION:=$(shell cat frontend/VERSION)
 
 all: stop build run
 
@@ -21,10 +22,10 @@ frontend:
 
 backend-build:
 	cd backend && pipenv run python setup.py sdist
-	docker build -t whoamiproject_backend:${VERSION} backend/
+	docker build -t whoamiproject_backend:${BACK_VERSION} backend/
 
 frontend-build:
-	docker build -t whoamiproject_frontend:${VERSION} frontend/
+	docker build -t whoamiproject_frontend:${FRONT_VERSION} frontend/
 
 backend-clean:
 	-docker stop whoamiproject_backend_1
@@ -41,10 +42,10 @@ frontend-clean:
 	-docker rm whoamiproject_frontend_1
 
 backend-empty: backend-clean
-	-docker rmi whoamiproject_backend:${VERSION}
+	-docker rmi whoamiproject_backend:${BACK_VERSION}
 
 frontend-empty: frontend-clean
-	-docker rmi whoamiproject_frontend:${VERSION}
+	-docker rmi whoamiproject_frontend:${FRONT_VERSION}
 
 .PHONY: all build stop run clean database backend frontend
 .PHONY: backend-build frontend-build backend-clean database-clean
