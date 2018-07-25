@@ -1,0 +1,523 @@
+@import url(../../index.css);
+.processpage-frame {
+  width: 100%;
+  height: auto;
+  left: 0;
+  position: relative;
+  top: 0; }
+
+
+
+.work-process-greeting {
+  width: 100%;
+  height: auto;
+  left: 0;
+  position: relative; }
+  .work-process-greeting .content-section {
+    clip-path: polygon(0 84%, 0% 0%, 100% 0%, 100% 100%);
+    -webkit-clip-path: polygon(0 84%, 0% 0%, 100% 0%, 100% 100%);
+    display: block;
+    height: 700px;
+    width: 100%;
+    position: relative;
+    left: 0;
+    background: linear-gradient(-80deg, #52E1C2, #70E598); }
+    .work-process-greeting .content-section .paragraph-section {
+      position: relative;
+      width: 60vw;
+      height: auto;
+      margin: auto;
+      display: block;
+      top: 25vh; }
+      .work-process-greeting .content-section .paragraph-section h3 {
+        font-size: 4rem;
+        text-align: left;
+        display: block;
+        position: relative;
+        width: 40vw;
+        left: 0; }
+      .work-process-greeting .content-section .paragraph-section h5 {
+        font-size: 1.6rem;
+        font-weight: 200;
+        top: 1rem;
+        text-align: left;
+        display: block;
+        position: relative;
+        width: 40vw;
+        left: 0; }
+      .work-process-greeting .content-section .paragraph-section ul {
+        font-size: 1.6rem;
+        font-weight: 200;
+        left: 0;
+        display: block;
+        width: 40vw;
+        position: relative;
+        top: 3rem;
+        list-style-type: none; }
+        .work-process-greeting .content-section .paragraph-section ul li {
+          font-size: 1.6rem;
+          font-weight: 200; }
+    .work-process-greeting .content-section .section-bg {
+      position: absolute;
+      left: 50vw;
+      top: 25vh;
+      width: 40vw;
+      height: auto;
+      display: block;
+      filter: invert(100%) grayscale(100%); }
+      .work-process-greeting .content-section .section-bg img {
+        width: 100%;
+        height: 100%; }
+
+.work-process-ques {
+  width: 100%;
+  height: auto;
+  left: 0;
+  position: relative;
+  top: 0; }
+  .work-process-ques .content-section {
+    display: block;
+    height: 800px;
+    width: 100%;
+    position: relative;
+    left: 0;
+    background: #ffffff; }
+    .work-process-ques .content-section .paragraph-section {
+      position: relative;
+      width: 60vw;
+      height: auto;
+      margin: auto;
+      display: block;
+      top: 10vh; }
+      .work-process-ques .content-section .paragraph-section h3 {
+        font-size: 4rem;
+        text-align: left;
+        display: block;
+        position: relative;
+        width: 50vw;
+        left: calc(100% - 50vw) !important; }
+      .work-process-ques .content-section .paragraph-section h5 {
+        font-size: 1.6rem;
+        font-weight: 200;
+        top: 1rem;
+        text-align: left;
+        display: block;
+        position: relative;
+        width: 50vw;
+        left: calc(100% - 50vw) !important; }
+      .work-process-ques .content-section .paragraph-section ul {
+        font-size: 1.6rem;
+        font-weight: 200;
+        left: calc(100% - 50vw) !important;
+        display: block;
+        width: 50vw;
+        position: relative;
+        top: 3rem;
+        list-style-type: none; }
+        .work-process-ques .content-section .paragraph-section ul li {
+          font-size: 1.6rem;
+          font-weight: 200; }
+    .work-process-ques .content-section .button-set {
+      width: 60vw;
+      height: auto;
+      margin: 0 auto;
+      display: block;
+      position: relative;
+      top: 20vh;
+      left: 10vw; }
+      .work-process-ques .content-section .button-set button {
+        display: inline-block;
+        width: auto;
+        padding: .5rem 1rem;
+        background: white;
+        border-radius: 5px;
+        border: 2px solid grey;
+        margin-right: 20px; }
+
+.work-process-scope {
+  width: 100%;
+  height: 800px;
+  left: 0;
+  position: relative;
+  top: 0; }
+  .work-process-scope .content-section {
+    display: block;
+    height: 800px;
+    width: 100%;
+    position: relative;
+    left: 0;
+    background: #eeeeee;
+    clip-path: polygon(0 100%, 0% 14%, 100% 0%, 100% 100%);
+    -webkit-clip-path: polygon(0 100%, 0% 14%, 100% 0%, 100% 100%); }
+    .work-process-scope .content-section .paragraph-section {
+      position: relative;
+      width: 60vw;
+      height: auto;
+      margin: auto;
+      display: block;
+      top: 20vh; }
+      .work-process-scope .content-section .paragraph-section h3 {
+        font-size: 4rem;
+        text-align: left;
+        display: block;
+        position: relative;
+        width: 50vw;
+        left: 0; }
+      .work-process-scope .content-section .paragraph-section h5 {
+        font-size: 1.6rem;
+        font-weight: 200;
+        top: 1rem;
+        text-align: left;
+        display: block;
+        position: relative;
+        width: 50vw;
+        left: 0; }
+      .work-process-scope .content-section .paragraph-section ul {
+        font-size: 1.6rem;
+        font-weight: 200;
+        left: 0;
+        display: block;
+        width: 50vw;
+        position: relative;
+        top: 3rem;
+        list-style-type: none; }
+        .work-process-scope .content-section .paragraph-section ul li {
+          font-size: 1.6rem;
+          font-weight: 200; }
+    .work-process-scope .content-section .button-set {
+      width: 60vw;
+      height: auto;
+      margin: 0px auto;
+      display: block;
+      position: relative;
+      top: 25vh;
+      left: 0vw; }
+      .work-process-scope .content-section .button-set button {
+        display: inline-block;
+        width: auto;
+        padding: .5rem 1rem;
+        background: white;
+        border-radius: 5px;
+        border: 2px solid grey;
+        margin-right: 20px; }
+  .work-process-scope .scroll-indicator-left, .work-process-scope .scroll-indicator-right {
+    z-index: 1;
+    top: 5vw; }
+    .work-process-scope .scroll-indicator-left .side-caption-left:after, .work-process-scope .scroll-indicator-right .side-caption-left:after, .scroll-indicator-right .work-process-scope .scroll-indicator-left .side-caption-right:after, .work-process-scope .scroll-indicator-right .side-caption-right:after {
+      width: 15vw;
+      left: 0; }
+
+.work-process-outcome {
+  width: 100%;
+  height: 800px;
+  left: 0;
+  position: relative;
+  top: 0; }
+  .work-process-outcome img {
+    position: relative;
+    top: 10vh;
+    letf: 0;
+    width: 45vw;
+    height: auto;
+    margin-right: auto;
+    margin-left: auto;
+    position: absolute;
+    left: 10vw;
+    z-index: 5; }
+  .work-process-outcome .content-section {
+    display: block;
+    height: 900px;
+    width: 100%;
+    position: relative;
+    left: 0;
+    background: #ffffff;
+    clip-path: polygon(0 84%, 0% 0%, 100% 0%, 100% 100%);
+    -webkit-clip-path: polygon(0 84%, 0% 0%, 100% 0%, 100% 100%); }
+    .work-process-outcome .content-section .paragraph-section {
+      position: relative;
+      width: 60vw;
+      height: auto;
+      margin: auto;
+      display: block;
+      top: 15vh;
+      position: absolute;
+      left: 30vw; }
+      .work-process-outcome .content-section .paragraph-section h3 {
+        font-size: 4rem;
+        text-align: left;
+        display: block;
+        position: relative;
+        width: 30vw;
+        left: calc(100% - 30vw) !important; }
+      .work-process-outcome .content-section .paragraph-section h5 {
+        font-size: 1.6rem;
+        font-weight: 200;
+        top: 1rem;
+        text-align: left;
+        display: block;
+        position: relative;
+        width: 30vw;
+        left: calc(100% - 30vw) !important; }
+      .work-process-outcome .content-section .paragraph-section ul {
+        font-size: 1.6rem;
+        font-weight: 200;
+        left: calc(100% - 30vw) !important;
+        display: block;
+        width: 30vw;
+        position: relative;
+        top: 3rem;
+        list-style-type: none; }
+        .work-process-outcome .content-section .paragraph-section ul li {
+          font-size: 1.6rem;
+          font-weight: 200; }
+    .work-process-outcome .content-section .button-set {
+      width: 60vw;
+      height: auto;
+      margin: 0px auto;
+      display: block;
+      position: relative;
+      top: 25vh;
+      left: 0vw; }
+      .work-process-outcome .content-section .button-set button {
+        display: inline-block;
+        width: auto;
+        padding: .5rem 1rem;
+        background: white;
+        border-radius: 5px;
+        border: 2px solid grey;
+        margin-right: 20px; }
+  .work-process-outcome .scroll-indicator-left, .work-process-outcome .scroll-indicator-right {
+    z-index: 1;
+    overflow: visible; }
+    .work-process-outcome .scroll-indicator-left .side-caption-left:after, .work-process-outcome .scroll-indicator-right .side-caption-left:after, .scroll-indicator-right .work-process-outcome .scroll-indicator-left .side-caption-right:after, .work-process-outcome .scroll-indicator-right .side-caption-right:after {
+      width: 15vw;
+      left: -5vw; }
+
+.work-process-Futuresupport {
+  width: 100%;
+  height: 800px;
+  left: 0;
+  position: relative;
+  top: 0; }
+  .work-process-Futuresupport .content-section {
+    display: block;
+    height: 600px;
+    width: 100%;
+    position: relative;
+    left: 0;
+    background: #efefef;
+    clip-path: polygon(0 100%, 0% 0%, 100% 14%, 100% 100%);
+    -webkit-clip-path: polygon(0 100%, 0% 0%, 100% 14%, 100% 100%); }
+    .work-process-Futuresupport .content-section .paragraph-section {
+      position: relative;
+      width: 60vw;
+      height: auto;
+      margin: auto;
+      display: block;
+      top: 15vh; }
+      .work-process-Futuresupport .content-section .paragraph-section h3 {
+        font-size: 4rem;
+        text-align: left;
+        display: block;
+        position: relative;
+        width: 50vw;
+        left: 0; }
+      .work-process-Futuresupport .content-section .paragraph-section h5 {
+        font-size: 1.6rem;
+        font-weight: 200;
+        top: 1rem;
+        text-align: left;
+        display: block;
+        position: relative;
+        width: 50vw;
+        left: 0; }
+      .work-process-Futuresupport .content-section .paragraph-section ul {
+        font-size: 1.6rem;
+        font-weight: 200;
+        left: 0;
+        display: block;
+        width: 50vw;
+        position: relative;
+        top: 3rem;
+        list-style-type: none; }
+        .work-process-Futuresupport .content-section .paragraph-section ul li {
+          font-size: 1.6rem;
+          font-weight: 200; }
+    .work-process-Futuresupport .content-section .button-set {
+      width: 60vw;
+      height: auto;
+      margin: 0px auto;
+      display: block;
+      position: relative;
+      top: 25vh;
+      left: 0vw; }
+      .work-process-Futuresupport .content-section .button-set button {
+        display: inline-block;
+        width: auto;
+        padding: .5rem 1rem;
+        background: white;
+        border-radius: 5px;
+        border: 2px solid grey;
+        margin-right: 20px; }
+
+.scroll-indicator-left, .scroll-indicator-right {
+  width: 30vw;
+  height: 1.2rem;
+  transform: rotate(90deg);
+  transform-origin: 0% 50%;
+  -webkit-transform-origin: 0% 50%;
+  -webkit-transform: rotate(90deg);
+  position: relative;
+  left: 15vw;
+  z-index: 5;
+  top: -15vw; }
+  .scroll-indicator-left .side-indicator-bar, .scroll-indicator-right .side-indicator-bar {
+    width: 15vw;
+    height: 5px;
+    position: relative;
+    background: black;
+    display: inline-block;
+    top: -0.2rem;
+    left: 0px; }
+  .scroll-indicator-left .side-caption-left, .scroll-indicator-right .side-caption-left, .scroll-indicator-right .side-caption-right {
+    font-size: 1rem;
+    transform: rotate(180deg) !important;
+    transform-origin: 50% 50%;
+    -webkit-transform-origin: 50% 50%;
+    -webkit-transform: rotate(180deg);
+    margin: 0 20px; }
+
+.scroll-indicator-right {
+  position: relative;
+  float: right;
+  right: 0;
+  top: -5vw;
+  z-index: 5; }
+
+.work-process-internal-approaches {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0px auto;
+  background: #eeeeee;
+  padding-top: 12vh; }
+  .work-process-internal-approaches h3 {
+    font-size: 4rem;
+    text-align: left;
+    display: block;
+    position: relative;
+    width: calc(60vw);
+    margin: auto; }
+  .work-process-internal-approaches h5 {
+    font-size: 1.6rem;
+    font-weight: 200;
+    top: 1rem;
+    text-align: left;
+    display: block;
+    position: relative;
+    width: calc(60vw);
+    margin: auto;
+    margin-bottom: 5vh; }
+  .work-process-internal-approaches .scroll-indicator-left, .work-process-internal-approaches .scroll-indicator-right {
+    z-index: 1;
+    top: -10vw; }
+    .work-process-internal-approaches .scroll-indicator-left .side-caption-left:after, .work-process-internal-approaches .scroll-indicator-right .side-caption-left:after, .scroll-indicator-right .work-process-internal-approaches .scroll-indicator-left .side-caption-right:after, .work-process-internal-approaches .scroll-indicator-right .side-caption-right:after {
+      width: 20vw;
+      left: 20pxw; }
+  .work-process-internal-approaches .approaches-cards {
+    display: block;
+    width: calc(80vw);
+    height: calc(60vw);
+    margin: auto;
+    position: relative;
+    z-index: 2; }
+    .work-process-internal-approaches .approaches-cards .approach-card, .work-process-internal-approaches .approaches-cards .card-exploration, .work-process-internal-approaches .approaches-cards .card-ideation, .work-process-internal-approaches .approaches-cards .card-expliments, .work-process-internal-approaches .approaches-cards .card-prototype, .work-process-internal-approaches .approaches-cards .card-mvp, .work-process-internal-approaches .approaches-cards .card-lego-bricks, .work-process-internal-approaches .approaches-cards .approach-card-extend {
+      display: inline-block;
+      width: calc((80vw / 3) - 20*2px);
+      height: calc((80vw / 3) - 20*2px);
+      background: white;
+      margin: 20px;
+      padding: 30px;
+      overflow: hidden;
+      border-radius: 10px;
+      z-index: 3;
+      transition-duration: 1s; }
+      .work-process-internal-approaches .approaches-cards .approach-card:hover .info-level1 p, .work-process-internal-approaches .approaches-cards .card-exploration:hover .info-level1 p, .work-process-internal-approaches .approaches-cards .card-ideation:hover .info-level1 p, .work-process-internal-approaches .approaches-cards .card-expliments:hover .info-level1 p, .work-process-internal-approaches .approaches-cards .card-prototype:hover .info-level1 p, .work-process-internal-approaches .approaches-cards .card-mvp:hover .info-level1 p, .work-process-internal-approaches .approaches-cards .card-lego-bricks:hover .info-level1 p, .work-process-internal-approaches .approaches-cards .approach-card-extend:hover .info-level1 p {
+        transform: translateY(-20px);
+        opacity: 1; }
+      .work-process-internal-approaches .approaches-cards .approach-card .info-level1, .work-process-internal-approaches .approaches-cards .card-exploration .info-level1, .work-process-internal-approaches .approaches-cards .card-ideation .info-level1, .work-process-internal-approaches .approaches-cards .card-expliments .info-level1, .work-process-internal-approaches .approaches-cards .card-prototype .info-level1, .work-process-internal-approaches .approaches-cards .card-mvp .info-level1, .work-process-internal-approaches .approaches-cards .card-lego-bricks .info-level1, .work-process-internal-approaches .approaches-cards .approach-card-extend .info-level1 {
+        display: block;
+        position: relative;
+        width: 100%;
+        height: 50%;
+        top: 50%;
+        transition-duration: .5s;
+        left: 0; }
+        .work-process-internal-approaches .approaches-cards .approach-card .info-level1 .title, .work-process-internal-approaches .approaches-cards .card-exploration .info-level1 .title, .work-process-internal-approaches .approaches-cards .card-ideation .info-level1 .title, .work-process-internal-approaches .approaches-cards .card-expliments .info-level1 .title, .work-process-internal-approaches .approaches-cards .card-prototype .info-level1 .title, .work-process-internal-approaches .approaches-cards .card-mvp .info-level1 .title, .work-process-internal-approaches .approaches-cards .card-lego-bricks .info-level1 .title, .work-process-internal-approaches .approaches-cards .approach-card-extend .info-level1 .title {
+          font-size: 1.6rem; }
+        .work-process-internal-approaches .approaches-cards .approach-card .info-level1 p, .work-process-internal-approaches .approaches-cards .card-exploration .info-level1 p, .work-process-internal-approaches .approaches-cards .card-ideation .info-level1 p, .work-process-internal-approaches .approaches-cards .card-expliments .info-level1 p, .work-process-internal-approaches .approaches-cards .card-prototype .info-level1 p, .work-process-internal-approaches .approaches-cards .card-mvp .info-level1 p, .work-process-internal-approaches .approaches-cards .card-lego-bricks .info-level1 p, .work-process-internal-approaches .approaches-cards .approach-card-extend .info-level1 p {
+          display: block;
+          width: 100%;
+          height: 100%;
+          font-size: 1rem;
+          opacity: 0;
+          transition-duration: 0.5s;
+          position: relative;
+          top: 0px; }
+      .work-process-internal-approaches .approaches-cards .approach-card .info-level2, .work-process-internal-approaches .approaches-cards .card-exploration .info-level2, .work-process-internal-approaches .approaches-cards .card-ideation .info-level2, .work-process-internal-approaches .approaches-cards .card-expliments .info-level2, .work-process-internal-approaches .approaches-cards .card-prototype .info-level2, .work-process-internal-approaches .approaches-cards .card-mvp .info-level2, .work-process-internal-approaches .approaches-cards .card-lego-bricks .info-level2, .work-process-internal-approaches .approaches-cards .approach-card-extend .info-level2 {
+        display: none;
+        transition-duration: .5s; }
+    .work-process-internal-approaches .approaches-cards .card-exploration, .work-process-internal-approaches .approaches-cards .card-ideation, .work-process-internal-approaches .approaches-cards .card-expliments, .work-process-internal-approaches .approaches-cards .card-prototype, .work-process-internal-approaches .approaches-cards .card-mvp, .work-process-internal-approaches .approaches-cards .card-lego-bricks {
+      position: absolute !important;
+      top: 20;
+      left: 20; }
+    .work-process-internal-approaches .approaches-cards .card-ideation {
+      left: calc( 80vw / 3 * 1); }
+    .work-process-internal-approaches .approaches-cards .card-expliments {
+      left: calc( 80vw / 3 * 2); }
+    .work-process-internal-approaches .approaches-cards .card-prototype {
+      top: calc( (80vw / 3 * 1)); }
+    .work-process-internal-approaches .approaches-cards .card-mvp {
+      top: calc( 80vw / 3 * 1);
+      left: calc( 80vw / 3 * 1); }
+    .work-process-internal-approaches .approaches-cards .card-lego-bricks {
+      top: calc( 80vw / 3 * 1);
+      left: calc( 80vw / 3 * 2); }
+    .work-process-internal-approaches .approaches-cards .approach-card-extend {
+      width: calc( 100% - 20*2px) !important;
+      height: calc(80vw / 3 * 2) !important;
+      z-index: 5;
+      position: absolute;
+      top: 0px !important;
+      left: 0px !important;
+      background: white;
+      transition-duration: .5s; }
+      .work-process-internal-approaches .approaches-cards .approach-card-extend:hover .info-level1 p {
+        transform: translateY(0px);
+        opacity: 1; }
+      .work-process-internal-approaches .approaches-cards .approach-card-extend .info-level1 {
+        display: block;
+        position: relative;
+        width: 100%;
+        height: 30%;
+        top: 0;
+        transition-duration: .5s;
+        left: 0; }
+        .work-process-internal-approaches .approaches-cards .approach-card-extend .info-level1 .title {
+          margin: 0;
+          position: relative;
+          left: 0;
+          font-size: 1.6rem; }
+        .work-process-internal-approaches .approaches-cards .approach-card-extend .info-level1 p {
+          display: block;
+          width: 100%;
+          height: 100%;
+          opacity: 1;
+          transition-duration: 0.5s;
+          position: relative;
+          top: 50px; }
+      .work-process-internal-approaches .approaches-cards .approach-card-extend .info-level2 {
+        display: block;
+        transition-duration: .5s; }
+        .work-process-internal-approaches .approaches-cards .approach-card-extend .info-level2 .detailedinfo .inputinfo ul, .work-process-internal-approaches .approaches-cards .approach-card-extend .info-level2 .detailedinfo .todoinfo ul, .work-process-internal-approaches .approaches-cards .approach-card-extend .info-level2 .detailedinfo .deliverableinfo ul {
+          list-style-type: none; }

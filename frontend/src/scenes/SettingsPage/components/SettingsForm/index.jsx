@@ -34,7 +34,7 @@ class SettingsForm extends React.Component {
           email: this.props.auth.email,
           password: this.state.password
       }
-  })
+    })
       .then((response)=>{
           console.log(response)
           if (response.data.status === true) {

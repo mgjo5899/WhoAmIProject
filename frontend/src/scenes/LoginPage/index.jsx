@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import LoginForm from './components/LoginForm';
+import SendEmailForm from './components/SendEmailForm';
 import Dashboard from '../../scenes/Dashboard';
 import { connect } from "react-redux";
 import { doLogin, doLogout } from "../../actions/auth";
@@ -27,10 +28,30 @@ let DashboardComponent = ({ auth, doLogin, doLogout }) => (
 	</div>
 );
 
+let SendEmailComponent = ({ auth, doLogin, doLogout }) => (
+	<div>
+		<NavBar auth={auth} doLogout={doLogout}/>
+		<div className="row">
+			<div style={{display: 'flex', justifyContent: 'center'}} className="col-md-4 col-md-offset-4">
+				<SendEmailForm auth={auth} doLogin={doLogin} doLogout={doLogout}/>
+			</div>
+		</div>
+	</div>
+);
+
 class LoginPage extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			forgotPassword: false,
+		};
+		this.handleClick = this.handleClick.bind(this);
 	}
+
+	handleClick(){
+		this.setState({ forgotPassword: true })
+	}
+
 	render() {
 		if (this.props.auth.isLoggedIn) {
 			return (
@@ -41,12 +62,32 @@ class LoginPage extends React.Component {
 				/>
 			)
 		} else {
+
 			return (
-				<LoginComponent
-					auth={this.props.auth}
-					doLogin={this.props.doLogin}
-					doLogout={this.props.doLogout}
-				/>
+				<div>
+					{!this.state.forgotPassword
+						? 	(
+							<div>
+								<LoginComponent
+									auth={this.props.auth}
+									doLogin={this.props.doLogin}
+									doLogout={this.props.doLogout}
+								/>
+								<br/>
+								<a onClick={this.handleClick} style={{display: 'flex', justifyContent: 'center'}} href='#'>Forgot my Password</a>
+							</div> 
+							)
+						: (  <div>
+								<SendEmailComponent
+									auth={this.props.auth}
+									doLogin={this.props.doLogin}
+									doLogout={this.props.doLogout}
+								/>
+						</div> 
+						)
+					}
+
+				</div>
 			)
 		}
 	}
