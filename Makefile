@@ -1,7 +1,7 @@
 BACK_VERSION:=$(shell cat backend/VERSION)
 FRONT_VERSION:=$(shell cat frontend/VERSION)
 
-all: stop build run
+all: clean build run
 
 build: backend-build frontend-build
 
@@ -9,7 +9,7 @@ clean: backend-clean database-clean frontend-clean
 
 run: database backend frontend
 
-empty: backend-empty frontend-empty
+empty: backend-empty frontend-empty database-clean
 
 database:
 	docker-compose up -d database
@@ -47,6 +47,6 @@ backend-empty: backend-clean
 frontend-empty: frontend-clean
 	-docker rmi whoamiproject_frontend:${FRONT_VERSION}
 
-.PHONY: all build stop run clean database backend frontend
+.PHONY: all build run clean database backend frontend
 .PHONY: backend-build frontend-build backend-clean database-clean
-.PHONY: frontend-clean backend-empty frontend-empty
+.PHONY: frontend-clean backend-empty frontend-empty empty
