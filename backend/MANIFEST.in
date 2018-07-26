@@ -1,1 +1,2 @@
-include whoami_backend/templates/*
+include whoami_back/templates/*
+include VERSION
