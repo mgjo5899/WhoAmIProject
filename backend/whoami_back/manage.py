@@ -1,18 +1,14 @@
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
-from itsdangerous import URLSafeTimedSerializer
 import time
 
 from models.user import User
-from models.base import Session
+from models.base import db
 from utils import HASH_METHOD
 from utils import get_pw_hash, check_pw_hash
 
 
 def signin_user(email, password, hashed=False):
-    session = Session()
     rtn_val = {}
-    user = session.query(User).filter(User.email == email).first()
+    user = db.query(User).filter(User.email == email).first()
 
     # No user with the given username
     if user == None:
@@ -34,14 +30,11 @@ def signin_user(email, password, hashed=False):
             rtn_val['confirmed'] = user.confirmed
             rtn_val['pw'] = user.password
 
-    session.close()
-
     return rtn_val
 
 def check_username(username):
-    session = Session()
     rtn_val = {}
-    user = session.query(User).filter(User.username == username).first()
+    user = db.query(User).filter(User.username == username).first()
 
     # No user with the given username
     if user == None:
@@ -50,14 +43,11 @@ def check_username(username):
     else:
         rtn_val['status'] = True
 
-    session.close()
-
     return rtn_val
 
 def check_email(email):
-    session = Session()
     rtn_val = {}
-    user = session.query(User).filter(User.email == email).first()
+    user = db.query(User).filter(User.email == email).first()
 
     # No user with the given username
     if user == None:
@@ -66,26 +56,20 @@ def check_email(email):
     else:
         rtn_val['status'] = True
 
-    session.close()
-
     return rtn_val
 
 def confirm_email(email):
-    session = Session()
     rtn_val = check_email(email)
 
     if rtn_val['status']:
-        user = session.query(User).filter(User.email == email).first()
+        user = db.query(User).filter(User.email == email).first()
         user.confirmed = True
         user.confirmed_on = time.strftime('%Y-%m-%d %H:%M:%S')
-        session.commit()
-
-    session.close()
+        db.commit()
 
     return rtn_val
 
 def register_user(username, password, email):
-    session = Session()
     rtn_val = {}
 
     if check_email(email)['status']:
@@ -99,19 +83,16 @@ def register_user(username, password, email):
         hashed_pw = get_pw_hash(password)
 
         new_user = User(username=username, email=email, password=hashed_pw)
-        session.add(new_user)
-        session.commit()
+        db.add(new_user)
+        db.commit()
 
         rtn_val['status'] = True
-
-    session.close()
 
     return rtn_val
 
 def get_users():
-    session = Session()
     rtn_val = {}
-    users = session.query(User).all()
+    users = db.query(User).all()
     
     rtn_val['status'] = True
     rtn_val['users'] = []
@@ -124,38 +105,30 @@ def get_users():
         curr_user['confirmed'] = user.confirmed
         rtn_val['users'].append(curr_user)
 
-    session.close()
-
     return rtn_val
 
 def delete_user(email, password):
-    session = Session()
     rtn_val = signin_user(email, password)
 
     if rtn_val['status']:
-        user = session.query(User).filter(User.email == email).first()
+        user = db.query(User).filter(User.email == email).first()
         session.delete(user)
         session.commit()
         rtn_val['deleted_user'] = {}
         rtn_val['deleted_user']['username'] = user.username
         rtn_val['deleted_user']['email'] = user.email
 
-    session.close()
-
     return rtn_val
 
 def modify_password(email, new_password):
-    session = Session()
     rtn_val = check_email(email)
 
     if rtn_val['status']:
-        user = session.query(User).filter(User.email == email).first()
+        user = db.query(User).filter(User.email == email).first()
         
         # Hashing
         hashed_pw = get_pw_hash(new_password)
         user.password = hashed_pw
         session.commit()
-
-    session.close()
 
     return rtn_val

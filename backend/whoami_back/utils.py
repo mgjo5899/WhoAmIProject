@@ -1,11 +1,11 @@
-from sqlalchemy_utils.functions import create_database, drop_database
+from sqlalchemy_utils.functions import create_database
 from sqlalchemy_utils.functions import database_exists
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Mail
 import re
 
-from models.base import Base, engine, get_db_url, Session
+from models.base import Base, engine, get_db_url, db
 from models.user import User
 
 
@@ -21,6 +21,7 @@ def valid_email_format(email):
         return False
     elif result.group(0) == email:
         return True
+
 
 # DB related
 def create_tables():
@@ -41,15 +42,15 @@ def db_close():
     engine.dispose()
 
 def erase_tables():
-    session = Session()
     meta = Base.metadata
 
     for table in reversed(meta.sorted_tables):
         if engine.dialect.has_table(engine, table.name):
             print('Clear table {}'.format(table.name))
-            session.execute(table.delete())
-    session.commit()
-    session.close()
+            db.execute(table.delete())
+
+    db.commit()
+    db.close()
 
 def reset_db():
     if not database_exists(get_db_url()):
