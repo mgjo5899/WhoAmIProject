@@ -1067,13 +1067,13 @@
   font-size: .8125rem; }
 
 .outlinedText:not(.mdc-text-field--disabled) .mdc-notched-outline__idle {
-  border-color: #000000; }
+  border-color: #aaaaaa; }
 
 .outlinedText:not(.mdc-text-field--disabled) .mdc-notched-outline__path {
-  stroke: #000000; }
+  stroke: #aaaaaa; }
 
 .outlinedText:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__path {
-  stroke: #000000; }
+  stroke: #aaaaaa; }
 
 .outlinedText:not(.mdc-text-field--disabled):not(.mdc-text-field--focused) .mdc-text-field__input:hover ~ .mdc-notched-outline__idle,
 .outlinedText:not(.mdc-text-field--disabled):not(.mdc-text-field--focused) .mdc-text-field__icon:hover ~ .mdc-notched-outline__idle {
@@ -1083,11 +1083,14 @@
 .outlinedText:not(.mdc-text-field--disabled):not(.mdc-text-field--focused) .mdc-text-field__icon:hover ~ .mdc-notched-outline .mdc-notched-outline__path {
   stroke: #000000; }
 
+.outlinedText:not(.mdc-text-field--disabled):not(.mdc-text-field--outlined):not(.mdc-text-field--textarea) .mdc-text-field__input:hover {
+  border-bottom-color: #757575; }
+
 .outlinedText:not(.mdc-text-field--disabled) .mdc-floating-label {
-  color: #000000; }
+  color: #757575; }
 
 .outlinedText:not(.mdc-text-field--disabled) .mdc-text-field__input::placeholder {
-  color: #000000; }
+  color: #757575; }
 
 .submitButton:not(:disabled) {
   color: #ffffff; }
