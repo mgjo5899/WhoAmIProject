@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
+import { Button, ButtonIcon } from 'rmwc/Button';
+import { TextField, TextFieldIcon, TextFieldHelperText } from 'rmwc/TextField';
+import 'material-components-web/dist/material-components-web.css'
+import './styles.css'
 
 const style = {
 	'marginTop': 25,
@@ -32,26 +34,35 @@ class RegisterForm extends React.Component {
             <MuiThemeProvider>
               <div>
                 <TextField
-                  hintText="Enter your Username"
-                  floatingLabelText="Username"
+                  className="outlinedText"
+                  label="Enter your Username"
+                  outlined
                   onChange = {(event, newValue) => this.setState({username:newValue})}
                 />
                 <br/>
                 <TextField
-                  hintText="Enter your Email"
-                  type="email"
-                  floatingLabelText="Email"
+                  className="outlinedText"
+                  label="Enter your Email"
+                  outlined
                   onChange = {(event, newValue) => this.setState({email:newValue})}
                 />
                 <br/>
                 <TextField
-                  type = "password"
-                  hintText="Enter your Password"
-                  floatingLabelText="Password"
+                  className="outlinedText"
+                  type="password"
+                  label="Enter your Password"
+                  outlined
                   onChange = {(event, newValue) => this.setState({password:newValue})}
                 />
                 <br/>
-                <RaisedButton label="Submit" primary={true} style={style} onClick={this.handleClick}/>
+                <br/>
+                <Button
+                  className="submitButton"
+                  raised
+                  onClick={this.handleClick}
+                >
+                  Sign up for WhoAmI
+                </Button>
                 <br/>
               </div>
               </MuiThemeProvider>

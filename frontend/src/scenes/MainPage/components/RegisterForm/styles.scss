@@ -1,0 +1,16 @@
+
+@import "@material/textfield/mdc-text-field";
+@import "@material/button/mdc-button";
+
+.outlinedText {
+    @include mdc-text-field-outline-color(#000000);
+    @include mdc-text-field-focused-outline-color(#000000);
+    @include mdc-text-field-hover-outline-color(#000000);
+    @include mdc-text-field-label-color(#000000);
+ }
+
+ .submitButton {
+    @include mdc-button-ink-color(#ffffff);
+    @include mdc-button-container-fill-color(#2A93D5)
+
+ }
