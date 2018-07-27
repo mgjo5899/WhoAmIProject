@@ -1,5 +1,13 @@
-FROM python:3.7-alpine
+FROM python:3.7-alpine as builder
 
+WORKDIR /tmp
+ADD . .
+RUN pip install pipenv
+RUN pipenv --three
+RUN pipenv run python setup.py sdist
+
+
+FROM python:3.7-alpine
 RUN apk add --no-cache bash
 
 ENV PYTHONUNBUFFERED=1
@@ -13,11 +21,11 @@ RUN cd /tmp && \
 
 WORKDIR /tmp
 
-COPY dist/whoami-backend-${VERSION}.tar.gz ./
-RUN tar xopf whoami-backend-${VERSION}.tar.gz
-RUN pip install --no-cache whoami-backend-${VERSION}.tar.gz
+COPY --from=builder /tmp/dist/whoami_back-${VERSION}.tar.gz ./
+RUN tar xopf whoami_back-${VERSION}.tar.gz
+RUN pip install --no-cache whoami_back-${VERSION}.tar.gz
 
-RUN mv whoami-backend-${VERSION}/whoami_back /backend
+RUN mv whoami_back-${VERSION}/whoami_back /backend
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
