@@ -21,7 +21,6 @@ frontend:
 	docker-compose up -d frontend
 
 backend-build:
-	cd backend && pipenv run python setup.py sdist
 	docker build -t whoamiproject_backend:${BACK_VERSION} backend/
 
 frontend-build:
