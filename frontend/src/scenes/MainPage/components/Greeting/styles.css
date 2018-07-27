@@ -27,6 +27,10 @@
     height: 100%;
   }
 
+  .content-section {
+    
+  }
+
 .work-process-greeting {
   width: 100%;
   height: auto;
@@ -40,7 +44,7 @@
     width: 100%;
     position: relative;
     left: 0;
-    background: linear-gradient(-80deg, #43cea2, #185a9d); }
+    background: linear-gradient(-80deg, #185a9d, #185a9d); }
     .work-process-greeting .content-section .paragraph-section {
       position: relative;
       width: 60vw;

@@ -4,8 +4,9 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-  border-bottom: 0.5px solid rgba(0, 0, 0, 0.32);
+  background: linear-gradient(-80deg, #faaca8, #ddd6f3);
 }
+
 
 .logo-container > img {
   max-height: 100%;
