@@ -1,11 +1,11 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "fea53b054663415b9123056de58f5da71bfd415726ef57000c73aa1c218effc6"
+            "sha256": "beb61938ab33f943a1861f1ccfa35eadd92aec7c596b086b43663401ea4c4481"
         },
         "pipfile-spec": 6,
         "requires": {
-            "python_version": "3.6"
+            "python_version": "3.7"
         },
         "sources": [
             {
@@ -131,10 +131,6 @@
             "index": "pypi",
             "version": "==6.7"
         },
-        "e1839a8": {
-            "editable": true,
-            "path": "."
-        },
         "flask": {
             "hashes": [
                 "sha256:2271c0070dbcb5275fad4a82e29f23ab92682dc45f9dfbc22c02ba9b9322ce48",
@@ -217,6 +213,10 @@
             ],
             "index": "pypi",
             "version": "==0.14.1"
+        },
+        "whoami-backend": {
+            "editable": true,
+            "path": "."
         }
     }
 }
