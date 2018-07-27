@@ -22,7 +22,7 @@ requires = [
 ]
 
 setup(
-    name='whoami-backend',
+    name='whoami_back',
     version=VERSION,
     packages=find_packages(),
     include_package_data=True,

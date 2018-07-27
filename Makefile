@@ -31,7 +31,7 @@ backend-clean:
 	-docker stop whoamiproject_backend_1
 	-docker rm whoamiproject_backend_1
 	rm -rf backend/dist
-	rm -rf backend/whoami_backend.egg-info
+	rm -rf backend/whoami_back.egg-info
 
 database-clean:
 	-docker stop whoamiproject_database_1
