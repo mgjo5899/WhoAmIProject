@@ -6,20 +6,25 @@
   position: relative;
   top: 0; }
 
+
+  .row {
+    width: 100%;
+    height: 100%;
+    margin:0;
+    padding:0;
+  }
+
   .col {
+
+    width: 80%;
     float: left;
-    width: 50%;
-    margin-right: 5em;
+    height: 100%;
   }
 
   .col2 {
-    margin-left: 55em;
-  }
-  
-  .row:after {
-    content: "";
-    display: table;
-    clear: both;
+    width: 20%;
+    float: right;
+    height: 100%;
   }
 
 .work-process-greeting {

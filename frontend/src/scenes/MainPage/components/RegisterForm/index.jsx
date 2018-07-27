@@ -32,18 +32,18 @@ class RegisterForm extends React.Component {
       return (
           <div>
             <MuiThemeProvider>
-              <div>
+              <div className="signUpContainer">
                 <TextField
                   className="outlinedText"
                   label="Enter your Username"
-                  outlined
+                  box
                   onChange = {(event, newValue) => this.setState({username:newValue})}
                 />
                 <br/>
                 <TextField
                   className="outlinedText"
                   label="Enter your Email"
-                  outlined
+                  box
                   onChange = {(event, newValue) => this.setState({email:newValue})}
                 />
                 <br/>
@@ -51,14 +51,14 @@ class RegisterForm extends React.Component {
                   className="outlinedText"
                   type="password"
                   label="Enter your Password"
-                  outlined
+                  box
                   onChange = {(event, newValue) => this.setState({password:newValue})}
                 />
                 <br/>
                 <br/>
                 <Button
                   className="submitButton"
-                  raised
+                  box
                   onClick={this.handleClick}
                 >
                   Sign up for WhoAmI

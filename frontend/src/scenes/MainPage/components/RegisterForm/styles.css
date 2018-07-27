@@ -1094,3 +1094,6 @@
 
 .submitButton:not(:disabled) {
   background-color: #2A93D5; }
+
+.signUpContainer {
+  border-radius: 0.2em; }

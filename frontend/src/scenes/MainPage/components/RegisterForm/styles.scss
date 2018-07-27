@@ -12,5 +12,8 @@
  .submitButton {
     @include mdc-button-ink-color(#ffffff);
     @include mdc-button-container-fill-color(#2A93D5)
+ }
 
+ .signUpContainer {
+     border-radius: 0.2em;
  }
