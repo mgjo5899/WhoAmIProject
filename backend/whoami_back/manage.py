@@ -1,9 +1,9 @@
 import time
 
-from models.user import User
-from models.base import db
-from utils import HASH_METHOD
-from utils import get_pw_hash, check_pw_hash
+from whoami_back.models.user import User
+from whoami_back.models.base import db
+from whoami_back.config import HASH_METHOD
+from whoami_back.utils import get_pw_hash, check_pw_hash
 
 
 def signin_user(email, password, hashed=False):

@@ -2,20 +2,56 @@ from sqlalchemy_utils.functions import create_database
 from sqlalchemy_utils.functions import database_exists
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import URLSafeTimedSerializer
-from flask_mail import Mail
+from flask import request
+from flask_mail import Message, Mail
 import re
+import json
 
-from models.base import Base, engine, get_db_url, db
-from models.user import User
+from whoami_back.models.base import Base, engine, get_db_url, db
+from whoami_back.models.user import User
+import whoami_back.config as config
 
 
-HASH_METHOD = 'sha256'
-SECRET_KEY = 'my_precious'
-SECURITY_PASSWORD_SALT = 'my_precious_two'
+# Receive request data
+def get_req_data():
+    req = None
 
-# Regular expression search related
+    if len(request.form) > 0:
+        # Postman
+        # request.data is empty with Postman
+        print("Getting data from request.form")
+        req = request.form
+    elif len(request.data) > 0:
+        # React
+        # request.form is empty with react
+        print("Getting data from request.data")
+        req = json.loads(request.data.decode("utf-8"))
+
+    return req
+
+
+# Sending email using SMTP server
+mail = None
+
+# Register application context to the mail object
+def init_mail(app):
+    global mail
+    mail = Mail(app)
+
+def send_email(email, template, subject):
+    msg = Message(
+            subject,
+            recipients=[email],
+            html=template
+    )
+
+    mail.send(msg)
+
+
+# Regular expression search
 def valid_email_format(email):
-    result = re.fullmatch('([a-zA-Z0-9\-%_\+]+(\.[a-zA-Z0-9\-%_\+]+)*)@([a-zA-Z0-9\-]+)\.([a-zA-Z0-9\-]{2,})', email)
+    result = re.fullmatch('([a-zA-Z0-9\-%_\+]+(\.[a-zA-Z0-9\-%_\+]+)*)@([a-zA-Z0-9\-]+)\.([a-zA-Z0-9\-]{2,})', \
+                          email)
 
     if result == None:
         return False
@@ -62,7 +98,7 @@ def reset_db():
 
 # Hashing related
 def get_pw_hash(password):
-    return generate_password_hash(password, HASH_METHOD)[7:]
+    return generate_password_hash(password, config.HASH_METHOD)[7:]
 
 def check_pw_hash(hash_str, password):
     return check_password_hash(hash_str, password)
@@ -70,15 +106,15 @@ def check_pw_hash(hash_str, password):
 
 # Confirmation token related
 def generate_email_token(email):
-    serializer = URLSafeTimedSerializer(SECRET_KEY)
-    return serializer.dumps(email, salt=SECURITY_PASSWORD_SALT)
+    serializer = URLSafeTimedSerializer(config.SECRET_KEY)
+    return serializer.dumps(email, salt=config.SECURITY_PASSWORD_SALT)
 
 def confirm_token(token, expiration=3600):
-    serializer = URLSafeTimedSerializer(SECRET_KEY)
+    serializer = URLSafeTimedSerializer(config.SECRET_KEY)
     try:
         email = serializer.loads(
             token,
-            salt=SECURITY_PASSWORD_SALT,
+            salt=config.SECURITY_PASSWORD_SALT,
             max_age=expiration
         )
     except:

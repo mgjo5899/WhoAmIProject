@@ -1,5 +1,5 @@
-import manage
-import utils
+import whoami_back.manage as manage
+import whoami_back.utils as utils
 
 # Checking database
 utils.reset_db()
