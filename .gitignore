@@ -1,3 +1,6 @@
+########## MAC
+*.DS_Store
+
 ########## YARN
 yarn.lock
 yarn-error.log
