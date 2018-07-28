@@ -1,7 +1,5 @@
 from flask import Flask, session, jsonify, request, redirect
 from flask import render_template, Blueprint
-from flask_cors import CORS
-import json
 
 import whoami_back.manage as manage
 import whoami_back.utils as utils
