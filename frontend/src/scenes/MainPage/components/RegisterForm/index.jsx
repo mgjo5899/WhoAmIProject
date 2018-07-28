@@ -22,11 +22,27 @@ class RegisterForm extends React.Component {
     };
     
     this.handleClick = this.handleClick.bind(this);
+    this.getUsername = this.getUsername.bind(this);
+    this.getPassword = this.getPassword.bind(this);
+    this.getEmail = this.getEmail.bind(this);
 	}
 	
 	handleClick(){
+    console.log(this.state.username, this.state.email)
 		this.props.registerUser(this.state.username, this.state.email, this.state.password);
-	}
+  }
+  
+  getUsername(event) {
+    this.setState({username:event.target.value})
+  }
+  
+  getPassword(event) {
+    this.setState({password:event.target.value})
+  }
+  
+  getEmail(event) {
+    this.setState({email:event.target.value})
+  }
 
 	render() {
       return (
@@ -39,14 +55,14 @@ class RegisterForm extends React.Component {
                   className="outlinedText"
                   label="Username"
                   box
-                  onChange = {(event, newValue) => this.setState({username:newValue})}
+                  onChange = {this.getUsername}
                 />
                 <br/>
                 <TextField
                   className="outlinedText"
                   label="Email"
                   box
-                  onChange = {(event, newValue) => this.setState({email:newValue})}
+                  onChange = {this.getEmail}
                 />
                 <br/>
                 <TextField
@@ -54,7 +70,7 @@ class RegisterForm extends React.Component {
                   type="password"
                   label="Password"
                   box
-                  onChange = {(event, newValue) => this.setState({password:newValue})}
+                  onChange = {this.getPassword}
                 />
                 <br/>
                 <br/>
@@ -66,6 +82,8 @@ class RegisterForm extends React.Component {
                   Sign up for WhoAmI
                 </Button>
                 <br/>
+                <br/>
+                <p style={{'textAlign':'center', 'color':'red'}}>{this.props.auth.statusMessage}</p>
               </div>
               </MuiThemeProvider>
           </div>

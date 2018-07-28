@@ -7,7 +7,6 @@
   background: linear-gradient(-80deg, #faaca8, #ddd6f3);
 }
 
-
 .logo-container > img {
   max-height: 100%;
   width: 68px;
@@ -46,10 +45,6 @@
   height: 100%;
   display: table-cell;
   vertical-align: middle;
-}
-
-.active .link-container > div {
-  border-bottom: 4px solid #68e4a3;
 }
 
 .link-container > div {

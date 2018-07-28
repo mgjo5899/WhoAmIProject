@@ -53,7 +53,7 @@ class Navbar extends React.Component {
           </div>
           
           <div className="left-link-container">
-            <Link to="/i/about">WhoAmI</Link>
+            <Link to="/">WhoAmI</Link>
           </div>
   
           <div className="right-link-container">

@@ -1,12 +1,10 @@
-import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
-import TextFieldGroup from '../../../../common/TextFieldGroup'
-
+import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import AppBar from 'material-ui/AppBar';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
-import axios from 'axios';
+
+import { Button, ButtonIcon } from 'rmwc/Button';
+import { TextField, TextFieldIcon, TextFieldHelperText } from 'rmwc/TextField';
+
+import './styles.css';
 
 const style = {
 	'marginTop': 25,
@@ -21,32 +19,50 @@ class LoginForm extends React.Component {
 			password: '',
 		};
 		this.handleClick = this.handleClick.bind(this);
+		this.getPassword = this.getPassword.bind(this);
+		this.getEmail = this.getEmail.bind(this);
 	}
 
 	handleClick(){
 		this.props.doLogin(this.state.email, this.state.password);
 	}
-    
-	render() {
+	
 
+	getPassword(event) {
+		this.setState({password:event.target.value})
+	}
+	
+	getEmail(event) {
+		this.setState({email:event.target.value})
+	}
+
+	render() {
 		return (
-			<div>
+			<div className="outlinedText">
 			<MuiThemeProvider>
+				<br/>
+				<h2 style={{'textAlign':'center', 'fontSize':'1.2em'}}>Sign in to WhoAmI</h2>
 			  <div>
-			   <TextField
-				 hintText="Enter your Email"
-				 floatingLabelText="Email"
-				 onChange = {(event,newValue) => this.setState({email:newValue})}
-				 />
+                <TextField
+                  className="outlinedText"
+                  label="Email"
+				  onChange={this.getEmail}
+				/>
 			   <br/>
-				 <TextField
-				   type="password"
-				   hintText="Enter your Password"
-				   floatingLabelText="Password"
-				   onChange = {(event,newValue) => this.setState({password:newValue})}
-				   />
+                <TextField
+					type="password"
+                  	className="outlinedText"
+                  	label="Password"
+				  	onChange={this.getPassword}
+				/>
 				 <br/>
-				 <RaisedButton label="Submit" primary={true} style={style} onClick={this.handleClick}/>
+				 <br/>
+                <Button
+                  className="submitButton"
+                  onClick={this.handleClick}
+                >
+                  Sign In
+                </Button>
 			 </div>
 			 </MuiThemeProvider>
 		  </div>

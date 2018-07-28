@@ -74,7 +74,7 @@ class LoginPage extends React.Component {
 									doLogout={this.props.doLogout}
 								/>
 								<br/>
-								<a onClick={this.handleClick} style={{display: 'flex', justifyContent: 'center'}} href='#'>Forgot my Password</a>
+								<p onClick={this.handleClick} style={{display: 'flex', justifyContent: 'center'}}>Forgot my Password</p>
 							</div> 
 							)
 						: (  <div>

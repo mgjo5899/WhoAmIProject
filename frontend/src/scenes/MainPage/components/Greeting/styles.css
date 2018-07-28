@@ -22,6 +22,8 @@
   }
 
   .col2 {
+    position: relative;
+    bottom: 6em;
     width: 20%;
     float: right;
     height: 100%;
