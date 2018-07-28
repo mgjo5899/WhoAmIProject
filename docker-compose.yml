@@ -13,13 +13,17 @@ services:
             - MYSQL_ROOT_HOST=% # allows non-docker accesses
     backend:
         image: whoamiproject_backend:0.0.1
+        ports:
+            - "8000:8000"
         environment:
             - MYSQL_USER=admin
             - MYSQL_PASSWORD=adminpw1
             - MYSQL_HOST=database
             - MYSQL_PORT=3306
-        ports:
-            - "8000:8000"
+            - MAIL_SERVER=smtp.gmail.com
+            - MAIL_PORT=587
+            - MAIL_USERNAME=whoamiapp2580
+            - MAIL_PASSWORD=gnsalswjddma2580
         links:
             - database
     frontend:
