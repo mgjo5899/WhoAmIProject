@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "beb61938ab33f943a1861f1ccfa35eadd92aec7c596b086b43663401ea4c4481"
+            "sha256": "052738fc5ade3aba9f82bada4959d30e9d772c5578b1c4c2ee87a981df7ec94d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -214,7 +214,7 @@
             "index": "pypi",
             "version": "==0.14.1"
         },
-        "whoami-backend": {
+        "whoami-back": {
             "editable": true,
             "path": "."
         }

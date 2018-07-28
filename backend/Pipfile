@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
-whoami-backend = {editable = true, path = "."}
+whoami-back = {editable = true, path = "."}
 
 [packages]
 blinker = "==1.4"
