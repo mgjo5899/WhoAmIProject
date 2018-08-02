@@ -20,6 +20,7 @@ services:
             - MYSQL_PASSWORD=adminpw1
             - MYSQL_HOST=database
             - MYSQL_PORT=3306
+            - MAIL_DEFAULT_SENDER=whoami_project
             - MAIL_SERVER=smtp.gmail.com
             - MAIL_PORT=587
             - MAIL_USERNAME=whoamiapp2580

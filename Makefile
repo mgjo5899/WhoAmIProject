@@ -28,17 +28,17 @@ frontend-build:
 
 backend-clean:
 	-docker stop whoamiproject_backend_1
-	-docker rm whoamiproject_backend_1
+	-docker rm -v whoamiproject_backend_1
 	rm -rf backend/dist
 	rm -rf backend/whoami_back.egg-info
 
 database-clean:
 	-docker stop whoamiproject_database_1
-	-docker rm whoamiproject_database_1
+	-docker rm -v whoamiproject_database_1
 
 frontend-clean:
 	-docker stop whoamiproject_frontend_1
-	-docker rm whoamiproject_frontend_1
+	-docker rm -v whoamiproject_frontend_1
 
 backend-empty: backend-clean
 	-docker rmi whoamiproject_backend:${BACK_VERSION}
