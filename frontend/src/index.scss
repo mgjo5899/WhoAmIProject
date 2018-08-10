@@ -1,7 +1,11 @@
-@import url("https://fonts.googleapis.com/css?family=Ubuntu");
-@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url('https://fonts.googleapis.com/css?family=Ubuntu');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+$dahong: rgb(228, 38, 86);
+
 :root {
-  --mdc-theme-secondary: $dahong; }
+    --mdc-theme-secondary: $dahong;
+}
 
 body {
   margin: 0;

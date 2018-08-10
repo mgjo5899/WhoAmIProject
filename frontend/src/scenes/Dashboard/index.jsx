@@ -1,18 +1,26 @@
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {
-	Card,
-	CardPrimaryAction,
-	CardMedia,
-	CardAction,
-	CardActions,
-	CardActionButtons,
-	CardActionIcons
-} from 'rmwc/Card';
-  
+import Contents from './components/Contents';
 
-const style = {
-	'marginTop': 25,
+import {
+	Dialog,
+	DefaultDialogTemplate,
+	DialogSurface,
+	DialogHeader,
+	DialogHeaderTitle,
+	DialogBody,
+	DialogFooter,
+	DialogFooterButton,
+	DialogBackdrop
+  } from 'rmwc/Dialog';
+
+import { Fab } from 'rmwc/Fab';
+const right = {
+	flexGrow: 1,
+	display: 'flex',
+	flexDirection: 'row-reverse',
+	marginRight: '2em',
+	marginTop: '1em',
 };
 
 
@@ -49,17 +57,40 @@ class Dashboard extends React.Component {
 
 	render() {
 		return (
+			<div style={right}>
+				<div>
+					<Dialog
+						open={this.state.standardDialogOpen}
+						onClose={evt => this.setState({standardDialogOpen: false})}>
+						<DialogSurface>
+							<DialogHeader>
+								<DialogHeaderTitle>Add Component</DialogHeaderTitle>
+							</DialogHeader>
+							<DialogBody>
+
+							</DialogBody>
+
+						</DialogSurface>
+						<DialogBackdrop />
+					</Dialog>
+				</div>
 			<div>
-			<MuiThemeProvider>
-			  <div>
+
+			{/** Standard dialog usage */}
+
 				{
-					!this.props.auth.isConfirmed
-						? this.verificationMessage()
-						: ( <div/> )
+					!this.props.auth.isConfirmed ? this.verificationMessage()
+					: ( 
+					<div>
+						<Fab 
+							className="fab-style"
+							icon="add"
+							onClick={evt => this.setState({standardDialogOpen: true})}
+						/>
+					</div>
+					) 
 				}
-			  	<h1 style={{'textAlign':'center'}}>{this.props.auth.username}'s Dashboard</h1>
-			 </div>
-			 </MuiThemeProvider>
+		  </div>
 		  </div>
 		);
 	}

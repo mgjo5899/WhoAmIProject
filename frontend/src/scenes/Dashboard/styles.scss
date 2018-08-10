@@ -1,0 +1,10 @@
+
+$dahong: rgb(228, 38, 86);
+
+:root {
+    --mdc-theme-secondary: $dahong;
+}
+
+.fab-style {
+    @include mdc-button-container-fill-color($dahong);
+}

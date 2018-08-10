@@ -12,8 +12,6 @@ class Instagram extends React.Component {
             texts: []
 		};
 
-        
-
 		this.getMostLiked = this.getMostLiked.bind(this);
 		this.getMostRecent = this.getMostRecent.bind(this);
     }
