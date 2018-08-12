@@ -1,4 +1,4 @@
-from flask import Flask, session, jsonify, request, redirect
+from flask import session, jsonify, request, redirect
 from flask import render_template, Blueprint
 
 import whoami_back.manage as manage
@@ -150,7 +150,7 @@ def signin():
 
     if request.method == 'GET':
         if 'email' in session and 'password' in session:
-            if manage.signin_user(session['email'], session['password'], hashed=True):
+            if manage.signin_user(session['email'], session['password'], hashed=True)['status']:
                 rtn_val['status'] = True
                 rtn_val['message'] = "Already signed in"
                 rtn_val['email'] = session['email']
@@ -201,9 +201,3 @@ def home():
         rtn_val = manage.get_users()
 
     return jsonify(rtn_val)
-
-if __name__ == '__main__':
-    print("Database checking...")
-    utils.db_checks()
-    app.run(debug=True, host='0.0.0.0', port=8000)
-    utils.db_close()
