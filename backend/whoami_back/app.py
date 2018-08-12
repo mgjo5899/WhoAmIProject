@@ -5,12 +5,14 @@ from whoami_back.utils import db_checks, db_close, init_mail
 from whoami_back.config import CREDENTIAL_MAX_TIME, BACKEND_PORT
 from whoami_back.config import get_mail_config
 from whoami_back.views.auth import auth
+from whoami_back.views.instagram import instagram
 
 
 app = Flask(__name__)
 
 # View functions registration
 app.register_blueprint(auth)
+app.register_blueprint(instagram)
 
 # Secret key for session
 app.secret_key = b'gkdlakdlspdladlwmwhtpq'
