@@ -9,6 +9,7 @@ import json
 
 from whoami_back.models.base import Base, engine, get_db_url, db
 from whoami_back.models.user import User
+from whoami_back.models.authorized_medium import AuthorizedMedium
 import whoami_back.config as config
 
 
