@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Contents from './components/Contents';
-
+import InstaLogo from '../../../src/icons/instagram.svg'
+import FacebookLogo from '../../../src/icons/facebook.svg'
+import SpotifyLogo from '../../../src/icons/spotify.svg'
+import GithubLogo from '../../../src/icons/Github.svg'
+import StackoverflowLogo from '../../../src/icons/stackoverflow.svg'
+import QuoraLogo from '../../../src/icons/quora.svg'
+import './styles.css'
+import InstagramLogin from 'react-instagram-login';
 import {
 	Dialog,
 	DefaultDialogTemplate,
@@ -23,6 +28,28 @@ const right = {
 	marginTop: '1em',
 };
 
+const icons = {
+	width: '180px',
+	height: '180px',
+	margin: '2em',
+}
+
+const grayScale = {
+	width: '180px',
+	height: '180px',
+	margin: '2em',
+    filter: 'grayscale(100%)',
+}
+
+const center = {
+	display: 'block',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+}
+
+const responseInstagram = (response) => {
+	console.log(response);
+  }
 
 class Dashboard extends React.Component {
 
@@ -31,6 +58,7 @@ class Dashboard extends React.Component {
 		this.state = {
 			email: '',
 			password: '',
+			authenticated: false,
 		};
 
 		this.handleClick = this.handleClick.bind(this);
@@ -67,7 +95,61 @@ class Dashboard extends React.Component {
 								<DialogHeaderTitle>Add Component</DialogHeaderTitle>
 							</DialogHeader>
 							<DialogBody>
+								<div style={center}>
+									<center>
+										<img 
+											style={this.state.authenticated ? icons : grayScale}
+											src={InstaLogo}
+											onClick={evt => this.setState({instaDialogOpen: true})}
+										/>
+										<img 
+											style={this.state.authenticated ? icons : grayScale}
+											src={FacebookLogo}
+											/>
+										<img 
+											style={this.state.authenticated ? icons : grayScale}
+											src={GithubLogo}
+										/>
+										<img 
+											style={this.state.authenticated ? icons : grayScale}
+											src={SpotifyLogo}
+										/>
+										<img 
+											style={this.state.authenticated ? icons : grayScale}
+											src={QuoraLogo}
+										/>
+										<img 
+											style={this.state.authenticated ? icons : grayScale}
+											src={StackoverflowLogo}
+										/>
+									</center>
+								</div>
+							</DialogBody>
 
+						</DialogSurface>
+						<DialogBackdrop />
+					</Dialog>
+				</div>
+				<div>
+					<Dialog
+						open={this.state.instaDialogOpen}
+						onClose={evt => this.setState({instaDialogOpen: false})}>
+						<DialogSurface>
+							<DialogHeader>
+								<DialogHeaderTitle>Authentication</DialogHeaderTitle>
+							</DialogHeader>
+							<DialogBody>
+								<div style={center}>
+									<center>
+									<InstagramLogin
+										clientId="28093b117f974a9dbef7962e19faedce"
+										buttonText="Authenticate Instagram"
+										onSuccess={responseInstagram}
+										onFailure={responseInstagram}
+										implicitAuth={true}
+									/>
+									</center>
+								</div>
 							</DialogBody>
 
 						</DialogSurface>
