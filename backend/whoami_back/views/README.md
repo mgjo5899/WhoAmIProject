@@ -22,10 +22,8 @@ You can use this to authenticate users.  If the server receives a correct
 credential for a user, it saves his/her email and hashed password in
 the session.
 
-+ Request (application/json)
++ Request Body (application/json)
     
-    + Body
-
         {
             "email": "someone@email.com",
             "password": "somepassword"
@@ -74,9 +72,7 @@ This is only here for testing purpose.
 
 ### Delete a user [DELETE]
 
-+ Request (application/json)
-
-    + Body
++ Request Body (application/json)
 
         {
             "email": "someone@email.com",
@@ -85,13 +81,13 @@ This is only here for testing purpose.
 
 + Response 200 (application/json)
 
-    {
-        "status": true,
-        "deleted_user": {
-            "username": "someone",
-            "email": "someone@email.com"
+        {
+            "status": true,
+            "deleted_user": {
+                "username": "someone",
+                "email": "someone@email.com"
+            }
         }
-    }
 
 
 ## User Registration [/register]
@@ -101,10 +97,8 @@ This is only here for testing purpose.
 After the user signs up, the server sends a confirmation email to the
 given email address.
 
-+ Request (application/json)
-
-    + Body
-
++ Request Body (application/json)
+	
         {
             "username": "someone",
             "password": "somepassword",
@@ -113,9 +107,9 @@ given email address.
 
 + Response 200 (application/json)
 
-    {
-        "status": true
-    }
+        {
+            "status": true
+        }
 
 
 ## Resending User Confirmation Email [/resend]
@@ -127,9 +121,7 @@ already registered himself/herself but not yet confirmed his/her email address.
 When such user visits WhoAmI website, it should give them a choice to send
 the confirmation email again.
 
-+ Request (application/json)
-
-    + Body
++ Request Body (application/json)
     
         {
             "email": "someone@email.com",
@@ -137,10 +129,10 @@ the confirmation email again.
 
 + Response 200 (application/json)
 
-    {
-        "status": true,
-        "message": "The confirmation email has been sent again"
-    }
+        {
+            "status": true,
+            "message": "The confirmation email has been sent again"
+        }
 
 
 ## Email Confirmation [/confirm/{token}]
@@ -158,9 +150,7 @@ redirects the user to either /signin page or /signup page accordingly.
 
 This API sends a password reset email to the requested user.
 
-+ Request (application/json)
-
-    + Body
++ Request Body (application/json)
 
         {
             "email": "someone@email.com"
@@ -168,10 +158,10 @@ This API sends a password reset email to the requested user.
 
 + Response (application/json)
 
-    {
-        "status": true,
-        "message": "The password reset email has been sent"
-    }
+        {
+            "status": true,
+            "message": "The password reset email has been sent"
+        }
 
 
 ## Password Reset [/reset_pw]
@@ -185,17 +175,15 @@ the session contains his/her email prior to this call.
 
 + Request (application/json)
 
-    + Body
-
         {
             "new_password": "somenewpassword"
         }
 
 + Response (application/json)
 
-    {
-        "status": true
-    }
+        {
+            "status": true
+        }
 
 
 ## Password Reset Confirm [/password_reset_confirm/{token}]
