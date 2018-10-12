@@ -1,5 +1,8 @@
 # WhoAmI API Documentation
 
+- [Authentication Related](#authentication-related)  
+- [Instagram Related](#instagram-related)
+
 ## Authentication Related
 
 ## User Signin [/signin]
