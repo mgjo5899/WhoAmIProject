@@ -29,7 +29,7 @@ def update_instagram_image(email, image_id, width, height, pos_x, pos_y, angle):
 
         rtn_val['status'] = True
         rtn_val['modified_image'] = {}
-        rtn_val['modified_image']['id'] = image_id
+        rtn_val['modified_image']['image_id'] = image_id
         rtn_val['modified_image']['last_modified'] = str(image.last_modified)
 
     return rtn_val
@@ -49,7 +49,7 @@ def delete_instagram_image(email, image_id):
         db.commit()
         rtn_val['status'] = True
         rtn_val['deleted_image'] = {}
-        rtn_val['deleted_image']['id'] = image.id
+        rtn_val['deleted_image']['image_id'] = image.id
         rtn_val['deleted_image']['raw_image_url'] = image.raw_image_url
 
     return rtn_val
@@ -68,7 +68,7 @@ def add_new_instagram_image(email, image_id, instagram_url, raw_image_url, orig_
         db.commit()
 
         rtn_val['status'] = True
-    rtn_val['id'] = image_id
+    rtn_val['image_id'] = image_id
 
     return rtn_val
 
