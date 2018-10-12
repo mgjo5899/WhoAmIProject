@@ -1,4 +1,4 @@
-FROM python:3.7-alpine as builder
+FROM python:3.7 as builder
 
 WORKDIR /tmp
 ADD . .
@@ -7,8 +7,7 @@ RUN pipenv --three
 RUN pipenv run python setup.py sdist
 
 
-FROM python:3.7-alpine
-RUN apk add --no-cache bash
+FROM python:3.7
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
