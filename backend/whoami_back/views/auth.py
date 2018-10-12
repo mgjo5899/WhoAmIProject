@@ -22,7 +22,7 @@ def password_reset(token):
 
         if rtn_val['status']:
             # Found email was valid; let the user reset the password
-            redirect_url = 'http://{}:{}/#/reset_password'.format(config.HOST_IP, config.FRONTEND_PORT)
+            redirect_url = 'http://{}:{}/#/reset_pw'.format(config.HOST_IP, config.FRONTEND_PORT)
             session['email'] = email
         else:
             # Not a valid email
@@ -145,8 +145,6 @@ def register():
 def signin():
     rtn_val = {}
     req = utils.get_req_data()
-    print(session)
-    print(req)
 
     if request.method == 'GET':
         if 'email' in session and 'password' in session:
@@ -173,8 +171,6 @@ def signin():
                 session['email'] = email
                 session['password'] = rtn_val['pw']
                 _ = rtn_val.pop('pw')
-                print("Successfully put email and password in session")
-                print(session)
         else:
             rtn_val['status'] = False
             rtn_val['message'] = "Request is missing either email or password"
