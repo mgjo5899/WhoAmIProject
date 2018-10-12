@@ -1,5 +1,7 @@
 # WhoAmI API Documentation
 
+## Authentication Related
+
 ## User Signin [/signin]
 
 ### Check user credential with session [GET]
@@ -173,7 +175,7 @@ reset email and his/her token is correct, then it directs the user to this endpo
 It checks on session for the user email so the user should have already logged in so
 the session contains his/her email prior to this call.
 
-+ Request (application/json)
++ Request Body (application/json)
 
         {
             "new_password": "somenewpassword"
@@ -193,3 +195,103 @@ the session contains his/her email prior to this call.
 This API redirects the user to either to /signin, /reset_pw or /signup accordingly.  This
 endpoint is only used when a user presses reset button in password reset email.  If the token
 is valid, then it redirects to /reset_pw.
+
+
+## Instagram Related 
+
+## Instagram Registration [/instagram/register]
+
+### Registers user's Instagram account [POST]
+
+This endpoint lets our server know that the user linked his/her Instagram account with us.
+It uses email and hashed password from session.
+
++ Request Body (application/json)
+
+        {
+            "username": "someone"
+        }
+
++ Response (application/json)
+
+        {
+            "status": true,
+            "authorized_time": 2018-10-02 06:28:08.427133,
+            "message": "Successfully registered Instagram account for the user"
+        }
+
+
+## Instagram Update [/instagram/update]
+
+### Data Addition Or Deletion [POST]
+
+This API gets called when there are things to add or delete from the user's Instagram DB
+regarding the images.  It uses email and hashed password from session.
+
++ Request Body (application/json)
+
+        {
+            "addition": [
+                {
+                    "id": "1839568314821633189_8042456766",
+                    "instagram_url": "https://www.instagram.com/p/BmHdaLJAeSl/",
+                    "raw_image_url": "https://scontent.cdninstagram.com/vp/a218bc14fedb259d5e22b8bd58e5b47d/5BF6828E/t51.2885-15/sh0.08/e35/s640x640/37930134_844689042390902_1407567392577421312_n.jpg",
+                    "orig_width": 640,
+                    "orig_height": 479
+                },
+                {
+                    "id": "1839568314821633189_8042456766",
+                    "instagram_url": "https://www.instagram.com/p/BmHdaLJAeSl/",
+                    "raw_image_url": "https://scontent.cdninstagram.com/vp/a218bc14fedb259d5e22b8bd58e5b47d/5BF6828E/t51.2885-15/sh0.08/e35/s640x640/37930134_844689042390902_1407567392577421312_n.jpg",
+                    "orig_width": 640,
+                    "orig_height": 479
+                }
+            ],
+            "deletion": [
+                "1839568314821633189_8042456766",  # Image ID
+                "1839568314821633189_8042456766",
+                "1839568314821633189_8042456766",
+                ...
+            ]
+        }
+
++ Response (application/json)
+
+        {
+            "additions": [
+                {
+                    "status": true,
+                    "image_id": "1839568314821633189_8042456766",
+                },
+                {
+                    "status": true,
+                    "image_id": "1839568314821633189_8042456766",
+                },
+                {
+                    "status": false,
+                    "message": "Image already added",
+                    "image_id": "1839568314821633189_8042456766",
+                }
+            ],
+            "deletions": [
+                {
+                    "status": true,
+                    "deleted_image": {
+                        "image_id": "1839568314821633189_8042456766",
+                        "raw_image_url": "https://scontent.cdninstagram.com/vp/a218bc14fedb259d5e22b8bd58e5b47d/5BF6828E/t51.2885-15/sh0.08/e35/s640x640/37930134_844689042390902_1407567392577421312_n.jpg"
+                    }
+                },
+                {
+                    "status": true,
+                    "deleted_image": {
+                        "image_id": "1839568314821633189_8042456766",
+                        "raw_image_url": "https://scontent.cdninstagram.com/vp/a218bc14fedb259d5e22b8bd58e5b47d/5BF6828E/t51.2885-15/sh0.08/e35/s640x640/37930134_844689042390902_1407567392577421312_n.jpg"
+                    }
+                },
+                {
+                    "status": false,
+                    "message": "There is no image of the user with the image_id",
+                    "image_id": "1839568314821633189_8042456766"
+                }
+            ]
+        }
