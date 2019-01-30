@@ -1,14 +1,16 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import {
     Collapse,
     Navbar,
     NavbarToggler,
     NavbarBrand,
-    Nav
+    Nav,
+    Container,
+    NavItem,
+    NavLink
 } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
 import SignIn from '../signing/signin';
-import SignUp from '../signing/signup';
 
 export default class extends Component {
 
@@ -24,21 +26,22 @@ export default class extends Component {
 
     render() {
         return (
-            <Fragment>
-                <Navbar color="light" light expand="md">
+            <Navbar className="navbar-dark bg-dark mb-3" expand="md">
+                <Container>
                     <NavbarBrand tag={Link} to="/">WhoAmI</NavbarBrand>
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
+                            <NavItem>
+                                <NavLink tag={Link} to="/components">Components</NavLink>
+                            </NavItem>
                             {/* Adding modal here */}
-                            {/* RegisterModal */}
-                            <SignUp />
                             {/* SignInModal */}
                             <SignIn />
                         </Nav>
                     </Collapse>
-                </Navbar>
-            </Fragment>
+                </Container>
+            </Navbar>
         );
     }
 }
