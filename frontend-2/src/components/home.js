@@ -1,11 +1,15 @@
 import React, { Component, Fragment } from 'react'
 import SignUp from './signing/signup';
 
+const style = {
+    width: '40%'
+}
+
 class Home extends Component {
     render() {
         return (
             <Fragment>
-                <div className="pl-5 w-50 float-right">
+                <div className="pl-5 float-right" style={style}>
                     <SignUp />
                 </div>
                 <div>
