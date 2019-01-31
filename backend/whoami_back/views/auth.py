@@ -148,13 +148,11 @@ def signin():
 
     if request.method == 'GET':
         if 'email' in session and 'password' in session:
-            if manage.signin_user(session['email'], session['password'], hashed=True)['status']:
-                rtn_val['status'] = True
+            rtn_val = manage.signin_user(session['email'], session['password'], hashed=True)
+
+            if rtn_val['status']:
                 rtn_val['message'] = "Already signed in"
-                rtn_val['email'] = session['email']
-            else:
-                rtn_val['status'] = False
-                rtn_val['message'] = "Incorrect credential in session token"
+                _ = rtn_val.pop('pw')
         else:
             rtn_val['status'] = False
             rtn_val['message'] = "Not signed in"

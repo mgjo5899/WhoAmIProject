@@ -110,11 +110,14 @@ def signin_user(email, password, hashed=False):
                 rtn_val['message'] = "Could not log into the account with the given password"
         elif hashed and password != user.password:
             rtn_val['status'] = False
+            rtn_val['message'] = "Could not log into the account with the given password"
 
         if 'status' not in rtn_val:
             rtn_val['status'] = True
             rtn_val['username'] = user.username
             rtn_val['confirmed'] = user.confirmed
+            rtn_val['email'] = user.email
+            rtn_val['registered_on'] = user.registered_on
             rtn_val['pw'] = user.password
 
     return rtn_val
