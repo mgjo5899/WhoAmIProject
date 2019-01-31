@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Navbar from './components/layout/navbar';
 import Home from './components/home';
-import {BrowserRouter, Route} from 'react-router-dom';
-import {Container} from 'reactstrap';
+import { BrowserRouter, Route } from 'react-router-dom';
+import { Container } from 'reactstrap';
 
 class App extends Component {
   render() {
@@ -11,7 +11,8 @@ class App extends Component {
         <div className="App">
           <Navbar />
           <Container>
-              <Route exact path="/" component={Home} />
+            <Route exact path="/" component={Home} />
+            <Route exact path="/components" component={Home} />
           </Container>
         </div>
       </BrowserRouter>
