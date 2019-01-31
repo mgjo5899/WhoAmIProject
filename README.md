@@ -35,3 +35,6 @@
 4. Install [Node and NPM](https://www.npmjs.com/)
   - After installing Node and NPM, install packages
     - `npm install .`
+
+## DB Schema
+![DB Schema](./whoami-db-schema.png)
