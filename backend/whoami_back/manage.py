@@ -114,11 +114,12 @@ def signin_user(email, password, hashed=False):
 
         if 'status' not in rtn_val:
             rtn_val['status'] = True
-            rtn_val['username'] = user.username
-            rtn_val['confirmed'] = user.confirmed
-            rtn_val['email'] = user.email
-            rtn_val['registered_on'] = user.registered_on
-            rtn_val['pw'] = user.password
+            rtn_val['user'] = {}
+            rtn_val['user']['username'] = user.username
+            rtn_val['user']['confirmed'] = user.confirmed
+            rtn_val['user']['email'] = user.email
+            rtn_val['user']['registered_on'] = user.registered_on
+            rtn_val['user']['pw'] = user.password
 
     return rtn_val
 

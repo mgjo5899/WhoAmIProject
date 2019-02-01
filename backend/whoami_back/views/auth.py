@@ -152,7 +152,7 @@ def signin():
 
             if rtn_val['status']:
                 rtn_val['message'] = "Already signed in"
-                _ = rtn_val.pop('pw')
+                _ = rtn_val['user'].pop('pw')
         else:
             rtn_val['status'] = False
             rtn_val['message'] = "Not signed in"
@@ -167,11 +167,28 @@ def signin():
 
             if rtn_val['status']:
                 session['email'] = email
-                session['password'] = rtn_val['pw']
-                _ = rtn_val.pop('pw')
+                session['password'] = rtn_val['user']['pw']
+                _ = rtn_val['user'].pop('pw')
         else:
             rtn_val['status'] = False
             rtn_val['message'] = "Request is missing either email or password"
+
+    return jsonify(rtn_val)
+
+@auth.route('/signout', methods=['GET'])
+def signout():
+    rtn_val = {}
+
+    if request.method == 'GET':
+        if 'email' in session and 'password' in session:
+            email = session.pop('email')
+            session.pop('password')
+            rtn_val['status'] = True
+            rtn_val['message'] = "User successfully signed out"
+            rtn_val['signed_out_email'] = email
+        else:
+            rtn_val['status'] = False
+            rtn_val['message'] = "Invalid session"
 
     return jsonify(rtn_val)
 
