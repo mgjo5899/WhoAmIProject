@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { throwError, registerUser } from '../../store/actions/authActions';
 
 class SignUp extends Component {
     state = {
@@ -8,49 +9,23 @@ class SignUp extends Component {
         firstName: '',
         lastName: '',
         confirmPassword: '',
-        errorMsg: ''
-    }
-
-    resetState = () => {
-        this.setState({
-            email: '',
-            password: '',
-            firstName: '',
-            lastName: '',
-            confirmPassword: '',
-            errorMsg: ''
-        });
     }
 
     handleChange = e => {
         this.setState({
             [e.target.id]: e.target.value,
-            errorMsg: ''
         });
+        this.props.throwError('SIGNUP_ERR', '');
     }
 
     handleSubmit = e => {
         e.preventDefault();
         const { email, firstName, lastName, password, confirmPassword } = this.state;
+        const { throwError, registerUser } = this.props
         if (password !== confirmPassword) {
-            this.setState({ errorMsg: 'Retype your password' });
+            throwError('SIGNUP_ERR', 'Retype your password');
         } else {
-            axios.post('http://localhost:8000/register', {
-                username: `${firstName} ${lastName}`,
-                password,
-                email
-            }).then(res => {
-                const { status } = res.data;
-                if (status) {
-                    console.log(res.data);
-                    this.resetState();
-                    document.getElementById('sign-up-form').reset();
-                } else {
-                    this.setState({ errorMsg: 'Email already exists' });
-                }
-            }).catch(err => {
-                console.log(err);
-            });
+            registerUser({ email, password, username: `${firstName} ${lastName}` });
         }
     }
 
@@ -80,7 +55,7 @@ class SignUp extends Component {
                             <label htmlFor="confirmPassword">Confirm password</label>
                             <input type="password" className="form-control" id="confirmPassword" placeholder="Confirm password" onChange={this.handleChange} required />
                         </div>
-                        {this.state.errorMsg && <div className="alert alert-danger" role="alert">{this.state.errorMsg}</div>}
+                        {this.props.auth.errorMsg.signUp && <div className="alert alert-danger" role="alert">{this.props.auth.errorMsg.signUp}</div>}
                     </div>
                     <div className="card-footer">
                         <button type="submit" className="btn btn-primary">Sign Up</button>
@@ -91,4 +66,17 @@ class SignUp extends Component {
     }
 }
 
-export default SignUp;
+const mapStateToProps = state => {
+    return {
+        auth: state.auth
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        throwError: (type, errorMsg) => dispatch(throwError(type, errorMsg)),
+        registerUser: userInfo => dispatch(registerUser(userInfo))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

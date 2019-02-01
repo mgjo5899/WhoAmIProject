@@ -11,9 +11,9 @@ import {
 } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
 import SignIn from '../signing/signin';
-import axios from 'axios';
-import {connect} from 'react-redux';
-import {storeUser} from '../../store/actions/authActions';
+import SignOut from '../signing/signout';
+import { connect } from 'react-redux';
+import { storeUser, confirmed, checkSignedIn } from '../../store/actions/authActions';
 
 class NavbarLayout extends Component {
 
@@ -28,51 +28,32 @@ class NavbarLayout extends Component {
     }
 
     componentWillMount = () => {
-        axios.get('http://localhost:8000/signin')
-        .then(res => {
-            console.log(res.data);
-            const {status, email} = res.data;
-            if(status) return this.getSpecificUser(email);
-        }).then(user => {
-            this.props.storeUser(user);
-            console.log('user found:',user);
-        }).catch(err => {
-            console.log(err)
-        });
-    }
-
-    getSpecificUser = email => {
-        axios.get('http://localhost:8000/users')
-        .then(res => {
-            const {status, users} = res.data;
-            if(status) {
-                return users.find(user => users.email === email);
-            } else {
-                console.log('status wrong', res);
-            }
-        }).catch(err => {
-            console.log(err);
-        });
+        this.props.checkSignedIn();
     }
 
     render() {
+        const { loaded, signedIn } = this.props.auth;
         return (
-            <Navbar className="navbar-dark bg-dark mb-3" expand="md">
-                <Container>
-                    <NavbarBrand tag={Link} to="/">WhoAmI</NavbarBrand>
-                    <NavbarToggler onClick={this.toggle} />
-                    <Collapse isOpen={this.state.isOpen} navbar>
-                        <Nav className="ml-auto" navbar>
-                            <NavItem>
-                                <NavLink tag={Link} to="/components">Components</NavLink>
-                            </NavItem>
-                            {/* Adding modal here */}
-                            {/* SignInModal */}
-                            <SignIn />
-                        </Nav>
-                    </Collapse>
-                </Container>
-            </Navbar>
+            loaded && (
+                <Navbar className="navbar-dark bg-dark mb-3" expand="md">
+                    <Container>
+                        <NavbarBrand tag={Link} to="/">WhoAmI</NavbarBrand>
+                        <NavbarToggler onClick={this.toggle} />
+                        <Collapse isOpen={this.state.isOpen} navbar>
+                            <Nav className="ml-auto" navbar>
+                                <NavItem>
+                                    <NavLink tag={Link} to="/components">Components</NavLink>
+                                </NavItem>
+                                {/* Adding modal here */}
+                                {
+                                    /* SignIn and SignOut */
+                                    signedIn ? <SignOut /> : <SignIn />
+                                }
+                            </Nav>
+                        </Collapse>
+                    </Container>
+                </Navbar>
+            )
         );
     }
 }
@@ -80,13 +61,14 @@ class NavbarLayout extends Component {
 const mapStateToProps = state => {
     return {
         auth: state.auth,
-        info: state.info
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        storeUser: user => dispatch(storeUser(user))
+        storeUser: user => dispatch(storeUser(user)),
+        confirmed: () => dispatch(confirmed()),
+        checkSignedIn: () => dispatch(checkSignedIn())
     }
 }
 

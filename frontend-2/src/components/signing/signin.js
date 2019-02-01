@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, NavItem } from 'reactstrap';
-import axios from 'axios';
 import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
+import { storeUser, signIn, throwError } from '../../store/actions/authActions';
 
 
 class SignIn extends Component {
@@ -9,51 +10,26 @@ class SignIn extends Component {
         signInModal: false,
         email: '',
         password: '',
-        errorMsg: ''
-    }
-
-    resetState = () => {
-        this.setState({
-            signInModal: false,
-            email: '',
-            password: '',
-            errorMsg: ''
-        });
     }
 
     toggleSignIn = () => {
         this.setState({
             signInModal: !this.state.signInModal,
-            errorMsg: ''
         });
     }
 
     handleChange = e => {
         this.setState({
             [e.target.id]: e.target.value,
-            errorMsg: ''
         });
+        this.props.throwError('SIGNIN_ERR', '');
     }
 
     handleSubmit = e => {
         e.preventDefault();
+        const { signIn } = this.props;
         const { email, password } = this.state;
-        axios.post('http://localhost:8000/signin', {
-            email,
-            password
-        }).then(res => {
-            const { status } = res.data;
-            if (status) {
-                console.log(this.props);
-                this.resetState();
-                this.props.history.push('/');
-            } else {
-                console.log('fix error message');
-                this.setState({ errorMsg: 'Something wrong' });
-            }
-        }).catch(err => {
-            console.log(err);
-        });
+        signIn(email, password);
     }
 
     render() {
@@ -74,7 +50,7 @@ class SignIn extends Component {
                                 <label htmlFor="password">Password</label>
                                 <input type="password" className="form-control" id="password" placeholder="Password" onChange={this.handleChange} />
                             </div>
-                            {this.state.errorMsg && <div className="alert alert-danger" role="alert">{this.state.errorMsg}</div>}
+                            {this.props.auth.errorMsg.signIn && <div className="alert alert-danger" role="alert">{this.props.auth.errorMsg.signIn}</div>}
                         </ModalBody>
                         <ModalFooter>
                             <Button type="submit" color="primary">Sign in</Button>{' '}
@@ -87,4 +63,18 @@ class SignIn extends Component {
     }
 }
 
-export default withRouter(SignIn);
+const mapStateToProps = state => {
+    return {
+        auth: state.auth
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        storeUser: user => dispatch(storeUser(user)),
+        signIn: (email, password) => dispatch(signIn(email, password)),
+        throwError: (type, errorMsg) => dispatch(throwError(type, errorMsg))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SignIn));
