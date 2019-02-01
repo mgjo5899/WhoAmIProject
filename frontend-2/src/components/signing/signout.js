@@ -1,13 +1,12 @@
 import React from 'react';
 import { Button, NavItem } from 'reactstrap';
-import axios from 'axios';
+import {connect} from 'react-redux';
+import {signOut} from '../../store/actions/authActions';
 
-const SignOut = () => {
+const SignOut = ({signOut}) => {
 
     const handleLogOut = e => {
-        axios.defaults.withCredentials = false;
-        // console.log(document.cookie);
-        window.location.reload()
+        signOut();
     }
 
     return (
@@ -17,4 +16,10 @@ const SignOut = () => {
     );
 }
 
-export default SignOut;
+const mapDispatchToProps = dispatch => {
+    return {
+        signOut : () => dispatch(signOut())
+    }
+}
+
+export default connect(null,mapDispatchToProps)(SignOut);

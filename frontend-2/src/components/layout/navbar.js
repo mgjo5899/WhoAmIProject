@@ -5,9 +5,7 @@ import {
     NavbarToggler,
     NavbarBrand,
     Nav,
-    Container,
-    NavItem,
-    NavLink
+    Container
 } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
 import SignIn from '../signing/signin';
@@ -41,9 +39,6 @@ class NavbarLayout extends Component {
                         <NavbarToggler onClick={this.toggle} />
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="ml-auto" navbar>
-                                <NavItem>
-                                    <NavLink tag={Link} to="/components">Components</NavLink>
-                                </NavItem>
                                 {/* Adding modal here */}
                                 {
                                     /* SignIn and SignOut */

@@ -40,12 +40,8 @@ class SignUp extends Component {
                             <input type="email" className="form-control" id="email" aria-describedby="emailHelp" placeholder="Email" onChange={this.handleChange} required />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="firstName">First name</label>
+                            <label htmlFor="firstName">Username</label>
                             <input type="text" className="form-control" id="firstName" placeholder="First Name" onChange={this.handleChange} required />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="lastName">Last name</label>
-                            <input type="text" className="form-control" id="lastName" placeholder="Last Name" onChange={this.handleChange} required />
                         </div>
                         <div className="form-group">
                             <label htmlFor="password">Password</label>

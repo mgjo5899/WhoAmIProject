@@ -5,7 +5,7 @@ const initState = {
         email: '',
         username: '',
         registered_on: 0,
-        confirmed: false,
+        confirmed: false
     },
     errorMsg: {
         signIn: '',
@@ -39,6 +39,11 @@ const authReducer = (state = initState, action) => {
                 errorMsg: {
                     signUp: action.errorMsg
                 }
+            }
+        case 'SIGNOUT_USER':
+            return {
+                ...initState,
+                loaded: true
             }
         default:
             return state;

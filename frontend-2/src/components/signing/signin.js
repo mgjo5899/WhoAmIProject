@@ -16,6 +16,7 @@ class SignIn extends Component {
         this.setState({
             signInModal: !this.state.signInModal,
         });
+        this.props.throwError('SIGNIN_ERR', '');
     }
 
     handleChange = e => {

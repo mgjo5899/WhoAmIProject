@@ -26,12 +26,12 @@ export const signIn = (email, password) => {
             email,
             password
         }).then(res => {
-            const { status, message } = res.data;
+            const { status, user } = res.data;
             if (status) {
-                dispatch(checkSignedIn());
+                dispatch(storeUser(user));
                 dispatch(throwError('SIGNIN_ERR', ''));
             } else {
-                dispatch(throwError('SIGNIN_ERR', message));
+                dispatch(throwError('SIGNIN_ERR', 'Could not sign in'));
             }
         }).catch(err => {
             console.log(err);
@@ -43,30 +43,16 @@ export const checkSignedIn = () => {
     return dispatch => {
         axios.get(SERVER + '/signin')
             .then(res => {
-                const { status, email } = res.data;
+                const { status, user } = res.data;
                 status ?
-                    getSpecificUser(email).then(user => {
-                        dispatch(storeUser(user));
-                    }) :
+                    dispatch(storeUser(user))
+                    :
                     dispatch(confirmed());
             }).catch(err => {
                 console.log(err);
             });
     }
 }
-
-const getSpecificUser = email =>
-    axios.get(SERVER + '/users')
-        .then(res => {
-            const { status, users } = res.data;
-            if (status) {
-                return users.find(user => user.email === email);
-            } else {
-                console.log('status wrong', res);
-            }
-        }).catch(err => {
-            console.log(err);
-        });
 
 export const registerUser = userInfo => {
     return dispatch => {
@@ -79,6 +65,18 @@ export const registerUser = userInfo => {
                 } else {
                     throwError('SIGNUP_ERROR', 'Email already exists')
                 }
+            }).catch(err => {
+                console.log(err);
+            });
+    }
+}
+
+export const signOut = () => {
+    return dispatch => {
+        axios.get(SERVER + '/signout')
+            .then(() => {
+                dispatch({ type: 'SIGNOUT_USER' });
+                dispatch(confirmed());
             }).catch(err => {
                 console.log(err);
             });
