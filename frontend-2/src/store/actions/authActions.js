@@ -58,12 +58,12 @@ export const registerUser = userInfo => {
     return dispatch => {
         axios.post(SERVER + '/register', userInfo)
             .then(res => {
-                const { status } = res.data;
+                const { status, message } = res.data;
                 if (status) {
                     const { email, password } = userInfo;
                     dispatch(signIn(email, password));
                 } else {
-                    throwError('SIGNUP_ERROR', 'Email already exists')
+                    dispatch(throwError('SIGNUP_ERR', message));
                 }
             }).catch(err => {
                 console.log(err);

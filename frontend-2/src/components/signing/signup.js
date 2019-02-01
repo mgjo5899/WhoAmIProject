@@ -6,9 +6,7 @@ class SignUp extends Component {
     state = {
         email: '',
         password: '',
-        firstName: '',
-        lastName: '',
-        confirmPassword: '',
+        username: '',
     }
 
     handleChange = e => {
@@ -20,13 +18,9 @@ class SignUp extends Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        const { email, firstName, lastName, password, confirmPassword } = this.state;
-        const { throwError, registerUser } = this.props
-        if (password !== confirmPassword) {
-            throwError('SIGNUP_ERR', 'Retype your password');
-        } else {
-            registerUser({ email, password, username: `${firstName} ${lastName}` });
-        }
+        const { email, username, password } = this.state;
+        const { registerUser } = this.props
+        registerUser({ email, password, username });
     }
 
     render() {
@@ -40,16 +34,12 @@ class SignUp extends Component {
                             <input type="email" className="form-control" id="email" aria-describedby="emailHelp" placeholder="Email" onChange={this.handleChange} required />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="firstName">Username</label>
-                            <input type="text" className="form-control" id="firstName" placeholder="First Name" onChange={this.handleChange} required />
+                            <label htmlFor="username">Username</label>
+                            <input type="text" className="form-control" id="username" placeholder="First Name" onChange={this.handleChange} required />
                         </div>
                         <div className="form-group">
                             <label htmlFor="password">Password</label>
                             <input type="password" className="form-control" id="password" placeholder="Password" onChange={this.handleChange} required />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="confirmPassword">Confirm password</label>
-                            <input type="password" className="form-control" id="confirmPassword" placeholder="Confirm password" onChange={this.handleChange} required />
                         </div>
                         {this.props.auth.errorMsg.signUp && <div className="alert alert-danger" role="alert">{this.props.auth.errorMsg.signUp}</div>}
                     </div>
