@@ -17,8 +17,13 @@ contains correct user credential.
 
         {
             "status": true,
-            "message": "Already signed in",
-            "email": "someone@email.com"
+            "message": "User already signed in",
+            "user": {
+                "confirmed": true,
+                "email": "someone@email.com",
+                "registered_on": "Fri, 01 Feb 2019 16:19:17 GMT",
+                "username": "someone"
+            }
         }
 
 ### Authenticate user [POST]
@@ -38,8 +43,28 @@ the session.
 
         {
             "status": true,
-            "username": "someone",
-            "confirmed": true
+            "message": "User successfully signed in",
+            "user": {
+                "confirmed": true,
+                "email": "someone@email.com",
+                "registered_on": "Fri, 01 Feb 2019 16:19:17 GMT",
+                "username": "someone"
+            }
+        }
+
+
+## User Signout [/signout]
+
+### Signing out by removing session data [GET]
+
+Signing out by removing session data.
+
++ Response 200 (application/json)
+
+        {
+            "status": true,
+            "message": "User successfully signed out",
+            "email": "someone@email.com"
         }
 
 

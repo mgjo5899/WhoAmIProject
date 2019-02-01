@@ -151,7 +151,7 @@ def signin():
             rtn_val = manage.signin_user(session['email'], session['password'], hashed=True)
 
             if rtn_val['status']:
-                rtn_val['message'] = "Already signed in"
+                rtn_val['message'] = "User already signed in"
                 _ = rtn_val['user'].pop('pw')
         else:
             rtn_val['status'] = False
@@ -168,6 +168,7 @@ def signin():
             if rtn_val['status']:
                 session['email'] = email
                 session['password'] = rtn_val['user']['pw']
+                rtn_val['message'] = "User successfully signed in"
                 _ = rtn_val['user'].pop('pw')
         else:
             rtn_val['status'] = False
@@ -185,7 +186,7 @@ def signout():
             session.pop('password')
             rtn_val['status'] = True
             rtn_val['message'] = "User successfully signed out"
-            rtn_val['signed_out_email'] = email
+            rtn_val['email'] = email
         else:
             rtn_val['status'] = False
             rtn_val['message'] = "Invalid session"
