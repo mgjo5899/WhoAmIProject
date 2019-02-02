@@ -30,12 +30,12 @@ class SignUp extends Component {
                     <h5 className="card-header">Sign up</h5>
                     <div className="card-body">
                         <div className="form-group">
-                            <label htmlFor="email">Email address</label>
+                            <label htmlFor="email">Email</label>
                             <input type="email" className="form-control" id="email" aria-describedby="emailHelp" placeholder="Email" onChange={this.handleChange} required />
                         </div>
                         <div className="form-group">
                             <label htmlFor="username">Username</label>
-                            <input type="text" className="form-control" id="username" placeholder="First Name" onChange={this.handleChange} required />
+                            <input type="text" className="form-control" id="username" placeholder="Username" onChange={this.handleChange} required />
                         </div>
                         <div className="form-group">
                             <label htmlFor="password">Password</label>
@@ -44,7 +44,7 @@ class SignUp extends Component {
                         {this.props.auth.errorMsg.signUp && <div className="alert alert-danger" role="alert">{this.props.auth.errorMsg.signUp}</div>}
                     </div>
                     <div className="card-footer">
-                        <button type="submit" className="btn btn-primary">Sign Up</button>
+                        <button type="submit" className="btn btn-primary col-sm-12">Sign Up</button>
                     </div>
                 </div>
             </form >

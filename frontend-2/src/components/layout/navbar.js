@@ -35,7 +35,7 @@ class NavbarLayout extends Component {
             loaded && (
                 <Navbar className="navbar-dark bg-dark mb-3" expand="md">
                     <Container>
-                        <NavbarBrand tag={Link} to="/">WhoAmI</NavbarBrand>
+                        <NavbarBrand tag={Link} to="/">whoami</NavbarBrand>
                         <NavbarToggler onClick={this.toggle} />
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="ml-auto" navbar>
