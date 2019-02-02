@@ -44,7 +44,7 @@ class SignUp extends Component {
                         {this.props.auth.errorMsg.signUp && <div className="alert alert-danger" role="alert">{this.props.auth.errorMsg.signUp}</div>}
                     </div>
                     <div className="card-footer">
-                        <button type="submit" className="btn btn-primary col-sm-12">Sign Up</button>
+                        <button type="submit" className="btn btn-primary col-sm-12">Sign up</button>
                     </div>
                 </div>
             </form >

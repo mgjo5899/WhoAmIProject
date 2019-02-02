@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button, NavItem } from 'reactstrap';
-import {connect} from 'react-redux';
-import {signOut} from '../../store/actions/authActions';
+import { connect } from 'react-redux';
+import { signOut } from '../../store/actions/authActions';
 
-const SignOut = ({signOut}) => {
+const SignOut = ({ signOut }) => {
 
     const handleLogOut = e => {
         signOut();
@@ -11,15 +11,15 @@ const SignOut = ({signOut}) => {
 
     return (
         <NavItem>
-            <Button color="dark" onClick={handleLogOut}>Sign Out</Button>
+            <Button color="dark" onClick={handleLogOut}>Sign out</Button>
         </NavItem>
     );
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        signOut : () => dispatch(signOut())
+        signOut: () => dispatch(signOut())
     }
 }
 
-export default connect(null,mapDispatchToProps)(SignOut);
+export default connect(null, mapDispatchToProps)(SignOut);
