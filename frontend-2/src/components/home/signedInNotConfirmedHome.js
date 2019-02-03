@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import { SERVER } from '../../config';
 
 class SignedInNotConfirmedHome extends Component {
     state = {
@@ -11,7 +12,7 @@ class SignedInNotConfirmedHome extends Component {
     handleResend = e => {
         console.log(this.props.auth);
         this.setState({ loading: true });
-        axios.post('http://localhost:8000/resend', {
+        axios.post(SERVER + '/resend', {
             email: this.props.auth.user.email
         }).then(res => res.data)
             .then(data => {
