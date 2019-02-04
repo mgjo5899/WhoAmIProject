@@ -2,7 +2,8 @@ import React, { Fragment } from 'react';
 import { Button, NavItem, UncontrolledDropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'reactstrap';
 import { connect } from 'react-redux';
 import { signOut } from '../../store/actions/authActions';
-import ChangePassword from './changePassword';
+import ChangePassword from './password/changePassword';
+import AddSNS from '../sns/addSNS';
 
 const SignOut = ({ auth, signOut }) => {
 
@@ -20,17 +21,18 @@ const SignOut = ({ auth, signOut }) => {
                     <ChangePassword />
                     <DropdownItem>
                         Not Yet
-                    </DropdownItem>
+                        </DropdownItem>
                     <DropdownItem divider />
                     <DropdownItem>
                         Not Yet
-                    </DropdownItem>
+                        </DropdownItem>
                 </DropdownMenu>
             </UncontrolledDropdown>
+            <AddSNS />
             <NavItem>
                 <Button color="dark" onClick={handleLogOut}>Sign out</Button>
             </NavItem>
-        </Fragment>
+        </Fragment >
     );
 }
 
