@@ -232,6 +232,6 @@ def modify_password(email, new_password):
         # Hashing
         hashed_pw = get_pw_hash(new_password)
         user.password = hashed_pw
-        session.commit()
+        db.commit()
 
     return rtn_val
