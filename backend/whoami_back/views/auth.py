@@ -16,17 +16,17 @@ def password_reset(token):
     if not email:
         # Email wasn't found or time expired
         # Come up with an error page for this
-        redirect_url = 'http://{}:{}/#/signin'.format(config.HOST_IP, config.FRONTEND_PORT)
+        redirect_url = 'http://{}:{}/signin'.format(config.HOST_IP, config.FRONTEND_PORT)
     else:
         rtn_val = manage.check_email(email)
 
         if rtn_val['status']:
             # Found email was valid; let the user reset the password
-            redirect_url = 'http://{}:{}/#/reset_pw'.format(config.HOST_IP, config.FRONTEND_PORT)
+            redirect_url = 'http://{}:{}/reset_pw'.format(config.HOST_IP, config.FRONTEND_PORT)
             session['email'] = email
         else:
             # Not a valid email
-            redirect_url = 'http://{}:{}/#/signup'.format(config.HOST_IP, config.FRONTEND_PORT)
+            redirect_url = 'http://{}:{}/signup'.format(config.HOST_IP, config.FRONTEND_PORT)
 
     return redirect(redirect_url)
 
@@ -76,16 +76,16 @@ def email_confirmation(token):
     if not email:
         # Invalid email or time expired
         # Come up with an error page for this
-        redirect_url = 'http://{}:{}/#/signin'.format(config.HOST_IP, config.FRONTEND_PORT)
+        redirect_url = 'http://{}:{}/signin'.format(config.HOST_IP, config.FRONTEND_PORT)
     else:
         rtn_val = manage.confirm_email(email)
 
         if rtn_val['status']:
             # Confirmed
-            redirect_url = 'http://{}:{}/#/signin'.format(config.HOST_IP, config.FRONTEND_PORT)
+            redirect_url = 'http://{}:{}/signin'.format(config.HOST_IP, config.FRONTEND_PORT)
         else:
             # Not confirmed
-            redirect_url = 'http://{}:{}/#/signup'.format(config.HOST_IP, config.FRONTEND_PORT)
+            redirect_url = 'http://{}:{}/signup'.format(config.HOST_IP, config.FRONTEND_PORT)
 
     return redirect(redirect_url)
 
