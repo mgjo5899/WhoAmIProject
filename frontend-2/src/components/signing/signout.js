@@ -3,7 +3,6 @@ import { Button, NavItem, UncontrolledDropdown, DropdownToggle, DropdownItem, Dr
 import { connect } from 'react-redux';
 import { signOut } from '../../store/actions/authActions';
 import ChangePassword from './password/changePassword';
-import AddSNS from '../sns/addSNS';
 
 const SignOut = ({ auth, signOut }) => {
 
@@ -28,7 +27,6 @@ const SignOut = ({ auth, signOut }) => {
                         </DropdownItem>
                 </DropdownMenu>
             </UncontrolledDropdown>
-            <AddSNS />
             <NavItem>
                 <Button color="dark" onClick={handleLogOut}>Sign out</Button>
             </NavItem>
