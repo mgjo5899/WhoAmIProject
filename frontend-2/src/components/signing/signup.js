@@ -1,26 +1,54 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { throwError, registerUser } from '../../store/actions/authActions';
+import axios from 'axios';
+import { SERVER } from '../../config';
+import { storeUser } from '../../store/actions/authActions';
 
 class SignUp extends Component {
     state = {
         email: '',
         password: '',
         username: '',
+        errorMsg: ''
     }
 
     handleChange = e => {
         this.setState({
             [e.target.id]: e.target.value,
+            errorMsg: ''
         });
-        this.props.throwError('SIGNUP_ERR', '');
     }
 
     handleSubmit = e => {
         e.preventDefault();
         const { email, username, password } = this.state;
-        const { registerUser } = this.props
-        registerUser({ email, password, username });
+        this.registerUser({ email, password, username });
+    }
+
+    registerUser = userInfo => {
+        axios.post(SERVER + '/register', userInfo)
+            .then(res => {
+                const { status, message } = res.data;
+                if (status) {
+                    const { email, password } = userInfo;
+                    this.signIn(email, password);
+                } else {
+                    this.setState({ errorMsg: message });
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+    }
+
+    signIn = (email, password) => {
+        axios.post(SERVER + '/signin', {
+            email,
+            password
+        }).then(res => {
+            this.props.storeUser(res.data.user);
+        }).catch(err => {
+            console.log(err);
+        });
     }
 
     render() {
@@ -41,7 +69,7 @@ class SignUp extends Component {
                             <label htmlFor="password">Password</label>
                             <input type="password" className="form-control" id="password" placeholder="Password" onChange={this.handleChange} required />
                         </div>
-                        {this.props.auth.errorMsg.signUp && <div className="alert alert-danger" role="alert">{this.props.auth.errorMsg.signUp}</div>}
+                        {this.state.errorMsg && <div className="alert alert-danger" role="alert">{this.state.errorMsg}</div>}
                     </div>
                     <div className="card-footer">
                         <button type="submit" className="btn btn-primary col-sm-12">Sign up</button>
@@ -60,8 +88,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        throwError: (type, errorMsg) => dispatch(throwError(type, errorMsg)),
-        registerUser: userInfo => dispatch(registerUser(userInfo))
+        storeUser: user => dispatch(storeUser(user))
     }
 }
 

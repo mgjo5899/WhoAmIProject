@@ -34,7 +34,6 @@ class NavbarLayout extends Component {
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
-                            {/* Adding modal here */}
                             {
                                 /* SignIn and SignOut */
                                 signedIn ? <SignOut /> : <SignIn />
