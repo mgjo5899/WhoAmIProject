@@ -1,9 +1,8 @@
 const initState = {
-    signedIn: false,
     user: {
         email: '',
         username: '',
-        registered_on: 0,
+        confirmed_on: 0,
         confirmed: false
     }
 }
@@ -13,7 +12,6 @@ const authReducer = (state = initState, action) => {
         case 'STORE_USER':
             return {
                 ...state,
-                signedIn: true,
                 user: action.user
             }
         case 'SIGNOUT_USER':

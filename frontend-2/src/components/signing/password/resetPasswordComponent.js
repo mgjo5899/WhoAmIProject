@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 import { SERVER } from '../../../config';
+import SignedInSecure from '../../../secure/signedInSecure';
+import { connect } from 'react-redux';
 
 class ResetPasswordComponent extends Component {
+
     state = {
         errorMsg: '',
         newPassword: '',
@@ -14,6 +17,10 @@ class ResetPasswordComponent extends Component {
             [e.target.id]: e.target.value,
             errorMsg: ''
         });
+    }
+
+    componentWillMount = () => {
+        SignedInSecure(this.props, '/');
     }
 
     handleSubmit = e => {
@@ -61,4 +68,10 @@ class ResetPasswordComponent extends Component {
     }
 }
 
-export default ResetPasswordComponent;
+const mapStateToProps = state => {
+    return {
+        auth: state.auth
+    }
+}
+
+export default connect(mapStateToProps)(ResetPasswordComponent);
