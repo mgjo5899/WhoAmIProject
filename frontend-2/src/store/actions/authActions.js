@@ -1,17 +1,9 @@
 import axios from 'axios';
-
-const SERVER = 'http://localhost:8000';
+import { SERVER } from '../../config';
 
 export const storeUser = user => {
     return dispatch => {
         dispatch({ type: 'STORE_USER', user });
-        dispatch(confirmed());
-    }
-}
-
-export const confirmed = () => {
-    return dispatch => {
-        dispatch({ type: 'CONFIRM_USER' });
     }
 }
 
@@ -39,21 +31,6 @@ export const signIn = (email, password) => {
     }
 }
 
-export const checkSignedIn = () => {
-    return dispatch => {
-        axios.get(SERVER + '/signin')
-            .then(res => {
-                const { status, user } = res.data;
-                status ?
-                    dispatch(storeUser(user))
-                    :
-                    dispatch(confirmed());
-            }).catch(err => {
-                console.log(err);
-            });
-    }
-}
-
 export const registerUser = userInfo => {
     return dispatch => {
         axios.post(SERVER + '/register', userInfo)
@@ -76,7 +53,6 @@ export const signOut = () => {
         axios.get(SERVER + '/signout')
             .then(() => {
                 dispatch({ type: 'SIGNOUT_USER' });
-                dispatch(confirmed());
             }).catch(err => {
                 console.log(err);
             });

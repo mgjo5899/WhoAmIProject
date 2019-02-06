@@ -11,7 +11,7 @@ import { NavLink as Link } from 'react-router-dom';
 import SignIn from '../signing/signin';
 import SignOut from '../signing/signout';
 import { connect } from 'react-redux';
-import { storeUser, confirmed, checkSignedIn } from '../../store/actions/authActions';
+import { storeUser } from '../../store/actions/authActions';
 
 class NavbarLayout extends Component {
 
@@ -25,31 +25,25 @@ class NavbarLayout extends Component {
         });
     }
 
-    componentWillMount = () => {
-        this.props.checkSignedIn();
-    }
-
     render() {
-        const { loaded, signedIn } = this.props.auth;
+        const { signedIn } = this.props.auth;
         return (
-            loaded && (
-                <Navbar className="navbar-dark bg-dark mb-3" expand="md">
-                    <Container>
-                        <NavbarBrand tag={Link} to="/">whoami</NavbarBrand>
-                        <NavbarToggler onClick={this.toggle} />
-                        <Collapse isOpen={this.state.isOpen} navbar>
-                            <Nav className="ml-auto" navbar>
-                                {/* Adding modal here */}
-                                {
-                                    /* SignIn and SignOut */
-                                    signedIn ? <SignOut /> : <SignIn />
-                                }
-                            </Nav>
-                        </Collapse>
-                    </Container>
-                </Navbar>
-            )
-        );
+            <Navbar className="navbar-dark bg-dark mb-3" expand="md">
+                <Container>
+                    <NavbarBrand tag={Link} to="/">whoami</NavbarBrand>
+                    <NavbarToggler onClick={this.toggle} />
+                    <Collapse isOpen={this.state.isOpen} navbar>
+                        <Nav className="ml-auto" navbar>
+                            {/* Adding modal here */}
+                            {
+                                /* SignIn and SignOut */
+                                signedIn ? <SignOut /> : <SignIn />
+                            }
+                        </Nav>
+                    </Collapse>
+                </Container>
+            </Navbar>
+        )
     }
 }
 
@@ -62,8 +56,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         storeUser: user => dispatch(storeUser(user)),
-        confirmed: () => dispatch(confirmed()),
-        checkSignedIn: () => dispatch(checkSignedIn())
     }
 }
 

@@ -1,5 +1,4 @@
 const initState = {
-    loaded: false,
     signedIn: false,
     user: {
         email: '',
@@ -21,11 +20,7 @@ const authReducer = (state = initState, action) => {
                 signedIn: true,
                 user: action.user
             }
-        case 'CONFIRM_USER':
-            return {
-                ...state,
-                loaded: true
-            }
+
         case 'SIGNIN_ERR':
             return {
                 ...state,

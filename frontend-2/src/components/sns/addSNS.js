@@ -5,9 +5,6 @@ import { SERVER } from '../../config';
 import { connect } from 'react-redux';
 import { ModalFooter, Button, ModalBody } from 'reactstrap';
 
-
-
-
 class AddSNS extends Component {
 
     state = {
