@@ -5,11 +5,11 @@ import { SignedInConfirmedHome, SignedInNotConfirmedHome, NotSignedInHome } from
 class Home extends Component {
 
     render() {
-        const { signedIn, user: { confirmed } } = this.props.auth;
+        const { user } = this.props.auth;
         return (
             <Fragment>
                 {
-                    signedIn ? confirmed ? <SignedInConfirmedHome /> : <SignedInNotConfirmedHome /> : <NotSignedInHome />
+                    user.email ? user.confirmed ? <SignedInConfirmedHome /> : <SignedInNotConfirmedHome /> : <NotSignedInHome />
                 }
             </Fragment>
         );

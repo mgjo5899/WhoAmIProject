@@ -26,7 +26,6 @@ class NavbarLayout extends Component {
     }
 
     render() {
-        const { signedIn } = this.props.auth;
         return (
             <Navbar className="navbar-dark bg-dark mb-3" expand="md">
                 <Container>
@@ -36,7 +35,7 @@ class NavbarLayout extends Component {
                         <Nav className="ml-auto" navbar>
                             {
                                 /* SignIn and SignOut */
-                                signedIn ? <SignOut /> : <SignIn />
+                                this.props.auth.user.email ? <SignOut /> : <SignIn />
                             }
                         </Nav>
                     </Collapse>

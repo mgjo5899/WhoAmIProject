@@ -42,7 +42,12 @@ class SignIn extends Component {
             password
         }).then(res => {
             const { status, user } = res.data;
-            status ? this.props.storeUser(user) : this.setState({ errorMsg: 'Could not sign in' });
+            if (status) {
+                this.props.storeUser(user);
+                this.props.history.push("/");
+            } else {
+                this.setState({ errorMsg: 'Could not sign in' });
+            }
         }).catch(err => {
             console.log(err);
         });
