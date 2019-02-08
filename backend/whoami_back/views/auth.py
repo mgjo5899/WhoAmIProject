@@ -40,6 +40,7 @@ def reset_password():
         new_password = req['new_password']
 
         rtn_val = manage.modify_password(email, new_password)
+        session['password'] = rtn_val.pop('hashed_new_pw')
     else:
         rtn_val['status'] = False
         rtn_val['message'] = "Request is missing either email, password, or new_password"
