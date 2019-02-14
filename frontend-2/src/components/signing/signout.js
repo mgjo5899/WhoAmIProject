@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react';
-import { Button, NavItem, UncontrolledDropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'reactstrap';
+import { Button, NavItem, UncontrolledDropdown, DropdownToggle, DropdownItem, DropdownMenu, NavLink } from 'reactstrap';
 import { connect } from 'react-redux';
 import { signOut } from '../../store/actions/authActions';
 import ChangePassword from './password/changePassword';
+import { withRouter, NavLink as Link } from 'react-router-dom';
 
 const SignOut = ({ auth, signOut }) => {
 
@@ -12,6 +13,9 @@ const SignOut = ({ auth, signOut }) => {
 
     return (
         <Fragment>
+            <NavItem>
+                <NavLink tag={Link} to="/playground">Playground</NavLink>
+            </NavItem>
             <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
                     {auth.user.username}
@@ -46,4 +50,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignOut);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SignOut));

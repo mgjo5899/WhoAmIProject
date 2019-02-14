@@ -7,7 +7,7 @@ import {
     Nav,
     Container
 } from 'reactstrap';
-import { NavLink as Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import SignIn from '../signing/signin';
 import SignOut from '../signing/signout';
 import { connect } from 'react-redux';

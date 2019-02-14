@@ -8,6 +8,7 @@ import axios from 'axios';
 import { SERVER } from './config';
 import { connect } from 'react-redux';
 import { storeUser } from './store/actions/authActions';
+import Playground from './components/layout/playground';
 
 class App extends Component {
 
@@ -33,6 +34,7 @@ class App extends Component {
           <Navbar />
           <Container>
             <Route exact path="/" component={Home} />
+            <Route exact path="/playground" component={Playground} />
             <Route exact path="/reset_pw" component={ResetPasswordComponent} />
           </Container>
         </div>

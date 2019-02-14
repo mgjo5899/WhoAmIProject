@@ -15,7 +15,10 @@ class AddSNS extends Component {
         sns: [
             {
                 name: 'Instagram',
-                link: '/instagram/register'
+                link: '/instagram/register',
+                clientId: '9ace074b44b0414baf402798131f8b00',
+                clientSecret: '7491526257d54beeaacd96be2072cf49',
+                authURL: (clientId, SERVER) => `https://api.instagram.com/oauth/authorize/?client_id=${clientId}&redirect_uri=${SERVER}&response_type=code`
             }
         ]
     }
@@ -32,10 +35,11 @@ class AddSNS extends Component {
         this.setState({ spinner: !this.state.spinner });
     }
 
-    handleRegister = link => {
+    handleRegister = elem => {
         this.spinnerToggle();
         this.registerToggle();
-        axios.post(SERVER + link, {
+        this.popup(elem);
+        axios.post(SERVER + elem.link, {
             username: this.props.auth.user.username
         }).then(res => {
             const { message } = res.data;
@@ -44,6 +48,14 @@ class AddSNS extends Component {
         }).catch(err => {
             console.log(err);
         });
+    }
+
+    popup = elem => {
+        const [width, height] = [450, 600];
+        const [left, top] = [window.screen.width / 2 - width / 2, window.screen.height / 2 - height / 2];
+        const spec = `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`
+        const newWindow = window.open(elem.authURL(elem.clientId, SERVER), elem.name, spec);
+        window.focus && newWindow.focus();
     }
 
     render() {
@@ -59,7 +71,7 @@ class AddSNS extends Component {
                             {
                                 this.state.sns.map(elem => (
                                     <div className="mx-auto col-sm-10 m-2 text-center" key={elem.name}>
-                                        <button onClick={() => this.handleRegister(elem.link)} className="list-group-item list-group-item-action">{elem.name}</button>
+                                        <button onClick={() => this.handleRegister(elem)} className="list-group-item list-group-item-action">{elem.name}</button>
                                     </div>)
                                 )
                             }
