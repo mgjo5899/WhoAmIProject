@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Modal, ModalHeader } from 'reactstrap';
 import axios from 'axios';
-import { SERVER } from '../../config';
+import { SERVER, CODE_REDIRECT_URI } from '../../config';
 import { connect } from 'react-redux';
 import { ModalFooter, Button, ModalBody } from 'reactstrap';
 
@@ -18,7 +18,7 @@ class AddSocialMedia extends Component {
                 link: '/instagram/register',
                 clientId: '9ace074b44b0414baf402798131f8b00',
                 clientSecret: '7491526257d54beeaacd96be2072cf49',
-                authURL: (clientId, SERVER) => `https://api.instagram.com/oauth/authorize/?client_id=${clientId}&redirect_uri=${SERVER}&response_type=code`
+                authURL: (clientId, CODE_REDIRECT_URI) => `https://api.instagram.com/oauth/authorize/?client_id=${clientId}&redirect_uri=${CODE_REDIRECT_URI}&response_type=code`
             }
         ]
     }
