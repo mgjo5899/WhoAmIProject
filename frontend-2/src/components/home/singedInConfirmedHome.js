@@ -1,12 +1,11 @@
 import React, { Fragment } from 'react';
-import AddSNS from '../sns/addSNS';
-
+import AddSocialMedia from '../social-media/addSocialMedia';
 
 const SignedInConfirmedHome = () => {
     return (
         <Fragment>
             <div className="float-right d-flex">
-                <AddSNS />
+                <AddSocialMedia />
             </div>
             <h1>Signed In Confirmed</h1>
         </Fragment>

@@ -5,7 +5,7 @@ import { SERVER } from '../../config';
 import { connect } from 'react-redux';
 import { ModalFooter, Button, ModalBody } from 'reactstrap';
 
-class AddSNS extends Component {
+class AddSocialMedia extends Component {
 
     state = {
         modal: false,
@@ -111,4 +111,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(AddSNS);
+export default connect(mapStateToProps)(AddSocialMedia);

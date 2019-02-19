@@ -9,6 +9,7 @@ import { SERVER } from './config';
 import { connect } from 'react-redux';
 import { storeUser } from './store/actions/authActions';
 import Playground from './components/layout/playground';
+import ReceiveInstagram from './components/social-media/receive/receive-instagram';
 
 class App extends Component {
 
@@ -31,6 +32,7 @@ class App extends Component {
     return this.state.loaded && (
       <BrowserRouter>
         <div className="App">
+          <Route exact path="/receive/instagram" component={ReceiveInstagram} />
           <Navbar />
           <Container>
             <Route exact path="/" component={Home} />
