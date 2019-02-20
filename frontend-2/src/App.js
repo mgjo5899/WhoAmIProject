@@ -8,7 +8,7 @@ import { SERVER } from './config';
 import { connect } from 'react-redux';
 import { storeUser } from './store/actions/authActions';
 import Playground from './components/layout/playground/playground';
-import ReceiveInstagram from './components/social-media/receive/receive-instagram';
+import ReceiveInstagram from './components/social-media/receive/ReceiveInstagram';
 
 class App extends Component {
 

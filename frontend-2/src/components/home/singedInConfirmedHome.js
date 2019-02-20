@@ -1,27 +1,33 @@
 import React, { useState } from 'react';
 import { Carousel, CarouselItem } from 'reactstrap';
-import Dashboard from '../dashboard';
+import Dashboard from '../dashboard/Dashboard';
 import ConnectTo from '../dashboard/ConnectTo';
+import SelectContents from '../dashboard/SelectContents';
 
 const SignedInConfirmedHome = () => {
 
     const [activeIndex, setActiveIndex] = useState(0);
+    const [element, setElement] = useState(null);
 
     const next = () => {
-        setActiveIndex(1);
+        activeIndex + 1 === items.length ? setActiveIndex(0) : setActiveIndex(activeIndex + 1);
     }
 
     const previous = () => {
-        setActiveIndex(0);
+        activeIndex === 0 ? setActiveIndex(items.length - 1) : setActiveIndex(activeIndex - 1);
+    }
+
+    const pickedElement = elem => {
+        setElement(elem);
+        next();
     }
 
     const props = {
-        activeIndex,
         next,
         previous
     };
 
-    const items = [<Dashboard {...props} />, <ConnectTo {...props} />];
+    const items = [<Dashboard {...props} />, <ConnectTo {...props} pickedElement={pickedElement} />, <SelectContents {...props} element={element} />];
 
     const slides = items.map((item, index) => (
         <CarouselItem key={index}>
