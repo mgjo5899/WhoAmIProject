@@ -2,6 +2,12 @@ BACK_VERSION:=$(shell cat backend/VERSION)
 
 all: build run
 
+start:
+	docker-compose start
+
+stop:
+	docker-compose stop
+
 build: backend-build
 
 clean:
