@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import Navbar from './components/layout/navbar';
 import Home from './components/home/home';
 import { BrowserRouter, Route } from 'react-router-dom';
-import { Container } from 'reactstrap';
 import ResetPasswordComponent from './components/signing/password/resetPasswordComponent';
 import axios from 'axios';
 import { SERVER } from './config';
 import { connect } from 'react-redux';
 import { storeUser } from './store/actions/authActions';
-import Playground from './components/layout/playground';
-import ReceiveInstagram from './components/social-media/receive/receive-instagram';
+import Playground from './components/layout/playground/playground';
+import ReceiveInstagram from './components/social-media/receive/ReceiveInstagram';
 
 class App extends Component {
 
@@ -34,11 +33,9 @@ class App extends Component {
         <div className="App">
           <Route exact path="/receive/instagram" component={ReceiveInstagram} />
           <Navbar />
-          <Container>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/playground" component={Playground} />
-            <Route exact path="/reset_pw" component={ResetPasswordComponent} />
-          </Container>
+          <Route exact path="/playground" component={Playground} />
+          <Route exact path="/" component={Home} />
+          <Route exact path="/reset_pw" component={ResetPasswordComponent} />
         </div>
       </BrowserRouter>
     )
