@@ -13,4 +13,5 @@ class AuthorizedMedium(Base):
 
     email = Column(String(250), ForeignKey(User.email), nullable=False)
     medium = Column(String(250), nullable=False)
+    access_token = Column(String(500), nullable=True)
     authorized_time = Column(DateTime, default=datetime.now())
