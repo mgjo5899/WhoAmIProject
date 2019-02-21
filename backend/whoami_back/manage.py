@@ -122,15 +122,18 @@ def register_medium(medium, email, access_token):
         rtn_val['message'] = "Could not find a user with the given email"
     else:
         target_medium = get_medium(email, medium)
+        print('target_medium: ', target_medium)
         rtn_val['status'] = True
 
         if target_medium != None:
             # Overwrite the access_token and authorized time
+            print('Found an existing authorization')
             target_medium.access_token = access_token
             target_medium.authorized_time = datetime.now()
             rtn_val['message'] = "Successfully updated Instagram access token for the user"
         else:
             # Need a new registration in the AuthorizedMedium table
+            print('Authorizing a new medium')
             new_medium = AuthorizedMedium(email=email, medium='instagram', access_token=access_token)
             db.add(new_medium)
             rtn_val['message'] = "Successfully registered Instagram account for the user"
