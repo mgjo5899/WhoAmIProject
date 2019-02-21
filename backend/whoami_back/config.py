@@ -1,6 +1,11 @@
 import os
 
 
+# Host name
+HOSTNAME = 'http://localhost'
+FRONTEND_PORT = '3000'
+BACKEND_PORT = '8000'
+
 # Email related
 HASH_METHOD = 'sha256'
 SECRET_KEY = 'my_precious'
