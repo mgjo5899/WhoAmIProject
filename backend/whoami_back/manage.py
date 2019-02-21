@@ -8,10 +8,47 @@ from whoami_back.models.base import db
 from whoami_back.config import HASH_METHOD
 from whoami_back.utils import get_pw_hash, check_pw_hash
 
+
+def get_authorized_medium(email):
+    rtn_val = {}
+
+    authorized_media = db.query(AuthorizedMedium).filter(AuthorizedMedium.email == email).all()
+
+    if len(authorized_media) > 0:
+        rtn_val['status'] = True
+        rtn_val['authorized_medium'] = []
+
+        for authorized_medium in authorized_media:
+            curr_medium = {}
+            curr_medium['email'] = email
+            curr_medium['medium'] = authorized_medium.medium
+            curr_medium['access_token'] = authorized_medium.access_token
+            curr_medium['authorized_time'] = authorized_medium.authorized_time
+            rtn_val['authorized_medium'].append(curr_medium)
+    else:
+        rtn_val['status'] = False
+        rtn_val['message'] = "Could not find any authorized medium for the user with the given email"
+
+    return rtn_val
+
+def get_medium_access_token(email, medium):
+    rtn_val = {}
+
+    target_medium = get_medium(email, medium)
+
+    if target_medium:
+        rtn_val['status'] = True
+        rtn_val['access_token'] = target_medium.access_token
+    else:
+        rtn_val['status'] = False
+        rtn_val['message'] = "Could not find target medium for the user with the given email"
+
+    return rtn_val
+
 def update_instagram_image(email, image_id, width, height, pos_x, pos_y, angle):
     rtn_val = {}
 
-    image = db.query(InstagramData).filter(and_(InstagramData.email == email, \
+    image = db.query(InstagramData).filter(and_(InstagramData.email == email,\
                                                 InstagramData.id == image_id)).first()
 
     if image == None:
@@ -37,7 +74,7 @@ def update_instagram_image(email, image_id, width, height, pos_x, pos_y, angle):
 def delete_instagram_image(email, image_id):
     rtn_val = {}
 
-    image = db.query(InstagramData).filter(and_(InstagramData.email == email, \
+    image = db.query(InstagramData).filter(and_(InstagramData.email == email,\
                                                 InstagramData.id == image_id)).first()
 
     if image == None:
@@ -57,12 +94,13 @@ def delete_instagram_image(email, image_id):
 def add_new_instagram_image(email, image_id, instagram_url, raw_image_url, orig_width, orig_height):
     rtn_val = {}
 
-    if db.query(InstagramData).filter(and_(InstagramData.id==image_id, InstagramData.email==email)).first():
+    if db.query(InstagramData).filter(and_(InstagramData.id==image_id,\
+                                           InstagramData.email==email)).first():
         rtn_val['status'] = False
         rtn_val['message'] = "Image already added"
     else:
-        new_image = InstagramData(id=image_id, email=email, \
-                                  instagram_url=instagram_url, raw_image_url=raw_image_url, \
+        new_image = InstagramData(id=image_id, email=email,\
+                                  instagram_url=instagram_url, raw_image_url=raw_image_url,\
                                   orig_width=orig_width, orig_height=orig_height)
         db.add(new_image)
         db.commit()
@@ -72,24 +110,31 @@ def add_new_instagram_image(email, image_id, instagram_url, raw_image_url, orig_
 
     return rtn_val
 
-def medium_authorized(email, medium):
-    return db.query(AuthorizedMedium).filter(and_(AuthorizedMedium.email == email, \
-                                              AuthorizedMedium.medium == medium)).first() != None
+def get_medium(email, medium):
+    return db.query(AuthorizedMedium).filter(and_(AuthorizedMedium.email == email,\
+                                              AuthorizedMedium.medium == medium)).first()
 
-def register_instagram(email):
+def register_medium(medium, email, access_token):
     rtn_val = {}
 
-    if medium_authorized(email, 'instagram'):
+    if check_email(email)['status'] == False:
         rtn_val['status'] = False
-        rtn_val['message'] = "The user already authorized Instagram"
+        rtn_val['message'] = "Could not find a user with the given email"
     else:
-        new_medium = AuthorizedMedium(email=email, medium='instagram')
-        db.add(new_medium)
-        db.commit()
-
+        target_medium = get_medium(email, medium)
         rtn_val['status'] = True
-        rtn_val['authorized_time'] = str(new_medium.authorized_time)
-        rtn_val['message'] = "Successfully registered Instagram account for the user"
+
+        if target_medium != None:
+            # Overwrite the access_token and authorized time
+            target_medium.access_token = access_token
+            target_medium.authorized_time = datetime.now()
+            rtn_val['message'] = "Successfully updated Instagram access token for the user"
+        else:
+            # Need a new registration in the AuthorizedMedium table
+            new_medium = AuthorizedMedium(email=email, medium='instagram', access_token=access_token)
+            db.add(new_medium)
+            rtn_val['message'] = "Successfully registered Instagram account for the user"
+        db.commit()
 
     return rtn_val
 

@@ -1,12 +1,121 @@
-from flask import session, Blueprint, jsonify, request
+from flask import session, Blueprint, jsonify, request, redirect
+import requests
 import json
 
 import whoami_back.utils as utils
+import whoami_back.instagram_config as instagram_conf
 import whoami_back.manage as manage
 
 
 instagram = Blueprint('instagram', __name__)
 
+
+def access_token_api(client_id, client_secret, grant_type, redirect_uri, code):
+    rtn_val = {}
+    uri = instagram_conf.ACCESS_TOKEN_ENDPOINT
+    payload = {
+                'client_id'     : client_id,
+                'client_secret' : client_secret,
+                'grant_type'    : grant_type,
+                'redirect_uri'  : redirect_uri,
+                'code'          : code
+              }
+    r = requests.post(uri, data=payload)
+
+    if r.status_code == 200:
+        rtn_val['status'] = True
+        rtn_val['access_token_data'] = json.loads(r.text)
+    else:
+        rtn_val['status'] = False
+        rtn_val['error_message'] = json.loads(r.text)
+
+    return rtn_val
+
+def get_user_contents(access_token):
+    rtn_val = {}
+    uri = instagram_conf.USER_MEDIA_ENDPOINT
+    r = requests.get(uri + '/?access_token=' + access_token)
+
+    if r.status_code == 200:
+        rtn_val['status'] = True
+        rtn_val['user_contents'] = json.loads(r.text)
+    else:
+        rtn_val['status'] = False
+        rtn_val['error_message'] = json.loads(r.text)
+
+    return rtn_val
+
+@instagram.route('/instagram/user_data', methods=['GET'])
+def get_user_data():
+    rtn_val = {}
+
+    if 'email' in session:
+        access_token = manage.get_medium_access_token(session['email'], 'instagram')
+
+        if access_token['status'] == True:
+            rtn_val = get_user_contents(access_token['access_token'])
+        else:
+            rtn_val['status'] = False
+            rtn_val['message'] = "Could not find Instagram access token for the user with the given email"
+    else:
+        rtn_val['status'] = False
+        rtn_val['message'] = "Could not find the user email in the session cookie"
+
+    return jsonify(rtn_val)
+
+@instagram.route('/instagram/get_access_token', methods=['GET'])
+def get_access_token():
+    rtn_val = {}
+    req = utils.get_req_data()
+
+    if 'code' in req:
+        print('code: ' + req['code'])
+
+        rtn_val = access_token_api(instagram_conf.CLIENT_ID,
+                                   instagram_conf.CLIENT_SECRET,
+                                   instagram_conf.GRANT_TYPE,
+                                   instagram_conf.ACCESS_TOKEN_REDIRECT_URI,
+                                   req['code'])
+
+        if rtn_val['status'] == True:
+            if 'email' in session:
+                access_token_data = rtn_val['access_token_data']
+                print('access_token_data: ', access_token_data)
+                rtn_val = { 'status' : True }
+                rtn_val['access_token'] = access_token_data['access_token']
+            else:
+                rtn_val = { 'status' : False }
+                rtn_val['message'] = "Could not find the user email in the session cookie"
+                rtn_val['error_code'] = 3
+        else:
+            rtn_val['error_code'] = 2
+    else:
+        rtn_val['status'] = False
+        rtn_val['message'] = "Failed to get code."
+        rtn_val['error_message'] = req
+        rtn_val['error_code'] = 1
+
+    if rtn_val['status'] == False:
+        # redirect to status false page
+        print("Failed to get user instagram access token")
+        notification = '{}?status=false&errorcode={}'.format(
+                                                              instagram_conf.RESULT_ENDPOINT,
+                                                              rtn_val['error_code']
+                                                            )
+    else:
+        # Indicate that the user is connected with Instagram
+        print("Successfully retrieved user instagram access token")
+        notification = '{}?status=true'.format(instagram_conf.RESULT_ENDPOINT)
+        rtn_val = manage.register_medium('instagram', session['email'], rtn_val['access_token'])
+
+        if rtn_val['status'] == True:
+            print("Saved access token to the user with the given email")
+        else:
+            print("Could not save access token to the user with the given email")
+
+    return redirect(notification)
+
+"""
 @instagram.route('/instagram/register', methods=['POST'])
 def register():
     rtn_val = {}
@@ -26,6 +135,7 @@ def register():
         rtn_val['message'] = "Request is either missing user credential or username"
 
     return jsonify(rtn_val)
+"""
 
 @instagram.route('/instagram/update', methods=['POST', 'PUT'])
 def update():
