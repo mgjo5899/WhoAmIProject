@@ -10,8 +10,7 @@ const Dashboard = ({ next }) => {
                     </svg>
                 </div>
             </div>
-            <div className="card justify-content-center align-self-stretch m-2" style={{ height: '80vh' }}>
-            </div>
+            <div className="card justify-content-center align-self-stretch m-2" style={{ height: '80vh' }}></div>
         </Fragment>
     );
 }

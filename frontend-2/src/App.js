@@ -33,9 +33,11 @@ class App extends Component {
         <div className="App">
           <Route exact path="/receive/instagram" component={ReceiveInstagram} />
           <Navbar />
-          <Route exact path="/playground" component={Playground} />
-          <Route exact path="/" component={Home} />
-          <Route exact path="/reset_pw" component={ResetPasswordComponent} />
+          <div className="container">
+            <Route exact path="/playground" component={Playground} />
+            <Route exact path="/" component={Home} />
+            <Route exact path="/reset_pw" component={ResetPasswordComponent} />
+          </div>
         </div>
       </BrowserRouter>
     )
