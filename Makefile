@@ -1,6 +1,6 @@
 BACK_VERSION:=$(shell cat backend/VERSION)
 
-all: clean build run
+all: build run
 
 build: backend-build
 
