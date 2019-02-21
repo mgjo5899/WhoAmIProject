@@ -62,17 +62,24 @@ const images = [
     </div>
 ];
 
-const Contents = ({ previous }) => {
+const Contents = ({ nextToSpreadSheet, previous }) => {
+
+    const [imageSelected, setImageSelected] = useState([]);
+
+    const handleNext = () => {
+        nextToSpreadSheet(imageSelected);
+    }
 
     return (
         <Fragment>
             <div className="card-columns">
                 {images.map((elem, index) => (
-                    <Image key={index} elem={elem} />
+                    <Image key={index} elem={elem} id={index} setImageSelected={setImageSelected} />
                 ))}
             </div >
             <div className="card-footer text-muted m-3 d-flex justify-content-center">
-                <button className="btn btn-danger" onClick={previous}>Cancel</button>
+                <button className="btn btn-danger mx-auto" onClick={previous}>Cancel</button>
+                <button className="btn btn-primary mx-auto" onClick={handleNext}>Done</button>
             </div>
         </Fragment>
     );
