@@ -249,6 +249,93 @@ It uses email and hashed password from session.
         }
 
 
+## Instagram User Data Related [/instagram/user_data]
+
+## Get User Data [GET]
+
+This API returns the Instagram data of the user who is signed in at the current session.
+
++ Response (application/json)
+
+        {
+            "status": true,
+            "user_contents": {
+                "data": [
+                    {
+                        "attribution": null,
+                        "caption": {
+                            "created_time": "1543101854",
+                            "from": {
+                                "full_name": "Joseph",
+                                "id": "8042456766",
+                                "profile_picture": "https://scontent.cdninstagram.com/vp/9899a40ccd4f9765d75e355c5739f352/5D07C873/t51.2885-19/s150x150/44831401_184970409123036_7553494893973209088_n.jpg?_nc_ht=scontent.cdninstagram.com",
+                                "username": "jocho5899"
+                            },
+                            "id": "17972641885146331",
+                            "text": "With a “French” baguette"
+                        },
+                        "comments": {
+                            "count": 3
+                        },
+                        "created_time": "1543101854",
+                        "filter": "Normal",
+                        "id": "1919999970989366104_8042456766",
+                        "images": {
+                            "low_resolution": {
+                                "height": 399,
+                                "url": "https://scontent.cdninstagram.com/vp/09897749bd656fe3a87e54503616096b/5D04A991/t51.2885-15/e35/p320x320/45485924_2144074302280621_5191338174935045848_n.jpg?_nc_ht=scontent.cdninstagram.com",
+                                "width": 320
+                            },
+                            "standard_resolution": {
+                                "height": 799,
+                                "url": "https://scontent.cdninstagram.com/vp/eb6f1d65cce1c7b255367d199dd554c3/5CF3976C/t51.2885-15/sh0.08/e35/p640x640/45485924_2144074302280621_5191338174935045848_n.jpg?_nc_ht=scontent.cdninstagram.com",
+                                "width": 640
+                            },
+                            "thumbnail": {
+                                "height": 150,
+                                "url": "https://scontent.cdninstagram.com/vp/031cae442f2d951069e4eef3e82cad40/5D211E9D/t51.2885-15/e35/c0.134.1080.1080/s150x150/45485924_2144074302280621_5191338174935045848_n.jpg?_nc_ht=scontent.cdninstagram.com",
+                                "width": 150
+                            }
+                        },
+                        "likes": {
+                            "count": 44
+                        },
+                        "link": "https://www.instagram.com/p/BqlNc0PlNtY/",
+                        "location": {
+                            "id": 129643084,
+                            "latitude": 43.7034,
+                            "longitude": 7.2663,
+                            "name": "Nice, France"
+                        },
+                        "tags": [],
+                        "type": "image",
+                        "user": {
+                            "full_name": "Joseph",
+                            "id": "8042456766",
+                            "profile_picture": "https://scontent.cdninstagram.com/vp/9899a40ccd4f9765d75e355c5739f352/5D07C873/t51.2885-19/s150x150/44831401_184970409123036_7553494893973209088_n.jpg?_nc_ht=scontent.cdninstagram.com",
+                            "username": "jocho5899"
+                        },
+                        "user_has_liked": false,
+                        "users_in_photo": [
+                            {
+                                "position": {
+                                    "x": 0.4293333333,
+                                    "y": 0.5386666667000001
+                                },
+                                "user": {
+                                    "username": "daily.baguette"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "meta": {
+                    "code": 200
+                },
+                "pagination": {}
+            }
+        }
+
 ## Instagram Update [/instagram/update]
 
 ### Data Addition Or Deletion [POST]
