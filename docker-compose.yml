@@ -27,9 +27,3 @@ services:
             - MAIL_PASSWORD=gnsalswjddma2580
         links:
             - database
-    frontend:
-        image: whoamiproject_frontend:0.0.1
-        ports:
-            - "3000:3000"
-        links:
-            - database

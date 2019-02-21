@@ -2,6 +2,8 @@ FROM python:3.7 as builder
 
 WORKDIR /tmp
 ADD . .
+RUN rm -rf .venv
+RUN pip install --upgrade pip
 RUN pip install pipenv
 RUN pipenv --three
 RUN pipenv run python setup.py sdist
@@ -14,6 +16,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV VERSION=0.0.1
 
 ADD Pipfile* /tmp/
+RUN pip install --upgrade pip
 RUN pip install pipenv
 RUN cd /tmp && \
     pipenv install --system
