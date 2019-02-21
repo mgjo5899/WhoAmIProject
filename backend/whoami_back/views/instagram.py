@@ -104,7 +104,7 @@ def get_access_token():
     notification = '{}?medium={}&status={}'.format(
                                                     instagram_conf.OAUTH_RESULT_ENDPOINT,
                                                     'instagram',
-                                                    rtn_val['status'].lower()
+                                                    str(rtn_val['status']).lower()
                                                   )
     if rtn_val['status'] == False:
         notification += '&errorcode={}'.format(rtn_val['error_code'])
