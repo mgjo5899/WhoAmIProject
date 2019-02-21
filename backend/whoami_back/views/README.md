@@ -2,6 +2,7 @@
 
 - [Authentication Related](#authentication-related)  
 - [Instagram Related](#instagram-related)
+- [User Data Related](#user-related)
 
 ## Authentication Related
 
@@ -353,18 +354,10 @@ regarding the images.  It uses email and hashed password from session.
                     "raw_image_url": "https://scontent.cdninstagram.com/vp/a218bc14fedb259d5e22b8bd58e5b47d/5BF6828E/t51.2885-15/sh0.08/e35/s640x640/37930134_844689042390902_1407567392577421312_n.jpg",
                     "orig_width": 640,
                     "orig_height": 479
-                },
-                {
-                    "id": "1839568314821633189_8042456766",
-                    "instagram_url": "https://www.instagram.com/p/BmHdaLJAeSl/",
-                    "raw_image_url": "https://scontent.cdninstagram.com/vp/a218bc14fedb259d5e22b8bd58e5b47d/5BF6828E/t51.2885-15/sh0.08/e35/s640x640/37930134_844689042390902_1407567392577421312_n.jpg",
-                    "orig_width": 640,
-                    "orig_height": 479
                 }
             ],
             "deletion": [
                 "1839568314821633189_8042456766",  # Image ID
-                "1839568314821633189_8042456766",
                 "1839568314821633189_8042456766",
                 ...
             ]
@@ -374,10 +367,6 @@ regarding the images.  It uses email and hashed password from session.
 
         {
             "additions": [
-                {
-                    "status": true,
-                    "image_id": "1839568314821633189_8042456766",
-                },
                 {
                     "status": true,
                     "image_id": "1839568314821633189_8042456766",
@@ -397,16 +386,31 @@ regarding the images.  It uses email and hashed password from session.
                     }
                 },
                 {
-                    "status": true,
-                    "deleted_image": {
-                        "image_id": "1839568314821633189_8042456766",
-                        "raw_image_url": "https://scontent.cdninstagram.com/vp/a218bc14fedb259d5e22b8bd58e5b47d/5BF6828E/t51.2885-15/sh0.08/e35/s640x640/37930134_844689042390902_1407567392577421312_n.jpg"
-                    }
-                },
-                {
                     "status": false,
                     "message": "There is no image of the user with the image_id",
                     "image_id": "1839568314821633189_8042456766"
                 }
             ]
+        }
+
+
+## User Related
+
+## Authorized Social Media
+
+### Get authorized social media [GET]
+
+(Credential in session required) This API gets social media that are linked to the given user.
+
++ Response 200 (application/json)
+
+        {
+            "authorized_medium": [
+                {
+                    "authorized_time": "Thu, 21 Feb 2019 15:38:51 GMT",
+                    "email": "mgjo5899@gmail.com",
+                    "medium": "instagram"
+                }
+            ],
+            "status": true
         }
