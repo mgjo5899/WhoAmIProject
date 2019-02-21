@@ -8,4 +8,4 @@ USER_MEDIA_ENDPOINT = '{}/v1/users/self/media/recent'.format(API_HOSTNAME)
 CLIENT_ID = 'c8fdd62c5cdd4b26a25c13f98b222e08'
 CLIENT_SECRET = 'ab7c144fa18a467a97300c6377d1e364'
 GRANT_TYPE = 'authorization_code'
-RESULT_ENDPOINT = '{}:{}/receive/instagram'.format(HOSTNAME, FRONTEND_PORT)
+OAUTH_RESULT_ENDPOINT = '{}:{}/oauth_redirect'.format(HOSTNAME, FRONTEND_PORT)
