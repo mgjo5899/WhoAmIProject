@@ -95,23 +95,19 @@ def get_access_token():
         rtn_val['error_message'] = req
         rtn_val['error_code'] = 1
 
-    if rtn_val['status'] == False:
-        # redirect to status false page
-        print("Failed to get user instagram access token")
-        notification = '{}?status=false&errorcode={}'.format(
-                                                              instagram_conf.RESULT_ENDPOINT,
-                                                              rtn_val['error_code']
-                                                            )
-    else:
-        # Indicate that the user is connected with Instagram
-        print("Successfully retrieved user instagram access token")
-        notification = '{}?status=true'.format(instagram_conf.RESULT_ENDPOINT)
+    if rtn_val['status'] == True:
         rtn_val = manage.register_medium('instagram', session['email'], rtn_val['access_token'])
 
-        if rtn_val['status'] == True:
-            print("Saved access token to the user with the given email")
-        else:
-            print("Could not save access token to the user with the given email")
+        if rtn_val['status'] == False:
+            rtn_val['error_code'] = 4
+
+    notification = '{}?medium={}&status={}'.format(
+                                                    instagram_conf.OAUTH_RESULT_ENDPOINT,
+                                                    'instagram',
+                                                    rtn_val['status'].lower()
+                                                  )
+    if rtn_val['status'] == False:
+        notification += '&errorcode={}'.format(rtn_val['error_code'])
 
     return redirect(notification)
 
