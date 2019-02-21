@@ -16,9 +16,9 @@ class AddSocialMedia extends Component {
             {
                 name: 'Instagram',
                 link: '/instagram/register',
-                clientId: '9ace074b44b0414baf402798131f8b00',
-                clientSecret: '7491526257d54beeaacd96be2072cf49',
-                authURL: (clientId, CODE_REDIRECT_URI) => `https://api.instagram.com/oauth/authorize/?client_id=${clientId}&redirect_uri=${CODE_REDIRECT_URI}&response_type=code`
+                clientId: 'c8fdd62c5cdd4b26a25c13f98b222e08',
+                clientSecret: 'ab7c144fa18a467a97300c6377d1e364',
+                authURL: (clientId) => `https://api.instagram.com/oauth/authorize/?client_id=${clientId}&redirect_uri=${CODE_REDIRECT_URI}&response_type=code`
             }
         ]
     }
