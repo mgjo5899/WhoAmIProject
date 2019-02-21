@@ -27,6 +27,13 @@ def get_req_data():
         # request.form is empty with react
         print("Getting data from request.data")
         req = json.loads(request.data.decode("utf-8"))
+    elif len(request.args) > 0:
+        # Redirect from social medium
+        print("Getting data from request.args")
+        req = {}
+
+        for k in request.args.keys():
+            req[k] = request.args.get(k)
 
     return req
 
