@@ -6,7 +6,7 @@ utils.reset_db()
 
 # Populating fake user table
 users = {
-            '{username}':['{email}', '{password}']
+            'someuser':['mgjo5899@gmail.com', '1000']
         }
 
 for name in users:
