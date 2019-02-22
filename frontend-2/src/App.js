@@ -8,7 +8,7 @@ import { SERVER } from './config';
 import { connect } from 'react-redux';
 import { storeUser } from './store/actions/authActions';
 import Playground from './components/layout/playground/playground';
-import ReceiveInstagram from './components/social-media/receive/ReceiveInstagram';
+import OAuthRedirect from './components/SocialMedia/OAuthRedirect';
 
 class App extends Component {
 
@@ -31,7 +31,7 @@ class App extends Component {
     return this.state.loaded && (
       <BrowserRouter>
         <div className="App">
-          <Route exact path="/receive/instagram" component={ReceiveInstagram} />
+          <Route exact path="/oauth_redirect" component={OAuthRedirect} />
           <Navbar />
           <div className="container">
             <Route exact path="/playground" component={Playground} />

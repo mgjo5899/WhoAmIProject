@@ -11,7 +11,7 @@ const SelectContents = ({ nextToSpreadSheet, previous, element }) => {
             <hr />
             <h5 className="d-flex justify-content-center m-2">Select the image</h5>
             <hr />
-            <Contents nextToSpreadSheet={nextToSpreadSheet} previous={previous} />
+            <Contents nextToSpreadSheet={nextToSpreadSheet} previous={previous} element={element} />
         </Fragment>
     );
 }
