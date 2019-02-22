@@ -21,6 +21,7 @@ const SignedInConfirmedHome = () => {
 
     const pickedElement = elem => {
         setElement(elem);
+        next();
     }
 
     const nextToSpreadSheet = selected => {

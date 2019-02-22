@@ -18,17 +18,26 @@ const ConnectTo = ({ previous, pickedElement, next }) => {
         }
     ]);
 
-    useEffect(() => {
+    const [elem, setElem] = useState(null);
+
+    useEffect(() => {       // first check for the authorization
         checkAuthorizedSocialMedia();
     }, []);
+
+    useEffect(() => {   // only let us pass the authorized medium
+        elem && pickedElement(elem); // pick the element what I have selected
+    }, [elem]);
 
     const checkAuthorizedSocialMedia = async () => {
         const data = await (await Axios.get(SERVER + '/user/authorized_media')).data;
         if (data.status) {
             data.authorized_medium.forEach(auth_obj => {    //iterate through given data
-                const index = socialMedia.findIndex(obj => obj.medium === auth_obj.medium); // iterate to find index of same medium
-                index !== -1 && (socialMedia[index].authorized = true); // if it finds the index, then make that thing into true
-                setSocialMedia(socialMedia);
+                setSocialMedia(socialMedia => {
+                    const newSocialMedia = [...socialMedia];    // make new list 
+                    const index = newSocialMedia.findIndex(obj => obj.medium === auth_obj.medium); // iterate to find index of same medium
+                    index !== -1 && (newSocialMedia[index].authorized = true); // if it finds the index, then make that thing into true
+                    return newSocialMedia;
+                });
             });
         }
     }
@@ -39,11 +48,11 @@ const ConnectTo = ({ previous, pickedElement, next }) => {
             const newWindow = popup(elem);    // only if it is disabled
             newWindow.onunload = () => {
                 // call api for the color
-                pickedElement(elem);
-                return;
+                checkAuthorizedSocialMedia();
             }
+        } else {
+            setElem(elem);
         }
-        pickedElement(elem);    // pick the element what I have selected
     }
 
     const popup = elem => {
