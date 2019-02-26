@@ -3,31 +3,36 @@ import { SERVER } from '../../config';
 import Axios from 'axios';
 import Gallery from 'react-grid-gallery';
 
-const Contents = ({ nextToSpreadSheet, previous, element }) => {
+const uniqid = require('uniqid');
 
-    const [imageSelected, setImageSelected] = useState([]);
+const Contents = ({ next, previous, element, setImageSelected, contents, setContents }) => {
+
     const [images, setImages] = useState([]);
-    const [contents, setContents] = useState([]);
 
-    const handleNext = () => {
-        nextToSpreadSheet(imageSelected);
-    }
+    const [lastElementMedium, setLastElementMedium] = useState('');
 
     // load images
     useEffect(() => {
-        fetchImage();
+        if (element && element.medium !== lastElementMedium) {
+            setLastElementMedium(element.medium);
+            fetchImage();
+        }
     }, [element]);
 
     // call when finish loading the image
     useEffect(() => {
         let newList = [];
         images.forEach(image => { newList = [...newList, ...image] });  // make newList for fetching all list data into one list
+        const [width, height] = [1000, 1000];
         const imageList = newList.map(image => ({
+            id: uniqid(),
             src: image.src.url,
             thumbnail: image.thumbnail.url,
             thumbnailWidth: image.thumbnail.width,
             thumbnailHeight: image.thumbnail.height,
-            caption: image.caption
+            caption: image.caption,
+            randomWidth: Math.floor(Math.random() * (width - 200)),
+            randomHeight: Math.floor(Math.random() * (height - 200))
         }));    // make the form for making gallery
         setContents(imageList); //setting contents which would display on the screen
     }, [images]);
@@ -75,7 +80,7 @@ const Contents = ({ nextToSpreadSheet, previous, element }) => {
         const img = images[index];
         img.hasOwnProperty("isSelected") ? img.isSelected = !img.isSelected : img.isSelected = true;
         setContents(images);
-        setImageSelected(images.filter(image => image.isSelected));
+        setImageSelected(contents.filter(image => image.isSelected));
     }
 
     return (
@@ -93,11 +98,9 @@ const Contents = ({ nextToSpreadSheet, previous, element }) => {
                     backdropClosesModal={true}
                 />
             </div>
-            <div className="fixed-bottom">
-                <div className="card-footer bg-secondary d-flex justify-content-center" style={{ opacity: 0.9 }}>
-                    <button className="btn btn-danger mx-auto" onClick={previous}>Cancel</button>
-                    <button className="btn btn-primary mx-auto" onClick={handleNext}>Done</button>
-                </div>
+            <div className="fixed-bottom card-footer bg-secondary d-flex justify-content-center" style={{ opacity: 0.9 }}>
+                <button className="btn btn-danger mx-auto" onClick={previous}>Cancel</button>
+                <button className="btn btn-primary mx-auto" onClick={next}>Done</button>
             </div>
         </Fragment>
     );

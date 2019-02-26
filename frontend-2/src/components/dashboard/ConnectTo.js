@@ -45,13 +45,15 @@ const ConnectTo = ({ previous, pickedElement, next }) => {
     const handleRegister = elem => {
         // check if it is enabled or not. If not, call popup first, if it is, skip it
         if (!elem.authorized) {
-            const newWindow = popup(elem);    // only if it is disabled
-            newWindow.onunload = () => {
-                // call api for the color
-                checkAuthorizedSocialMedia();
-            }
+            // const newWindow = popup(elem);    // only if it is disabled
+            popup(elem);    // only if it is disabled
+            window.checkAuthorizedSocialMedia = checkAuthorizedSocialMedia;
+            // newWindow.onunload = () => {
+            //     // call api for the color
+            //     checkAuthorizedSocialMedia();
+            // }
         } else {
-            setElem(elem);
+            setElem({ ...elem });
         }
     }
 
@@ -61,7 +63,6 @@ const ConnectTo = ({ previous, pickedElement, next }) => {
         const spec = `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`
         const newWindow = window.open(elem.authURL(elem.clientId, elem.authRedirectUri), elem.medium, spec);
         window.focus && newWindow.focus();
-        return newWindow;
     }
 
     return (

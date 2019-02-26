@@ -10,6 +10,7 @@ const SignedInConfirmedHome = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [element, setElement] = useState(null);
     const [imageSelected, setImageSelected] = useState([]);
+    const [contents, setContents] = useState([]);
 
     const next = () => {
         activeIndex + 1 === items.length ? setActiveIndex(0) : setActiveIndex(activeIndex + 1);
@@ -24,11 +25,6 @@ const SignedInConfirmedHome = () => {
         next();
     }
 
-    const nextToSpreadSheet = selected => {
-        setImageSelected(selected);
-        next();
-    }
-
     const props = {
         next,
         previous
@@ -37,8 +33,14 @@ const SignedInConfirmedHome = () => {
     const items = [
         <Dashboard {...props} />,
         <ConnectTo {...props} pickedElement={pickedElement} />,
-        <SelectContents {...props} element={element} nextToSpreadSheet={nextToSpreadSheet} />,
-        <Spread {...props} imageSelected={imageSelected} setImageSelected={setImageSelected} />
+        <SelectContents {...props}
+            element={element}
+            imageSelected={imageSelected}
+            setImageSelected={setImageSelected}
+            contents={contents}
+            setContents={setContents}
+        />,
+        <Spread {...props} imageSelected={imageSelected} setImageSelected={setImageSelected} setContents={setContents} />
     ];
 
     const slides = items.map((item, index) => (
