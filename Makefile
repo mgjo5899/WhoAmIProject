@@ -24,5 +24,10 @@ backend:
 backend-build:
 	docker build -t whoamiproject_backend:${BACK_VERSION} backend/
 
+windows: database windows-backend
+
+windows-backend:
+	sleep 20; source docker.env; cd backend; pipenv run python whoami_back/app.py
+
 .PHONY: all build clean run database backend frontend
 .PHONY: backend-build frontend-build
