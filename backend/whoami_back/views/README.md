@@ -1,10 +1,11 @@
 # WhoAmI API Documentation
 
-- [Authentication Related](#authentication-related)  
-- [Instagram Related](#instagram-related)
-- [User Data Related](#user-related)
+- [Authentication](#authentication)  
+- [Whiteboard](#whiteboard)
+- [Instagram](#instagram)
+- [User Data](#user-data)
 
-## Authentication Related
+## Authentication
 
 ## User Signin [/signin]
 
@@ -226,27 +227,136 @@ endpoint is only used when a user presses reset button in password reset email. 
 is valid, then it redirects to /reset_pw.
 
 
-## Instagram Related 
+## Whiteboard
 
-## Instagram Registration [/instagram/register]
+## User Data on the Whiteboard [/whiteboard/user_data]
 
-### Registers user's Instagram account [POST]
+### Get user data that's on the whiteboard [GET]
 
-This endpoint lets our server know that the user linked his/her Instagram account with us.
-It uses email and hashed password from session.
+This API returns data related to the user contents on the user's whiteboard.  It requires the user credential in the session cookie.
+
++ Response (application/json)
+
+        {
+            "status": true,
+            "whiteboard_data": [
+                {
+                    "curr_height": 480,
+                    "curr_width": 640,
+                    "id": 2,
+                    "instagram_url": "https://www.instagram.com/p/Bu7vYu-F9z0/",
+                    "last_modified": "Wed, 13 Mar 2019 21:20:39 GMT",
+                    "medium": "instagram",
+                    "orig_height": 480,
+                    "orig_width": 640,
+                    "pos_x": 10,
+                    "pos_y": 10,
+                    "raw_content_url": "https://scontent.cdninstagram.com/vp/9572fc0348077bef240769a0e6c06c34/5D0B6328/t51.2885-15/sh0.08/e35/s640x640/53199887_348952865719289_2176542923815712269_n.jpg?_nc_ht=scontent.cdninstagram.com",
+                    "status": 1,
+                    "type": "image"
+                }
+            ]
+        }
+
+### Add contents [POST]
+
+This API lets you add whiteboard data.  It requires the user crerdential in the session cookie.
 
 + Request Body (application/json)
 
         {
-            "username": "someone"
+            "new_contents": [
+                {
+                    # General information
+                    "type": "image",
+                    "medium": "instagram",
+                    "pos_x": 10,
+                    "pos_y": 10,
+
+                    # Medium specific information
+                    "instagram_specific": {
+                        "raw_content_url": "https://scontent.cdninstagram.com/vp/9572fc0348077bef240769a0e6c06c34/5D0B6328/t51.2885-15/sh0.08/e35/s640x640/53199887_348952865719289_2176542923815712269_n.jpg?_nc_ht=scontent.cdninstagram.com",
+                        "instagram_url": "https://www.instagram.com/p/Bu7vYu-F9z0/",
+                        "orig_width": 640,
+                        "orig_height": 480,
+                        "curr_width": 640,
+                        "curr_height": 480
+                    }
+                }
+            ]
         }
 
 + Response (application/json)
 
         {
             "status": true,
-            "authorized_time": 2018-10-02 06:28:08.427133,
-            "message": "Successfully registered Instagram account for the user"
+            "addition_results": [
+                {
+                    "status": true,
+                    "id": 2,
+                    "medium": "instagram",
+                    "email": "mgjo5899@gmail.com"
+                }
+            ]
+        }
+
+### Updating whiteboard data [PUT]
+
+This API lets the whiteboard data to be updated.  It requirers the user crerdential in the session cookie.
+
++ Request Body (application/json)
+
+        {
+            "updated_contents": [
+                {
+                    "id": 1,
+                    "medium": "instagram",
+                    "pos_x": 10,
+                    "pos_y": 10,
+                    "curr_width": 640,
+                    "curr_height": 480
+                }
+            ]
+        }
+
++ Response (application/json)
+
+        {
+            "status": true,
+            "update_results": [
+                {
+                    "status": true,
+                    "id": 1,
+                    "medium": "instagram",
+                    "email": "mgjo5899@gmail.com"
+                }
+            ]
+        }
+
+### Deleting whiteboard data [DELETE]
+
+This API lets the whiteboard data to be deleted.  It requirers the user crerdential in the session cookie.
+
++ Request Body (application/json)
+
+        {
+            "deleted_contents": [
+                1
+            ]
+        }
+
++ Response (application/json)
+
+        {
+            "status": true,
+            "delete_results": [
+                {
+                    "status": true,
+                    "id": 1,
+                    "medium": "instagram",
+                    "email": "mgjo5899@gmail.com"
+                }
+            ]
         }
 
 
@@ -260,141 +370,27 @@ This API returns the Instagram data of the user who is signed in at the current 
 
         {
             "status": true,
-            "user_contents": {
-                "data": [
-                    {
-                        "attribution": null,
-                        "caption": {
-                            "created_time": "1543101854",
-                            "from": {
-                                "full_name": "Joseph",
-                                "id": "8042456766",
-                                "profile_picture": "https://scontent.cdninstagram.com/vp/9899a40ccd4f9765d75e355c5739f352/5D07C873/t51.2885-19/s150x150/44831401_184970409123036_7553494893973209088_n.jpg?_nc_ht=scontent.cdninstagram.com",
-                                "username": "jocho5899"
-                            },
-                            "id": "17972641885146331",
-                            "text": "With a “French” baguette"
-                        },
-                        "comments": {
-                            "count": 3
-                        },
-                        "created_time": "1543101854",
-                        "filter": "Normal",
-                        "id": "1919999970989366104_8042456766",
-                        "images": {
-                            "low_resolution": {
-                                "height": 399,
-                                "url": "https://scontent.cdninstagram.com/vp/09897749bd656fe3a87e54503616096b/5D04A991/t51.2885-15/e35/p320x320/45485924_2144074302280621_5191338174935045848_n.jpg?_nc_ht=scontent.cdninstagram.com",
-                                "width": 320
-                            },
-                            "standard_resolution": {
-                                "height": 799,
-                                "url": "https://scontent.cdninstagram.com/vp/eb6f1d65cce1c7b255367d199dd554c3/5CF3976C/t51.2885-15/sh0.08/e35/p640x640/45485924_2144074302280621_5191338174935045848_n.jpg?_nc_ht=scontent.cdninstagram.com",
-                                "width": 640
-                            },
-                            "thumbnail": {
-                                "height": 150,
-                                "url": "https://scontent.cdninstagram.com/vp/031cae442f2d951069e4eef3e82cad40/5D211E9D/t51.2885-15/e35/c0.134.1080.1080/s150x150/45485924_2144074302280621_5191338174935045848_n.jpg?_nc_ht=scontent.cdninstagram.com",
-                                "width": 150
-                            }
-                        },
-                        "likes": {
-                            "count": 44
-                        },
-                        "link": "https://www.instagram.com/p/BqlNc0PlNtY/",
-                        "location": {
-                            "id": 129643084,
-                            "latitude": 43.7034,
-                            "longitude": 7.2663,
-                            "name": "Nice, France"
-                        },
-                        "tags": [],
-                        "type": "image",
-                        "user": {
-                            "full_name": "Joseph",
-                            "id": "8042456766",
-                            "profile_picture": "https://scontent.cdninstagram.com/vp/9899a40ccd4f9765d75e355c5739f352/5D07C873/t51.2885-19/s150x150/44831401_184970409123036_7553494893973209088_n.jpg?_nc_ht=scontent.cdninstagram.com",
-                            "username": "jocho5899"
-                        },
-                        "user_has_liked": false,
-                        "users_in_photo": [
-                            {
-                                "position": {
-                                    "x": 0.4293333333,
-                                    "y": 0.5386666667000001
-                                },
-                                "user": {
-                                    "username": "daily.baguette"
-                                }
-                            }
-                        ]
-                    }
-                ],
-                "meta": {
-                    "code": 200
-                },
-                "pagination": {}
-            }
-        }
-
-## Instagram Update [/instagram/update]
-
-### Data Addition Or Deletion [POST]
-
-This API gets called when there are things to add or delete from the user's Instagram DB
-regarding the images.  It uses email and hashed password from session.
-
-+ Request Body (application/json)
-
-        {
-            "addition": [
+            "email": "mgjo5899@gmail.com"
+            "instagram_contents": [
                 {
-                    "id": "1839568314821633189_8042456766",
-                    "instagram_url": "https://www.instagram.com/p/BmHdaLJAeSl/",
-                    "raw_image_url": "https://scontent.cdninstagram.com/vp/a218bc14fedb259d5e22b8bd58e5b47d/5BF6828E/t51.2885-15/sh0.08/e35/s640x640/37930134_844689042390902_1407567392577421312_n.jpg",
                     "orig_width": 640,
-                    "orig_height": 479
-                }
-            ],
-            "deletion": [
-                "1839568314821633189_8042456766",  # Image ID
-                "1839568314821633189_8042456766",
-                ...
-            ]
-        }
-
-+ Response (application/json)
-
-        {
-            "additions": [
+                    "orig_height": 480,
+                    "raw_content_url": "https://scontent.cdninstagram.com/vp/9572fc0348077bef240769a0e6c06c34/5D0B6328/t51.288515/sh0.08/e35/s640x640/53199887_348952865719289_2176542923815712269_n.jpg?_nc_ht=scontent.cdninstagram.com",
+                    "instagram_url": "https://www.instagram.com/p/Bu7vYu-F9z0/",
+                    "type": "image"
+								},
                 {
-                    "status": true,
-                    "image_id": "1839568314821633189_8042456766",
-                },
-                {
-                    "status": false,
-                    "message": "Image already added",
-                    "image_id": "1839568314821633189_8042456766",
-                }
-            ],
-            "deletions": [
-                {
-                    "status": true,
-                    "deleted_image": {
-                        "image_id": "1839568314821633189_8042456766",
-                        "raw_image_url": "https://scontent.cdninstagram.com/vp/a218bc14fedb259d5e22b8bd58e5b47d/5BF6828E/t51.2885-15/sh0.08/e35/s640x640/37930134_844689042390902_1407567392577421312_n.jpg"
-                    }
-                },
-                {
-                    "status": false,
-                    "message": "There is no image of the user with the image_id",
-                    "image_id": "1839568314821633189_8042456766"
+                    "orig_width": 640,
+                    "orig_height": 640,
+                    "raw_content_url": "https://scontent.cdninstagram.com/vp/a9bd4032f373574b6b2182d47e722a9d/5D0FFEFA/t51.2885-15/sh0.08/e35/s640x640/53109635_123344238777449_8694827121769313550_n.jpg?_nc_ht=scontent.cdninstagram.com",
+                    "instagram_url": "https://www.instagram.com/p/BuwxR1vFjBm/",
+                    "type": 'image'
                 }
             ]
-        }
+      }
 
 
-## User Related
+## User Data
 
 ## Authorized Social Media
 

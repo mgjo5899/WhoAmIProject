@@ -20,7 +20,12 @@ def access_token_api(client_id, client_secret, grant_type, redirect_uri, code):
                 'redirect_uri'  : redirect_uri,
                 'code'          : code
               }
+
     r = requests.post(uri, data=payload)
+
+    # When things are not working
+    #rtn_val['status'] = True
+    #rtn_val['access_token_data'] = json.loads(''.join([t.strip() for t in open('instagram_data.txt', 'r').readlines()]))
 
     if r.status_code == 200:
         rtn_val['status'] = True
@@ -45,6 +50,21 @@ def get_user_contents(access_token):
 
     return rtn_val
 
+def refine_raw_data(raw_contents_data):
+    contents = []
+
+    for raw_content in raw_contents_data:
+        # Get standard_resolution
+        content = {}
+        content['orig_width'] = raw_content['images']['standard_resolution']['width']
+        content['orig_height'] = raw_content['images']['standard_resolution']['height']
+        content['raw_content_url'] = raw_content['images']['standard_resolution']['url']
+        content['instagram_url'] = raw_content['link']
+        content['type'] = raw_content['type']
+        contents.append(content)
+
+    return contents
+
 @instagram.route('/instagram/user_data', methods=['GET'])
 def get_user_data():
     rtn_val = {}
@@ -53,7 +73,37 @@ def get_user_data():
         access_token = manage.get_medium_access_token(session['email'], 'instagram')
 
         if access_token['status'] == True:
-            rtn_val = get_user_contents(access_token['access_token'])
+            raw_user_data = get_user_contents(access_token['access_token'])
+
+            if raw_user_data['status'] == True:
+                # Refine the data
+                refined_contents = refine_raw_data(raw_user_data['user_contents']['data'])
+                existing_instagram_contents = manage.get_whiteboard_data(session['email'], 'instagram')['whiteboard_data']
+
+                # Check if there's any unavailable contents and if there are, mark their status as 3
+                # Also check if there's any existing used (1) or unused (2) content
+                # If there is, retrieve necessary information
+                for existing_content in existing_instagram_contents:
+                    available = False
+
+                    for curr_content in refined_contents:
+                        if existing_content['raw_content_url'] == curr_content['raw_content_url']:
+                            available = True
+                            curr_content['id'] = existing_content['id']
+                            curr_content['pos_x'] = existing_content['pos_x']
+                            curr_content['pos_y'] = existing_content['pos_y']
+                            curr_content['last_modified'] = existing_content['last_modified']
+                            curr_content['curr_width'] = existing_content['curr_width']
+                            curr_content['curr_height'] = existing_content['curr_height']
+                            curr_content['status'] = existing_content['status']
+                            break
+
+                    if available == False:
+                        marking_result = manage.mark_content_unavailable(existing_content['id'])
+                        print(marking_result)
+                rtn_val['status'] = True
+                rtn_val['instagram_contents'] = refined_contents
+                rtn_val['email'] = session['email']
         else:
             rtn_val['status'] = False
             rtn_val['message'] = "Could not find Instagram access token for the user with the given email"
@@ -69,8 +119,6 @@ def get_access_token():
     req = utils.get_req_data()
 
     if 'code' in req:
-        print('code: ' + req['code'])
-
         rtn_val = access_token_api(instagram_conf.CLIENT_ID,
                                    instagram_conf.CLIENT_SECRET,
                                    instagram_conf.GRANT_TYPE,
@@ -80,7 +128,6 @@ def get_access_token():
         if rtn_val['status'] == True:
             if 'email' in session:
                 access_token_data = rtn_val['access_token_data']
-                print('access_token_data: ', access_token_data)
                 rtn_val = { 'status' : True }
                 rtn_val['access_token'] = access_token_data['access_token']
             else:
@@ -110,72 +157,3 @@ def get_access_token():
         notification += '&errorcode={}'.format(rtn_val['error_code'])
 
     return redirect(notification)
-
-"""
-@instagram.route('/instagram/register', methods=['POST'])
-def register():
-    rtn_val = {}
-    req = utils.get_req_data()
-
-    if 'email' in session and 'password' in session and 'username' in req:
-        if manage.signin_user(session['email'], session['password'], hashed=True)['status']:
-            rtn_val = manage.check_username_with_email(req['username'], session['email'])
-
-            if rtn_val['status']:
-                rtn_val = manage.register_instagram(session['email'])
-        else:
-            rtn_val['status'] = False
-            rtn_val['message'] = "Incorrect credential in session token"
-    else:
-        rtn_val['status'] = False
-        rtn_val['message'] = "Request is either missing user credential or username"
-
-    return jsonify(rtn_val)
-"""
-
-@instagram.route('/instagram/update', methods=['POST', 'PUT'])
-def update():
-    rtn_val = {}
-    req = utils.get_req_data()
-
-    if 'email' in session and 'password' in session and 'username' in req:
-        if manage.signin_user(session['email'], session['password'], hashed=True)['status']:
-            rtn_val = manage.check_username_with_email(req['username'], session['email'])
-
-            if rtn_val['status']:
-                # TODO: Need to check with how react sends dictionary or JSON formatted string
-                if request.method == 'POST':
-                    if 'addition' in req:
-                        added = []
-                        additions = json.loads(req['addition'])
-
-                        for img in additions:
-                            added.append(manage.add_new_instagram_image(session['email'], img['id'], \
-                                                           img['instagram_url'], img['raw_image_url'], \
-                                                           img['orig_width'], img['orig_height']))
-                        rtn_val['additions'] = added
-
-                    if 'deletion' in req:
-                        deleted = []
-                        deletion = json.loads(req['deletion'])
-
-                        for image_id in deletion:
-                            deleted.append(manage.delete_instagram_image(session['email'], image_id))
-                        rtn_val['deletions'] = deleted
-                elif request.method == 'PUT':
-                    if 'modification' in req:
-                        modified = []
-                        modifications = json.loads(req['modification'])
-
-                        for img in modifications:
-                            modified.append(manage.update_instagram_image(session['email'], img['id'], \
-                                    img['width'], img['height'], img['pos_x'], img['pos_y'], img['angle']))
-                        rtn_val['modifications'] = modified
-        else:
-            rtn_val['status'] = False
-            rtn_val['message'] = "Incorrect credential in session token"
-    else:
-        rtn_val['status'] = False
-        rtn_val['message'] = "Request is either missing user credential or username"
-
-    return jsonify(rtn_val)
