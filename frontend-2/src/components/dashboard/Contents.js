@@ -3,77 +3,102 @@ import { SERVER } from '../../config';
 import Axios from 'axios';
 import Gallery from 'react-grid-gallery';
 
-const uniqid = require('uniqid');
-
 const Contents = ({ next, previous, element, setImageSelected, contents, setContents }) => {
 
-    const [images, setImages] = useState([]);
+    const [data, setData] = useState({
+        new: [],
+        images: [],
+        existing: [],
+        change: [],
+        delete: []
+    });
 
     const [lastElementMedium, setLastElementMedium] = useState('');
 
     // load images
     useEffect(() => {
+        // if it was previously loaded, make it efficient, don't load same thing again
         if (element && element.medium !== lastElementMedium) {
             setLastElementMedium(element.medium);
             fetchImage();
         }
     }, [element]);
 
-    // call when finish loading the image
+    // call when image loading changes
     useEffect(() => {
-        let newList = [];
-        images.forEach(image => { newList = [...newList, ...image] });  // make newList for fetching all list data into one list
         const [width, height] = [1000, 1000];
-        const imageList = newList.map(image => ({
-            id: uniqid(),
-            src: image.src.url,
-            thumbnail: image.thumbnail.url,
-            thumbnailWidth: image.thumbnail.width,
-            thumbnailHeight: image.thumbnail.height,
-            caption: image.caption,
+
+        // make the form for making gallery
+        const imageList = data.images.map(image => ({
+            src: image.src,
+            thumbnail: image.src,
+            thumbnailWidth: image.orig_width,
+            thumbnailHeight: image.orig_height,
             randomWidth: Math.floor(Math.random() * (width - 200)),
             randomHeight: Math.floor(Math.random() * (height - 200))
-        }));    // make the form for making gallery
-        setContents(imageList); //setting contents which would display on the screen
-    }, [images]);
+        }));
+
+        // get the images that already registered, and mark as checked if it is a same source
+        checkExistingImages();
+
+        // setting contents which would display on the screen
+        setContents(imageList);
+    }, [data.images]);
+
+    const checkExistingImages = async () => {
+        try {
+            const { status, whiteboard_data } = await (await Axios.get(SERVER + '/whiteboard/user_data')).data;
+            if (!status) throw new Error('Error occured while fetching whiteboard user data');
+            // add whiteboard data url into the set
+            const urlSet = new Set();
+            whiteboard_data.forEach(({ raw_content_url }) => {
+                urlSet.add(raw_content_url);
+            });
+            // check the url using previous set if it should be marked or not
+            setData({
+                images: (
+                    data.images.map(image => {
+                        if (image.src in urlSet) {
+                            image.isSelected = true;
+                        }
+                        return image;
+                    })
+                ),
+                existing: whiteboard_data
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     //fetch image function
     const fetchImage = async () => {
         if (element) {
             // fetch data in the link
-            const { status, user_contents } = await (await Axios.get(SERVER + element.link)).data;
-            if (status) {
+            try {
+                const userData = await (await Axios.get(SERVER + element.link)).data;
+                if (!userData.status) throw new Error('No right to fetch data');
                 // instagram case
-                setImages(
-                    user_contents
-                        .data
-                        .map(data => (
-                            data.carousel_media
-                                ?
-                                data.carousel_media.map(image => (
-                                    {
-                                        src: image.images.standard_resolution,
-                                        thumbnail: image.images.low_resolution,
-                                        // caption: data.caption.text
-                                    }
-                                ))
-                                :
-                                [
-                                    {
-                                        src: data.images.standard_resolution,
-                                        thumbnail: data.images.low_resolution,
-                                        // caption: data.caption.text
-                                    }
-                                ]
-                        )
-                        )
-                )
-            } else {
-                // throws error
-                console.log('error');
+                const contentsData = userData[element.contents];
+                setData({
+                    images: (
+                        contentsData.map(imageData => (
+                            {
+                                src: imageData.raw_content_url,
+                                thumbnail: imageData.raw_content_url,
+                                orig_width: imageData.orig_width,
+                                orig_height: imageData.orig_height
+                                // caption: data.caption.text
+                            }
+                        ))
+                    )
+                });
+            } catch (error) {
+                console.log(error);
             }
         }
     }
+
 
     const onSelectImage = index => {
         const images = contents

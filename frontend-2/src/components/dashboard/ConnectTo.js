@@ -14,7 +14,8 @@ const ConnectTo = ({ previous, pickedElement, next }) => {
             authRedirectUri: 'http://localhost:8000/instagram/get_access_token',
             authURL: (clientId, authRedirectUri) => `https://api.instagram.com/oauth/authorize/?client_id=${clientId}&redirect_uri=${authRedirectUri}&response_type=code`,
             src: InstagramLogo,
-            authorized: false
+            authorized: false,
+            contents: 'instagram_contents'
         }
     ]);
 
