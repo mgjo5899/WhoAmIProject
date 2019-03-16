@@ -15,7 +15,9 @@ const ConnectTo = ({ previous, pickedElement, next }) => {
             authURL: (clientId, authRedirectUri) => `https://api.instagram.com/oauth/authorize/?client_id=${clientId}&redirect_uri=${authRedirectUri}&response_type=code`,
             src: InstagramLogo,
             authorized: false,
-            contents: 'instagram_contents'
+            contents: 'instagram_contents',
+            sourceUrl: 'instagram_url',
+            specific: 'instagram_specific'
         }
     ]);
 
