@@ -4,7 +4,7 @@ import { Drag } from './DragAndDrop';
 import Axios from 'axios';
 import { SERVER } from '../../config';
 
-const Spread = ({ next, previous, imageSelected, setImageSelected, setContents }) => {
+const Spread = ({ next, previous, element, setContents, data }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(1000);
@@ -15,9 +15,8 @@ const Spread = ({ next, previous, imageSelected, setImageSelected, setContents }
     }, []);
 
     const handleClose = image => {
-        setImageSelected(imageSelected.filter(curImage => curImage.id !== image.id));
         setContents(contents => {
-            const contentIndex = contents.findIndex(content => content.id === image.id);
+            const contentIndex = contents.findIndex(content => content.src === image.src);
             contents[contentIndex].isSelected = !contents[contentIndex].isSelected;
             return contents;
         });
@@ -29,56 +28,63 @@ const Spread = ({ next, previous, imageSelected, setImageSelected, setContents }
             height: 'auto'
         }
         setImages(
-            imageSelected.map((image, key) => {
-                return (
-                    <div
-                        id={image.id}
-                        className="card draggable position-absolute resize-drag rounded"
-                        key={key}
-                        style={{
-                            ...style,
-                            WebkitTransform: `translate(${image.randomWidth}px, ${image.randomHeight}px)`,
-                            transform: `translate(${image.randomWidth}px, ${image.randomHeight}px)`
-                        }}
-                        data-x={image.randomWidth}
-                        data-y={image.randomHeight}>
-                        <button type="button" onClick={() => handleClose(image)} className="close position-absolute" style={{ top: '2%', right: '2%' }} aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <img
-                            className="w-100 h-100"
-                            src={image.src}
-                            alt=""
-                        />
-                    </div>
-                )
-            })
+            data.selected.map((image, key) => (
+                <div
+                    id={image.src}
+                    className="card draggable position-absolute resize-drag rounded"
+                    key={key}
+                    style={{
+                        ...style,
+                        WebkitTransform: `translate(${image.randomWidth}px, ${image.randomHeight}px)`,
+                        transform: `translate(${image.randomWidth}px, ${image.randomHeight}px)`
+                    }}
+                    data-x={image.randomWidth}
+                    data-y={image.randomHeight}>
+                    <button type="button" onClick={() => handleClose(image)} className="close position-absolute" style={{ top: '2%', right: '2%' }} aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <img
+                        className="w-100 h-100"
+                        src={image.src}
+                        alt=""
+                    />
+                </div>
+            ))
         );
         // setSize({ width: elem.offsetWidth, height: elem.offsetHeight });
-    }, [imageSelected]);
+    }, [data.selected]);
 
     const handleLoadMore = () => {
         setHeight(height + 300);
     }
 
     const handleNext = async () => {
-        const data = await Axios.post(SERVER + '/instagram/update', {
-            addition: imageSelected.map(image => ({
-                id: image.id,
-                raw_image_url: image.src,
-                width: document.getElementById(image.id).offsetWidth,
-                height: document.getElementById(image.id).offsetHeight,
-                pos_x: image.randomWidth,
-                pos_y: image.randomHeight
-            }))
-        });
         console.log(data);
 
-        imageSelected.forEach(image => {
-            const elem = document.getElementById(image.id);
-            console.log(elem.offsetWidth, elem.offsetHeight);
-        })
-
+        const resData = await Axios.post(SERVER + '/whiteboard/user_data', {
+            new_contents: data.new.map(elem => {
+                const curImg = images.find(image => image.props.id === elem.src);
+                const [pos_x, pos_y] = [curImg.props['data-x'], curImg.props['data-y']];
+                const [curr_width, curr_height] = [curImg.props.style.width, curImg.offsetHeight];
+                const res = {
+                    type: elem.type,
+                    medium: element.medium,
+                    pos_x,
+                    pos_y,
+                    [element.specific]: {
+                        raw_content_url: elem.src,
+                        [element.sourceUrl]: elem.sourceUrl,
+                        orig_width: elem.orig_width,
+                        orig_height: elem.orig_height,
+                        curr_width,
+                        curr_height
+                    }
+                };
+                console.log(res);
+                return res
+            })
+        });
+        console.log(resData.data);
         // next();
         // setImageSelected([]);
     }

@@ -3,22 +3,14 @@ import { SERVER } from '../../config';
 import Axios from 'axios';
 import Gallery from 'react-grid-gallery';
 
-const Contents = ({ next, previous, element, setImageSelected, contents, setContents }) => {
-
-    const [data, setData] = useState({
-        new: [],
-        images: [],
-        existing: [],
-        change: [],
-        delete: []
-    });
+const Contents = ({ next, previous, element, contents, setContents, data, setData }) => {
 
     const [lastElementMedium, setLastElementMedium] = useState('');
     const [markedImage, setMarkedImage] = useState(false);
 
     useEffect(() => {
-        console.log(data)
-    }, [data]);
+        console.log(data);
+    }, [data])
 
     // load images
     useEffect(() => {
@@ -144,8 +136,8 @@ const Contents = ({ next, previous, element, setImageSelected, contents, setCont
                 setData({ ...data, new: data.new.filter(elem => elem.src !== img.src) });
             }
         }
+        setData(data => ({ ...data, selected: contents.filter(content => content.isSelected) }));
         setContents(contents);
-        setImageSelected(contents.filter(image => image.isSelected));
     }
 
     return (
