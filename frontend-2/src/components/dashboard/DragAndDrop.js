@@ -1,7 +1,7 @@
 import interact from 'interactjs';
 
 // target elements with the "draggable" class
-export const Drag = () => {
+export const Drag = setChanged => {
 
     const dragMoveListener = event => {
         var target = event.target,
@@ -16,12 +16,14 @@ export const Drag = () => {
         // update the posiion attributes
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
-    }
 
+        setChanged(changed => changePosAndSize(changed, event, x, y));
+
+    }
     // this is used later in the resizing and gesture demos
     window.dragMoveListener = dragMoveListener;
 
-    interact('.draggable')
+    interact('.draggable.resize-drag')
         .draggable({
             // enable inertial throwing
             inertia: true,
@@ -38,43 +40,53 @@ export const Drag = () => {
             onmove: dragMoveListener,
             // call this function on every dragend event
             onend: () => { }
+        })
+        .resizable({
+            // resize from all edges and corners
+            edges: { left: true, right: true, bottom: true, top: true },
+
+            // keep the edges inside the parent
+            restrictEdges: {
+                outer: 'parent',
+                endOnly: true,
+            },
+
+            // minimum size
+            restrictSize: {
+                min: { width: 100, height: 'auto' },
+            },
+
+            inertia: true,
+        })
+        .on('resizemove', function (event) {
+            let target = event.target,
+                x = (parseFloat(target.getAttribute('data-x')) || 0),
+                y = (parseFloat(target.getAttribute('data-y')) || 0);
+
+            // update the element's style
+            target.style.width = event.rect.width + 'px';
+            // target.style.height = event.rect.height + 'px';
+
+            // translate when resizing from top or left edges
+            x += event.deltaRect.left;
+            y += event.deltaRect.top;
+
+            target.style.webkitTransform = target.style.transform =
+                'translate(' + x + 'px,' + y + 'px)';
+
+            target.setAttribute('data-x', x);
+            target.setAttribute('data-y', y);
+
+            setChanged(changed => changePosAndSize(changed, event, x, y));
         });
 }
 
-interact('.resize-drag')
-    .resizable({
-        // resize from all edges and corners
-        edges: { left: true, right: true, bottom: true, top: true },
-
-        // keep the edges inside the parent
-        restrictEdges: {
-            outer: 'parent',
-            endOnly: true,
-        },
-
-        // minimum size
-        restrictSize: {
-            min: { width: 100, height: 'auto' },
-        },
-
-        inertia: true,
-    })
-    .on('resizemove', function (event) {
-        let target = event.target,
-            x = (parseFloat(target.getAttribute('data-x')) || 0),
-            y = (parseFloat(target.getAttribute('data-y')) || 0);
-
-        // update the element's style
-        target.style.width = event.rect.width + 'px';
-        // target.style.height = event.rect.height + 'px';
-
-        // translate when resizing from top or left edges
-        x += event.deltaRect.left;
-        y += event.deltaRect.top;
-
-        target.style.webkitTransform = target.style.transform =
-            'translate(' + x + 'px,' + y + 'px)';
-
-        target.setAttribute('data-x', x);
-        target.setAttribute('data-y', y);
-    });
+const changePosAndSize = (changed, event, x, y) => ({
+    ...changed,
+    [event.target.id]: {
+        posX: x,
+        posY: y,
+        width: event.target.offsetWidth,
+        height: event.target.offsetHeight
+    }
+});

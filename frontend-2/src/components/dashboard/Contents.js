@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { SERVER } from '../../config';
 import Axios from 'axios';
 import Gallery from 'react-grid-gallery';
+import uuidv4 from 'uuid/v4';
 
 const Contents = ({ next, previous, element, contents, setContents, data, setData }) => {
 
@@ -29,16 +30,23 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
         // setting contents which would display on the screen
         data.images && data.images.length > 0 && setContents(
             data.images.map(image => ({
+                id: image.id,
                 src: image.src,
                 thumbnail: image.src,
                 thumbnailWidth: image.orig_width,
                 thumbnailHeight: image.orig_height,
-                randomWidth: Math.floor(Math.random() * (width - 200)),
-                randomHeight: Math.floor(Math.random() * (height - 200)),
+                posX: image.pos_x !== undefined ? image.pos_x : Math.floor(Math.random() * (width - 200)),
+                posY: image.pos_y !== undefined ? image.pos_y : Math.floor(Math.random() * (height - 200)),
                 isSelected: false,
                 medium: image.medium,
                 sourceUrl: image.sourceUrl,
-                type: image.type
+                type: image.type,
+                specific: image.specific,
+                orig_width: image.orig_width,
+                orig_height: image.orig_height,
+                curr_width: image.curr_width,
+                curr_height: image.curr_height,
+                elementSourceUrl: image.elementSourceUrl
             }))
         );
         // give signal to contents
@@ -55,15 +63,14 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
             const { status, whiteboard_data } = await (await Axios.get(SERVER + '/whiteboard/user_data')).data;
             if (!status) throw new Error('Error occured while fetching whiteboard user data');
             // add whiteboard data url into the set
-            console.log(whiteboard_data);
-            const urlSet = new Set();
-            whiteboard_data.forEach(({ raw_content_url }) => {
-                urlSet.add(raw_content_url);
+            const idSet = new Set();
+            whiteboard_data.forEach(({ id }) => {
+                idSet.add(id);
             });
             // check the url using previous set if it should be marked or not
             setContents(
                 contents.map(image => {
-                    if (urlSet.has(image.src)) {
+                    if (idSet.has(image.id)) {
                         image.isSelected = true;
                     }
                     return image;
@@ -71,7 +78,8 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
             );
             setData({
                 ...data,
-                existing: whiteboard_data
+                existing: whiteboard_data,
+                selected: contents.filter(content => content.isSelected)
             });
             setMarkedImage(true);
         } catch (error) {
@@ -93,14 +101,20 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
                     images: (
                         contentsData.map(content => (
                             {
-                                medium: content.medium,
+                                id: content.id ? content.id : uuidv4(),
+                                medium: element.medium,
                                 src: content.raw_content_url,
                                 thumbnail: content.raw_content_url,
                                 orig_width: content.orig_width,
                                 orig_height: content.orig_height,
                                 type: content.type,
                                 sourceUrl: content[element.sourceUrl],
-                                specific: content[element.specific]
+                                specific: element.specific,
+                                elementSourceUrl: element.sourceUrl,
+                                pos_x: content.pos_x,
+                                pos_y: content.pos_y,
+                                curr_width: content.curr_width,
+                                curr_height: content.curr_height
                                 // caption: data.caption.text
                             }
                         ))
@@ -118,12 +132,12 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
         img.isSelected = !img.isSelected;
         // everything based on src
         // find existing index
-        const existingIndex = data.existing.findIndex(elem => elem.raw_content_url === img.src) !== -1;
+        const existingIndex = data.existing.findIndex(elem => elem.id === img.id) !== -1;
         if (img.isSelected) {
             // selected
             // check if it is in existing one, if it is, then erase from delete, if it is not, then add the object to add state
             if (existingIndex) {
-                setData({ ...data, delete: data.delete.filter(elem => elem.src !== img.src) });
+                setData({ ...data, delete: data.delete.filter(elem => elem.id !== img.id) });
             } else {
                 setData({ ...data, new: [...data.new, img] });
             }
@@ -133,7 +147,7 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
             if (existingIndex) {
                 setData({ ...data, delete: [...data.delete, img] });
             } else {
-                setData({ ...data, new: data.new.filter(elem => elem.src !== img.src) });
+                setData({ ...data, new: data.new.filter(elem => elem.id !== img.id) });
             }
         }
         setData(data => ({ ...data, selected: contents.filter(content => content.isSelected) }));

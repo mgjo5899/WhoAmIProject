@@ -4,42 +4,43 @@ import { Drag } from './DragAndDrop';
 import Axios from 'axios';
 import { SERVER } from '../../config';
 
-const Spread = ({ next, previous, element, setContents, data }) => {
+const Spread = ({ next, previous, setContents, data }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(1000);
+    const [changed, setChanged] = useState([]);
     const width = 1000;
 
     useEffect(() => {
-        Drag();
+        Drag(setChanged);
     }, []);
 
     const handleClose = image => {
         setContents(contents => {
-            const contentIndex = contents.findIndex(content => content.src === image.src);
+            const contentIndex = contents.findIndex(content => content.id === image.id);
             contents[contentIndex].isSelected = !contents[contentIndex].isSelected;
             return contents;
         });
     }
 
     useEffect(() => {
-        const style = {
-            width: 200,
-            height: 'auto'
-        }
         setImages(
             data.selected.map((image, key) => (
                 <div
-                    id={image.src}
+                    id={image.id}
+                    medium={image.medium}
+                    orig_width={image.orig_width}
+                    orig_height={image.orig_height}
                     className="card draggable position-absolute resize-drag rounded"
                     key={key}
                     style={{
-                        ...style,
-                        WebkitTransform: `translate(${image.randomWidth}px, ${image.randomHeight}px)`,
-                        transform: `translate(${image.randomWidth}px, ${image.randomHeight}px)`
+                        width: image.curr_width || 200,
+                        height: 'auto',
+                        WebkitTransform: `translate(${image.posX}px, ${image.posY}px)`,
+                        transform: `translate(${image.posX}px, ${image.posY}px)`
                     }}
-                    data-x={image.randomWidth}
-                    data-y={image.randomHeight}>
+                    data-x={image.posX}
+                    data-y={image.posY}>
                     <button type="button" onClick={() => handleClose(image)} className="close position-absolute" style={{ top: '2%', right: '2%' }} aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -58,33 +59,72 @@ const Spread = ({ next, previous, element, setContents, data }) => {
         setHeight(height + 300);
     }
 
-    const handleNext = async () => {
-        console.log(data);
+    const addData = async () => {
+        try {
+            await Axios.post(SERVER + '/whiteboard/user_data', {
+                new_contents: data.new.map(elem => {
+                    return {
+                        type: elem.type,
+                        medium: elem.medium,
+                        pos_x: changed[elem.id] ? changed[elem.id].posX : elem.posX,
+                        pos_y: changed[elem.id] ? changed[elem.id].posY : elem.posY,
+                        [elem.specific]: {
+                            raw_content_url: elem.src,
+                            [elem.elementSourceUrl]: elem.sourceUrl,
+                            orig_width: elem.orig_width,
+                            orig_height: elem.orig_height,
+                            curr_width: changed[elem.id] ? changed[elem.id].width : 200,
+                            curr_height: changed[elem.id] ? changed[elem.id].height : (elem.orig_height / elem.orig_width * 200)
+                        }
+                    };
+                })
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
-        const resData = await Axios.post(SERVER + '/whiteboard/user_data', {
-            new_contents: data.new.map(elem => {
-                const curImg = images.find(image => image.props.id === elem.src);
-                const [pos_x, pos_y] = [curImg.props['data-x'], curImg.props['data-y']];
-                const [curr_width, curr_height] = [curImg.props.style.width, curImg.offsetHeight];
-                const res = {
-                    type: elem.type,
-                    medium: element.medium,
-                    pos_x,
-                    pos_y,
-                    [element.specific]: {
-                        raw_content_url: elem.src,
-                        [element.sourceUrl]: elem.sourceUrl,
-                        orig_width: elem.orig_width,
-                        orig_height: elem.orig_height,
-                        curr_width,
-                        curr_height
-                    }
-                };
-                console.log(res);
-                return res
-            })
+    const changeData = async () => {
+        // put all existing data except delete data
+        const existingIdSet = new Set();
+        data.existing.forEach(elem => {
+            existingIdSet.add(elem.id);
         });
-        console.log(resData.data);
+        try {
+            await Axios.put(SERVER + '/whiteboard/user_data', {
+                updated_contents: images.filter(image => existingIdSet.has(image.props.id) && changed[image.props.id]).map(image => ({
+                    id: image.props.id,
+                    medium: image.props.medium,
+                    pos_x: changed[image.props.id].posX,
+                    pos_y: changed[image.props.id].posY,
+                    curr_width: changed[image.props.id].width,
+                    curr_height: changed[image.props.id].height
+                })
+                )
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const deleteData = async () => {
+        try {
+            await Axios.delete(SERVER + '/whiteboard/user_data', {
+                data: {
+                    deleted_contents: data.delete.map(elem => elem.id)
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleNext = () => {
+        console.log(data);
+        // adding new data
+        addData();
+        changeData();
+        deleteData();
         // next();
         // setImageSelected([]);
     }

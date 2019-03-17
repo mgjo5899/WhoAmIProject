@@ -48,7 +48,7 @@ const SignedInConfirmedHome = () => {
             data={data}
             setData={setData}
         />,
-        <Spread {...props} element={element} setContents={setContents} data={data} />
+        <Spread {...props} setContents={setContents} data={data} />
     ];
 
     const slides = items.map((item, index) => (
