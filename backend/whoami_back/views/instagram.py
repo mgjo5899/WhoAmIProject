@@ -54,14 +54,24 @@ def refine_raw_data(raw_contents_data):
     contents = []
 
     for raw_content in raw_contents_data:
-        # Get standard_resolution
-        content = {}
-        content['orig_width'] = raw_content['images']['standard_resolution']['width']
-        content['orig_height'] = raw_content['images']['standard_resolution']['height']
-        content['raw_content_url'] = raw_content['images']['standard_resolution']['url']
-        content['instagram_url'] = raw_content['link']
-        content['type'] = raw_content['type']
-        contents.append(content)
+        if raw_content['type'] == 'image':
+            # Get standard_resolution
+            content = {}
+            content['orig_width'] = raw_content['images']['standard_resolution']['width']
+            content['orig_height'] = raw_content['images']['standard_resolution']['height']
+            content['raw_content_url'] = raw_content['images']['standard_resolution']['url']
+            content['instagram_url'] = raw_content['link']
+            content['type'] = raw_content['type']
+            contents.append(content)
+        elif raw_content['type'] == 'carousel':
+            for carousel_content in raw_content['carousel_media']:
+                content = {}
+                content['orig_width'] = carousel_content['images']['standard_resolution']['width']
+                content['orig_height'] = carousel_content['images']['standard_resolution']['height']
+                content['raw_content_url'] = carousel_content['images']['standard_resolution']['url']
+                content['instagram_url'] = raw_content['link']
+                content['type'] = carousel_content['type']
+                contents.append(content)
 
     return contents
 
