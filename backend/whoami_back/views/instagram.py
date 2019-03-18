@@ -39,7 +39,10 @@ def access_token_api(client_id, client_secret, grant_type, redirect_uri, code):
 def get_user_contents(access_token):
     rtn_val = {}
     uri = instagram_conf.USER_MEDIA_ENDPOINT
-    r = requests.get(uri + '/?access_token=' + access_token)
+    user_content_endpoint = '{}/?access_token={}'.format(uri, access_token)
+    r = requests.get(user_content_endpoint)
+
+    #print('user_content_endpoint: ', user_content_endpoint)
 
     if r.status_code == 200:
         rtn_val['status'] = True
@@ -65,13 +68,37 @@ def refine_raw_data(raw_contents_data):
             contents.append(content)
         elif raw_content['type'] == 'carousel':
             for carousel_content in raw_content['carousel_media']:
-                content = {}
-                content['orig_width'] = carousel_content['images']['standard_resolution']['width']
-                content['orig_height'] = carousel_content['images']['standard_resolution']['height']
-                content['raw_content_url'] = carousel_content['images']['standard_resolution']['url']
-                content['instagram_url'] = raw_content['link']
-                content['type'] = carousel_content['type']
-                contents.append(content)
+                if carousel_content['type'] == 'image':
+                    content = {}
+                    content['orig_width'] = carousel_content['images']['standard_resolution']['width']
+                    content['orig_height'] = carousel_content['images']['standard_resolution']['height']
+                    content['raw_content_url'] = carousel_content['images']['standard_resolution']['url']
+                    content['instagram_url'] = raw_content['link']
+                    content['type'] = carousel_content['type']
+                    contents.append(content)
+                elif carousel_content['type'] == 'video':
+                    # TODO: Let's take care of video too
+                    print("got video")
+                    content = {}
+                    content['orig_width'] = carousel_content['videos']\
+                                                            ['standard_resolution']['width']
+                    content['orig_height'] = carousel_content['videos']\
+                                                             ['standard_resolution']['height']
+                    content['raw_content_url'] = carousel_content['videos']\
+                                                                 ['standard_resolution']['url']
+                    content['instagram_url'] = raw_content['link']
+                    content['type'] = carousel_content['type']
+                    #contents.append(content)
+        elif raw_content['type'] == 'video':
+            # TODO: Let's take care of video too
+            print("got video")
+            content = {}
+            content['orig_width'] = raw_content['videos']['standard_resolution']['width']
+            content['orig_height'] = raw_content['videos']['standard_resolution']['height']
+            content['raw_content_url'] = raw_content['videos']['standard_resolution']['url']
+            content['instagram_url'] = raw_content['link']
+            content['type'] = raw_content['type']
+            #contents.append(content)
 
     return contents
 
