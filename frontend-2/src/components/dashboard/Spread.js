@@ -4,56 +4,60 @@ import { Drag } from './DragAndDrop';
 import Axios from 'axios';
 import { SERVER } from '../../config';
 
-const Spread = ({ next, previous, setContents, data }) => {
+const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage }) => {
 
-    const [images, setImages] = useState([]);
-    const [height, setHeight] = useState(1000);
     const [changed, setChanged] = useState([]);
-    const width = 1000;
-
-    useEffect(() => {
-        Drag(setChanged);
-    }, []);
+    const [images, setImages] = useState([]);
+    const [height, setHeight] = useState(defaultHeight);
 
     const handleClose = image => {
-        setContents(contents => {
-            const contentIndex = contents.findIndex(content => content.id === image.id);
-            contents[contentIndex].isSelected = !contents[contentIndex].isSelected;
-            return contents;
-        });
+        deleteImage(image);
     }
 
     useEffect(() => {
-        setImages(
-            data.selected.map((image, key) => (
-                <div
-                    id={image.id}
-                    medium={image.medium}
-                    orig_width={image.orig_width}
-                    orig_height={image.orig_height}
-                    className="card draggable position-absolute resize-drag rounded"
-                    key={key}
-                    style={{
-                        width: image.curr_width || 200,
-                        height: 'auto',
-                        WebkitTransform: `translate(${image.posX}px, ${image.posY}px)`,
-                        transform: `translate(${image.posX}px, ${image.posY}px)`
-                    }}
-                    data-x={image.posX}
-                    data-y={image.posY}>
-                    <button type="button" onClick={() => handleClose(image)} className="close position-absolute" style={{ top: '2%', right: '2%' }} aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <img
-                        className="w-100 h-100"
-                        src={image.src}
-                        alt=""
-                    />
-                </div>
-            ))
-        );
-        // setSize({ width: elem.offsetWidth, height: elem.offsetHeight });
-    }, [data.selected]);
+        if (activeIndex === contentsIndex.spread) {
+            Drag(setChanged);
+            setImages(
+                data.selected.map((image, key) => (
+                    <div
+                        id={image.id}
+                        medium={image.medium}
+                        orig_width={image.orig_width}
+                        orig_height={image.orig_height}
+                        className="card draggable position-absolute resize-drag rounded"
+                        key={key}
+                        style={{
+                            width: image.curr_width || 200,
+                            height: 'auto',
+                            WebkitTransform: `translate(${image.posX}px, ${image.posY}px)`,
+                            transform: `translate(${image.posX}px, ${image.posY}px)`
+                        }}
+                        data-x={image.posX}
+                        data-y={image.posY}>
+                        <button type="button" onClick={() => handleClose(image)} className="close position-absolute" style={{ top: '2%', right: '2%' }} aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <img
+                            className="w-100 h-100"
+                            src={image.src}
+                            alt=""
+                        />
+                    </div>
+                ))
+            );
+            // set height of whiteboard based on the selected images
+            setHeight(getHeight());
+        }
+    }, [activeIndex, data.selected]);
+
+    const getHeight = () => {
+        let maxHeight = height;
+        // iterate through every array, get maximum and return 200 added
+        images.forEach(image => {
+            maxHeight = Math.max(maxHeight, image.props['data-y'] + 300);
+        });
+        return maxHeight;
+    }
 
     const handleLoadMore = () => {
         setHeight(height + 300);
@@ -119,14 +123,11 @@ const Spread = ({ next, previous, setContents, data }) => {
         }
     }
 
-    const handleNext = () => {
-        console.log(data);
-        // adding new data
-        addData();
-        changeData();
-        deleteData();
-        // next();
-        // setImageSelected([]);
+    const handleNext = async () => {
+        await addData();
+        await changeData();
+        await deleteData();
+        next();
     }
 
     return (
@@ -138,7 +139,7 @@ const Spread = ({ next, previous, setContents, data }) => {
                 loader={<div className="loader" key={0}>Loading ...</div>}
                 threshold={0}
             >
-                <div id="spread-sheet" className="card p-2 mt-3" style={{ width, height }}>
+                <div id="spread-sheet" className="card p-2 mt-3" style={{ defaultWidth, height }}>
                     {images}
                 </div>
             </InfiniteScroll>

@@ -3,7 +3,7 @@ import InstagramLogo from '../../images/instagram/instagram-logo.png';
 import Axios from 'axios';
 import { SERVER } from '../../config';
 
-const ConnectTo = ({ previous, pickedElement, next }) => {
+const ConnectTo = ({ previous, setElement, activeIndex, contentsIndex, next }) => {
 
     const [socialMedia, setSocialMedia] = useState([
         {
@@ -21,42 +21,42 @@ const ConnectTo = ({ previous, pickedElement, next }) => {
         }
     ]);
 
-    const [elem, setElem] = useState(null);
-
-    useEffect(() => {       // first check for the authorization
-        checkAuthorizedSocialMedia();
-    }, []);
-
-    useEffect(() => {   // only let us pass the authorized medium
-        elem && pickedElement(elem); // pick the element what I have selected
-    }, [elem]);
+    useEffect(() => {
+        // first check for the authorization
+        if (activeIndex === contentsIndex.connect_to) {
+            checkAuthorizedSocialMedia();
+        }
+    }, [activeIndex]);
 
     const checkAuthorizedSocialMedia = async () => {
-        const data = await (await Axios.get(SERVER + '/user/authorized_media')).data;
-        if (data.status) {
-            data.authorized_medium.forEach(auth_obj => {    //iterate through given data
-                setSocialMedia(socialMedia => {
-                    const newSocialMedia = [...socialMedia];    // make new list 
-                    const index = newSocialMedia.findIndex(obj => obj.medium === auth_obj.medium); // iterate to find index of same medium
-                    index !== -1 && (newSocialMedia[index].authorized = true); // if it finds the index, then make that thing into true
-                    return newSocialMedia;
+        try {
+            const { status, authorized_medium } = (await Axios.get(SERVER + '/user/authorized_media')).data;
+            if (status) {
+                //iterate through given data
+                authorized_medium.forEach(auth_obj => {
+                    setSocialMedia(socialMedia => {
+                        // iterate to find same medium
+                        let newSocialMedia = [...socialMedia];
+                        const media = newSocialMedia.find(obj => obj.medium === auth_obj.medium);
+                        if (media) media.authorized = true;
+                        return newSocialMedia;
+                    });
                 });
-            });
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
 
     const handleRegister = elem => {
         // check if it is enabled or not. If not, call popup first, if it is, skip it
         if (!elem.authorized) {
-            // const newWindow = popup(elem);    // only if it is disabled
-            popup(elem);    // only if it is disabled
-            window.checkAuthorizedSocialMedia = checkAuthorizedSocialMedia;
-            // newWindow.onunload = () => {
-            //     // call api for the color
-            //     checkAuthorizedSocialMedia();
-            // }
+            // only if it is disabled
+            // give function to the child window
+            popup(elem).checkAuthorizedSocialMedia = checkAuthorizedSocialMedia;
         } else {
-            setElem({ ...elem });
+            setElement(elem);
+            next();
         }
     }
 
@@ -66,6 +66,7 @@ const ConnectTo = ({ previous, pickedElement, next }) => {
         const spec = `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`
         const newWindow = window.open(elem.authURL(elem.clientId, elem.authRedirectUri), elem.medium, spec);
         window.focus && newWindow.focus();
+        return newWindow;
     }
 
     return (
@@ -76,8 +77,8 @@ const ConnectTo = ({ previous, pickedElement, next }) => {
             <div className="card-body">
                 <div className="list-group row">
                     {
-                        socialMedia.map(elem => (
-                            <div className="mx-auto col-sm-10 m-2 text-center" key={elem.medium}>
+                        socialMedia.map((elem, index) => (
+                            <div className="mx-auto col-sm-10 m-2 text-center" key={index}>
                                 <button onClick={() => handleRegister(elem)} className="list-group-item list-group-item-action">
                                     <img src={elem.src} alt={elem.medium} className="w-25 h-25" style={!elem.authorized ? { filter: 'grayscale(100%)' } : {}} />
                                 </button>

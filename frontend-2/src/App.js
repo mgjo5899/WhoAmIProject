@@ -7,8 +7,7 @@ import axios from 'axios';
 import { SERVER } from './config';
 import { connect } from 'react-redux';
 import { storeUser } from './store/actions/authActions';
-import Playground from './components/layout/playground/playground';
-import OAuthRedirect from './components/SocialMedia/OAuthRedirect';
+import OAuthRedirect from './components/social-media/OAuthRedirect';
 
 class App extends Component {
 
@@ -34,7 +33,6 @@ class App extends Component {
           <Route exact path="/oauth_redirect" component={OAuthRedirect} />
           <Navbar />
           <div className="container">
-            <Route exact path="/playground" component={Playground} />
             <Route exact path="/" component={Home} />
             <Route exact path="/reset_pw" component={ResetPasswordComponent} />
           </div>
