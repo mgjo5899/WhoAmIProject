@@ -8,15 +8,19 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
 
     const [changed, setChanged] = useState([]);
     const [images, setImages] = useState([]);
-    const [height, setHeight] = useState(defaultHeight);
+    const [height, setHeight] = useState(0);
 
     const handleClose = image => {
         deleteImage(image);
     }
 
     useEffect(() => {
+        Drag(setChanged);
+    }, []);
+
+    useEffect(() => {
         if (activeIndex === contentsIndex.spread) {
-            Drag(setChanged);
+            setHeight(defaultHeight);
             setImages(
                 data.selected.map((image, key) => (
                     <div

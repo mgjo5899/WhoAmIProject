@@ -5,11 +5,12 @@ import { SERVER } from '../../config';
 const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWidth, defaultHeight, resetData }) => {
 
     const [images, setImages] = useState([]);
-    const [height, setHeight] = useState(defaultHeight);
+    const [height, setHeight] = useState(0);
 
     useEffect(() => {
         if (activeIndex === contentsIndex.dashboard) {
             // when first loaded to dashboard, get existing data from server
+            setHeight(defaultHeight);
             getExistingImages();
         }
     }, [activeIndex]);
