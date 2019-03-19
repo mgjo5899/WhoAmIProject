@@ -17,7 +17,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
 
     useEffect(() => {
         console.log(data);
-    }, [data])
+    }, [data]);
 
     useEffect(() => {
         if (data.existing.length > 0) {
@@ -53,7 +53,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
     }, [data.existing]);
 
     const settingHeight = () => {
-        let maxHeight = height;
+        let maxHeight = defaultHeight;
         data.existing.forEach(elem => {
             maxHeight = Math.max(maxHeight, elem.pos_y + elem.curr_height + 100);
         });
@@ -62,13 +62,12 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
 
     const getExistingImages = async () => {
         try {
-            setData(resetData());
             const { status, whiteboard_data } = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
             if (!status) throw new Error('Error occured while fetching whiteboard user data');
-            setData(data => ({
-                ...data,
+            setData({
+                ...resetData(),
                 existing: whiteboard_data
-            }));
+            });
         } catch (error) {
             console.log(error);
         }
