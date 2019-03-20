@@ -1,37 +1,38 @@
 {
-  "name": "whoamiproject",
+  "name": "frontend-2",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
-    "formik": "^0.11.11",
-    "material-components-web": "^0.37.1",
-    "material-ui": "^0.20.1",
-    "node-sass-chokidar": "^1.3.3",
-    "react": "^16.3.2",
-    "react-bootstrap": "^0.32.1",
-    "react-dom": "^16.3.2",
-    "react-instagram-login": "^1.3.0",
-    "react-redux": "^5.0.7",
-    "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.4",
-    "react-virtualized-select": "^3.1.3",
-    "redux": "^4.0.0",
+    "bootstrap": "^4.3.1",
+    "interactjs": "^1.3.4",
+    "query-string": "^6.2.0",
+    "react": "^16.8.2",
+    "react-dom": "^16.8.2",
+    "react-grid-gallery": "^0.5.3",
+    "react-infinite-scroller": "^1.2.4",
+    "react-redux": "^6.0.0",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "^2.1.5",
+    "reactstrap": "^7.1.0",
+    "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "rmwc": "^1.8.3",
-    "yup": "^0.25.1"
+    "uuid": "^3.3.2"
   },
   "scripts": {
-    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
-    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
-    "start-js": "react-scripts start",
-    "start": "npm-run-all -p watch-css start-js",
-    "build-js": "react-scripts build",
-    "build": "npm-run-all build-css build-js",
-    "test": "react-scripts test --env=jsdom",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "devDependencies": {
-    "npm-run-all": "^4.1.3"
-  }
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

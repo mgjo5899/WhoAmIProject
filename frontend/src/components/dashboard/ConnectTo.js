@@ -52,9 +52,11 @@ const ConnectTo = ({ previous, setElement, activeIndex, contentsIndex, next }) =
         // check if it is enabled or not. If not, call popup first, if it is, skip it
         if (!elem.authorized) {
             // only if it is disabled
-            // give function to the child window
-            popup(elem).checkAuthorizedSocialMedia = checkAuthorizedSocialMedia;
+            // set function globally so that child window can grab parent's function
+            window.checkAuthorizedSocialMedia = checkAuthorizedSocialMedia;
+            popup(elem);
         } else {
+            // already registered, passing element which picked
             setElement(elem);
             next();
         }
@@ -66,7 +68,6 @@ const ConnectTo = ({ previous, setElement, activeIndex, contentsIndex, next }) =
         const spec = `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`
         const newWindow = window.open(elem.authURL(elem.clientId, elem.authRedirectUri), elem.medium, spec);
         window.focus && newWindow.focus();
-        return newWindow;
     }
 
     return (

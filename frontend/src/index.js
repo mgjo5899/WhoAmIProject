@@ -1,33 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * as actions from './actions/auth';
-
-import './index.css';
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
-
-
-// React-Redux
-// dispatch(action) : send action to reducer. 
-// When dispatch gets run, store sends current state and action to reducer function
-
-import store from "./store";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { createStore, applyMiddleware } from 'redux';
+import rootReducer from './store/reducers/rootReducer';
 import { Provider } from 'react-redux';
-import { Router, Route, Link } from 'react-router-dom';
-import history from "./history";
+import thunk from 'redux-thunk';
+import axios from 'axios';
 
-console.log('init state', store.getState());
-store.subscribe(()=>console.log(store.getState()));
+axios.defaults.withCredentials = true;
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
-ReactDOM.render(
-    // Instead of passing store as a props into the App component,
-    // We use react-redux Provider (view-binding tool)
-    <Provider store={ store }>
-        <Router history={ history }>
-            <App />
-        </Router>
-    </Provider>, 
-    document.getElementById('root')
-);
-
-registerServiceWorker();
+ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
