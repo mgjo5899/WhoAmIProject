@@ -115,7 +115,7 @@ def get_user_data():
             if raw_user_data['status'] == True:
                 # Refine the data
                 refined_contents = refine_raw_data(raw_user_data['user_contents']['data'])
-                existing_instagram_contents = manage.get_whiteboard_data(session['email'], 'instagram')['whiteboard_data']
+                existing_instagram_contents = manage.get_whiteboard_data(email=session['email'], medium='instagram')['whiteboard_data']
 
                 # Check if there's any unavailable contents and if there are, mark their status as 3
                 # Also check if there's any existing used (1) or unused (2) content
