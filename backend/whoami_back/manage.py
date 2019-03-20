@@ -46,11 +46,25 @@ def get_medium_access_token(email, medium):
 
     return rtn_val
 
-def get_whiteboard_data(email, medium=None):
-    rtn_val = {}
-    authorized_media = []
+def get_whiteboard_data(username=None, email=None, medium=None):
+    user = {}
 
-    for curr in db.query(AuthorizedMedium).filter(AuthorizedMedium.email == email).all():
+    if username != None:
+        user = get_user(username=username)
+    elif email != None:
+        user = get_user(email=email)
+    else:
+        user = {'status', False}
+        user['message'] = "Could not find username or email"
+
+    if user['status'] == False:
+        return user
+
+    authorized_media = []
+    user_email = user['data']['email']
+    rtn_val = {}
+
+    for curr in db.query(AuthorizedMedium).filter(AuthorizedMedium.email == user_email).all():
         authorized_media.append(curr.medium)
 
     whiteboard_data = []
@@ -58,7 +72,7 @@ def get_whiteboard_data(email, medium=None):
     # Keep adding new type of social medium
     if (medium == None or medium == 'instagram') and 'instagram' in authorized_media:
         whiteboard_contents = db.query(WhiteboardData).filter(and_(\
-                                       WhiteboardData.email == email,\
+                                       WhiteboardData.email == user_email,\
                                        WhiteboardData.medium == 'instagram',\
                                        WhiteboardData.status != 3)).all()
 
@@ -274,7 +288,7 @@ def get_medium(email, medium):
 def register_medium(medium, email, access_token):
     rtn_val = {}
 
-    if check_email(email)['status'] == False:
+    if get_user(email=email)['status'] == False:
         rtn_val['status'] = False
         rtn_val['message'] = "Could not find a user with the given email"
     else:
@@ -340,50 +354,54 @@ def check_username_with_email(username, email):
 
     return rtn_val
 
-def check_username(username):
+def get_user(username=None, email=None):
     rtn_val = {}
-    user = db.query(User).filter(User.username == username).first()
 
-    # No user with the given username
+    if username != None:
+        user = db.query(User).filter(User.username == username).first()
+    elif email != None:
+        user = db.query(User).filter(User.email == email).first()
+    else:
+        rtn_val['status'] = False
+        rtn_val['message'] = "Could not find username or email"
+
     if user == None:
         rtn_val['status'] = False
-        rtn_val['message'] = "There is no user with the given username"
+        rtn_val['message'] = "Could not find a user with the given information"
     else:
         rtn_val['status'] = True
-
-    return rtn_val
-
-def check_email(email):
-    rtn_val = {}
-    user = db.query(User).filter(User.email == email).first()
-
-    # No user with the given username
-    if user == None:
-        rtn_val['status'] = False
-        rtn_val['message'] = "There is no user with the given email address"
-    else:
-        rtn_val['status'] = True
+        rtn_val['data'] = {}
+        rtn_val['data']['email'] = user.email
+        rtn_val['data']['username'] = user.username
+        rtn_val['data']['registered_on'] = user.registered_on
+        rtn_val['data']['confirmed'] = user.confirmed
+        rtn_val['data']['confirmed_on'] = user.confirmed_on
 
     return rtn_val
 
 def confirm_email(email):
-    rtn_val = check_email(email)
+    user = get_user(email=email)
+    rtn_val = {}
 
-    if rtn_val['status']:
+    if user['status']:
+        rtn_val['status'] = True
+        rtn_val['message'] = "Email confirmed"
         user = db.query(User).filter(User.email == email).first()
         user.confirmed = True
         user.confirmed_on = datetime.now()
         db.commit()
+    else:
+        rtn_val = user
 
     return rtn_val
 
 def register_user(username, password, email):
     rtn_val = {}
 
-    if check_email(email)['status']:
+    if get_user(email=email)['status']:
         rtn_val['status'] = False
         rtn_val['message'] = "The given email already exists"
-    elif check_username(username)['status']:
+    elif get_user(username=username)['status']:
         rtn_val['status'] = False
         rtn_val['message'] = "The given username already exists"
     else:
@@ -429,9 +447,12 @@ def delete_user(email, password):
     return rtn_val
 
 def modify_password(email, new_password):
-    rtn_val = check_email(email)
+    user = get_user(email=email)
+    rtn_val = {}
 
-    if rtn_val['status']:
+    if user['status']:
+        rtn_val['status'] = True
+        rtn_val['message'] = "Password modified successfully"
         user = db.query(User).filter(User.email == email).first()
         
         # Hashing
@@ -439,5 +460,7 @@ def modify_password(email, new_password):
         user.password = hashed_pw
         rtn_val['hashed_new_pw'] = hashed_pw
         db.commit()
+    else:
+        rtn_val = user
 
     return rtn_val
