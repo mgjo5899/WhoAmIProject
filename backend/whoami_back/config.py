@@ -1,6 +1,9 @@
 import os
 
 
+# API Secret Key
+SECRET_API_KEY = "gnsalswjddma" # 훈민정음
+
 # Host name
 HOSTNAME = 'http://localhost'
 
