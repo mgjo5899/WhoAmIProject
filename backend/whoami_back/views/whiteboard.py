@@ -9,6 +9,23 @@ import whoami_back.manage as manage
 whiteboard = Blueprint('whiteboard', __name__)
 
 
+@whiteboard.route('/whiteboard/published_data', methods=['POST'])
+def get_published_whiteboard_data():
+    rtn_val = {}
+    req = utils.get_req_data()
+
+    if not ('username' in req or 'secret_key' in req):
+        rtn_val['status'] = False
+        rtn_val['message'] = "Request is missing either username or secret_key"
+    else:
+        if utils.check_secret_api_key(req['secret_key']) == False:
+            rtn_val['status'] = False
+            rtn_val['message'] = "Given secret_key is incorrect"
+        else:
+            rtn_val = manage.get_whiteboard_data(username=req['username'])
+
+    return jsonify(rtn_val)
+
 @whiteboard.route('/whiteboard/user_data', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def whiteboard_user_data():
     rtn_val = {}
@@ -16,7 +33,7 @@ def whiteboard_user_data():
 
     if 'email' in session:
         if request.method == 'GET':
-            rtn_val = manage.get_whiteboard_data(session['email'])
+            rtn_val = manage.get_whiteboard_data(email=session['email'])
         elif request.method == 'POST':
             new_contents = req['new_contents']
 

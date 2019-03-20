@@ -18,9 +18,9 @@ def password_reset(token):
         # Come up with an error page for this
         redirect_url = 'http://{}:{}/signin'.format(config.HOST_IP, config.FRONTEND_PORT)
     else:
-        rtn_val = manage.check_email(email)
+        user = manage.get_user(email=email)
 
-        if rtn_val['status']:
+        if user['status']:
             # Found email was valid; let the user reset the password
             redirect_url = 'http://{}:{}/reset_pw'.format(config.HOST_IP, config.FRONTEND_PORT)
             session['email'] = email
@@ -54,16 +54,19 @@ def send_pwreset_email():
 
     if 'email' in req:
         email = req['email']
-        rtn_val = manage.check_email(email)
+        user = manage.get_user(email=email)
 
-        if rtn_val['status']:
+        if user['status']:
+            rtn_val['status'] = True
+            rtn_val['message'] = "The password reset email has been sent"
             token = utils.generate_email_token(email)
             pwreset_url = 'http://{}:{}/password_reset_confirm/{}'.format(config.HOST_IP, config.BACKEND_PORT, token)
             template = render_template('pwreset.html', pwreset_url=pwreset_url)
             subject = "Reset your whoami password"
 
             utils.send_email(email, template, subject)
-            rtn_val['message'] = "The password reset email has been sent"
+        else:
+            rtn_val = user
     else:
         rtn_val['status'] = False
         rtn_val['message'] = "Request is missing email"
@@ -97,16 +100,17 @@ def resend_confirmation():
 
     if 'email' in req:
         email = req['email']
-        rtn_val = manage.check_email(email)
+        user = manage.get_user(email=email)
 
-        if rtn_val['status']:
+        if user['status']:
+            rtn_val['status'] = True
+            rtn_val['message'] = "The confirmation email has been sent again"
             token = utils.generate_email_token(email)
             confirm_url = 'http://{}:{}/confirm/{}'.format(config.HOST_IP, config.BACKEND_PORT, token)
             template = render_template('activate.html', confirm_url=confirm_url)
             subject = "Please confirm your email"
 
             utils.send_email(email, template, subject)
-            rtn_val['message'] = "The confirmation email has been sent again"
     else:
         rtn_val['status'] = False
         rtn_val['message'] = "Request is missing email"

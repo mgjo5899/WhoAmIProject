@@ -15,6 +15,12 @@ from whoami_back.models.whiteboard_data import WhiteboardData
 import whoami_back.config as config
 
 
+# Check given secret key
+def check_secret_api_key(given_key):
+    if given_key == config.SECRET_API_KEY:
+        return True
+    return False
+
 # Receive request data
 def get_req_data():
     req = None
