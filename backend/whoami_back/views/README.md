@@ -229,6 +229,41 @@ is valid, then it redirects to /reset_pw.
 
 ## Whiteboard
 
+## Get user's published data [/whiteboard/published_data]
+
+This API returns whiteboard contents data related to the given user.
+
++ Request Body (application/json)
+
+        {
+            "username": "someusername",
+            "secret_key": "somesecretkey"
+        }
+
++ Response (application/json)
+
+        {
+            "status": true,
+            "whiteboard_data": [
+                {
+                    "curr_height": 200,
+                    "curr_width": 200,
+                    "id": 3,
+                    "instagram_url": "https://www.instagram.com/p/BsgqgMIFOLYtWUVgkt6d9v6McEw7x99KFerztw0/",
+                    "last_modified": "Tue, 19 Mar 2019 21:54:41 GMT",
+                    "medium": "instagram",
+                    "orig_height": 640,
+                    "orig_width": 640,
+                    "pos_x": 381,
+                    "pos_y": 56,
+                    "raw_content_url": "https://scontent.cdninstagram.com/vp/9f4a41d8a9add1cf3e6efc75df0e6ef4/5D20C069/t51.2885-15/sh0.08/e35/s640x640/49759352_2281406505226870_3927099686951390228_n.jpg?_nc_ht=scontent.cdninstagram.com",
+                    "status": 1,
+                    "type": "image"
+                }
+            ]
+        }
+
+
 ## User Data on the Whiteboard [/whiteboard/user_data]
 
 ### Get user data that's on the whiteboard [GET]
