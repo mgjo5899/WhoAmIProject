@@ -128,10 +128,14 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
     }
 
     const handleNext = async () => {
-        await addData();
-        await changeData();
-        await deleteData();
-        next();
+        try {
+            await addData();
+            await changeData();
+            await deleteData();
+            next();
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (

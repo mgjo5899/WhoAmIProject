@@ -127,7 +127,8 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
                 minHeight: "1px",
                 width: "100%",
                 border: "1px solid #ddd",
-                overflow: "auto"
+                overflow: "auto",
+                marginBottom: 100
             }}>
                 {markedImage && (
                     <Gallery
