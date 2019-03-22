@@ -8,6 +8,7 @@ import { SERVER } from './config';
 import { connect } from 'react-redux';
 import { storeUser } from './store/actions/authActions';
 import OAuthRedirect from './components/social-media/OAuthRedirect';
+import MainPage from './components/home/main_page';
 
 class App extends Component {
 
@@ -35,6 +36,7 @@ class App extends Component {
           <div className="container">
             <Route exact path="/" component={Home} />
             <Route exact path="/reset_pw" component={ResetPasswordComponent} />
+            <Route exact path="/:username" component={MainPage} />
           </div>
         </div>
       </BrowserRouter>
