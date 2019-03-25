@@ -77,8 +77,6 @@ def refine_raw_data(raw_contents_data):
                     content['type'] = carousel_content['type']
                     contents.append(content)
                 elif carousel_content['type'] == 'video':
-                    # TODO: Let's take care of video too
-                    print("got video")
                     content = {}
                     content['orig_width'] = carousel_content['videos']\
                                                             ['standard_resolution']['width']
@@ -88,17 +86,15 @@ def refine_raw_data(raw_contents_data):
                                                                  ['standard_resolution']['url']
                     content['instagram_url'] = raw_content['link']
                     content['type'] = carousel_content['type']
-                    #contents.append(content)
+                    contents.append(content)
         elif raw_content['type'] == 'video':
-            # TODO: Let's take care of video too
-            print("got video")
             content = {}
             content['orig_width'] = raw_content['videos']['standard_resolution']['width']
             content['orig_height'] = raw_content['videos']['standard_resolution']['height']
             content['raw_content_url'] = raw_content['videos']['standard_resolution']['url']
             content['instagram_url'] = raw_content['link']
             content['type'] = raw_content['type']
-            #contents.append(content)
+            contents.append(content)
 
     return contents
 
