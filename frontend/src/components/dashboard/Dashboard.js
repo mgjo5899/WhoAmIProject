@@ -2,11 +2,13 @@ import React, { Fragment, useEffect, useState } from 'react';
 import Axios from 'axios';
 import { SERVER, SECRET_KEY } from '../../config';
 import { connect } from 'react-redux';
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 
 const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWidth, defaultHeight, resetData, username, auth }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
+    const [modal, setModal] = useState(false);
 
     useEffect(() => {
         if (activeIndex === contentsIndex.dashboard) {
@@ -40,7 +42,9 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
                             transform: `translate(${image.pos_x}px, ${image.pos_y}px)`
                         }}
                         data-x={image.pos_x}
-                        data-y={image.pos_y}>
+                        data-y={image.pos_y}
+                        onClick={toggle}
+                    >
                         <img
                             className="w-100 h-100"
                             src={image.raw_content_url}
@@ -52,6 +56,10 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
         }
         settingHeight();
     }, [data.existing]);
+
+    const toggle = () => {
+        setModal(!modal);
+    }
 
     const settingHeight = () => {
         let maxHeight = defaultHeight;

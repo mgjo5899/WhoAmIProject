@@ -83,6 +83,7 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
             if (!userData.status) throw new Error(userData.message);
             // fetching contents
             const contentsData = userData[element.contents];
+            console.log(contentsData);
             setData({
                 ...data,
                 images: (

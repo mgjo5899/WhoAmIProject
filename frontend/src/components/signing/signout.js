@@ -5,7 +5,9 @@ import { signOut } from '../../store/actions/authActions';
 import ChangePassword from './password/changePassword';
 import { withRouter } from 'react-router-dom';
 
-const SignOut = ({ auth, signOut }) => {
+const SignOut = ({ auth, signOut, history }) => {
+
+    console.log(history);
 
     return (
         <Fragment>
@@ -25,7 +27,7 @@ const SignOut = ({ auth, signOut }) => {
                 </DropdownMenu>
             </UncontrolledDropdown>
             <NavItem>
-                <Button color="dark" onClick={() => signOut()}>Sign out</Button>
+                <Button color="dark" onClick={() => signOut(history)}>Sign out</Button>
             </NavItem>
         </Fragment >
     );
@@ -39,7 +41,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        signOut: () => dispatch(signOut())
+        signOut: history => dispatch(signOut(history))
     }
 }
 
