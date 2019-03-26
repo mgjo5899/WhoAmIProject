@@ -7,8 +7,6 @@ import { withRouter } from 'react-router-dom';
 
 const SignOut = ({ auth, signOut, history }) => {
 
-    console.log(history);
-
     return (
         <Fragment>
             <UncontrolledDropdown nav inNavbar>
