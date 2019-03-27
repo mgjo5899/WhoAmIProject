@@ -7,11 +7,14 @@ export const storeUser = user => {
     }
 }
 
-export const signOut = () => {
+export const signOut = history => {
+    console.log(history);
     return dispatch => {
         axios.get(SERVER + '/signout')
             .then(() => {
                 dispatch({ type: 'SIGNOUT_USER' });
+                // succeed, so redirecting to home
+                history.push('/');
             }).catch(err => {
                 console.log(err);
             });

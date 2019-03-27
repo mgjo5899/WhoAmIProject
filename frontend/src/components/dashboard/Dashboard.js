@@ -2,11 +2,15 @@ import React, { Fragment, useEffect, useState } from 'react';
 import Axios from 'axios';
 import { SERVER, SECRET_KEY } from '../../config';
 import { connect } from 'react-redux';
+import { Modal } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWidth, defaultHeight, resetData, username, auth }) => {
+const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWidth, defaultHeight, resetData, username, auth, history }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
+    const [modal, setModal] = useState(false);
+    const [currentImage, setCurrentImage] = useState({});
 
     useEffect(() => {
         if (activeIndex === contentsIndex.dashboard) {
@@ -21,9 +25,8 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
     }, [data]);
 
     useEffect(() => {
-        if (data.existing.length > 0) {
+        if (data.existing) {
             // setting images forming to right elements
-            console.log(data);
             setImages(
                 data.existing.map((image, index) => (
                     <div
@@ -40,7 +43,9 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
                             transform: `translate(${image.pos_x}px, ${image.pos_y}px)`
                         }}
                         data-x={image.pos_x}
-                        data-y={image.pos_y}>
+                        data-y={image.pos_y}
+                        onClick={() => toggle(image)}
+                    >
                         <img
                             className="w-100 h-100"
                             src={image.raw_content_url}
@@ -53,6 +58,17 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
         settingHeight();
     }, [data.existing]);
 
+    const toggle = image => {
+        if (modal) {
+            setCurrentImage({});
+        } else {
+            setCurrentImage({ ...currentImage, image: image.raw_content_url });
+            // temporory easy way of handling
+            image.medium === 'instagram' ? setCurrentImage(currentImage => ({ ...currentImage, source: image.instagram_url })) : setCurrentImage({});
+        }
+        setModal(!modal);
+    }
+
     const settingHeight = () => {
         let maxHeight = defaultHeight;
         data.existing.forEach(elem => {
@@ -62,40 +78,32 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
     }
 
     const getExistingImages = async () => {
-        if (isOwner()) {
-            await getOwnerExistingImages();
-        } else {
-            await getUserExistingImages();
+        try {
+            isOwner() ? await getOwnerExistingImages() : await getUserExistingImages();
+        } catch (error) {
+            history.push(`/error_page?msg=${error}`);
         }
     }
 
     const getOwnerExistingImages = async () => {
-        try {
-            const { status, whiteboard_data, message } = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
-            if (!status) throw new Error(message);
-            setData({
-                ...resetData(),
-                existing: whiteboard_data
-            });
-        } catch (error) {
-            console.log(error);
-        }
+        const { status, whiteboard_data, message } = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
+        if (!status) throw new Error(message);
+        setData({
+            ...resetData(),
+            existing: whiteboard_data
+        });
     }
 
     const getUserExistingImages = async () => {
-        try {
-            const { status, whiteboard_data, message } = (await Axios.post(SERVER + '/whiteboard/published_data', {
-                username,
-                secret_key: SECRET_KEY
-            })).data;
-            if (!status) throw new Error(message);
-            setData({
-                ...resetData(),
-                existing: whiteboard_data
-            });
-        } catch (error) {
-            console.log(error);
-        }
+        const { status, whiteboard_data, message } = (await Axios.post(SERVER + '/whiteboard/published_data', {
+            username,
+            secret_key: SECRET_KEY
+        })).data;
+        if (!status) throw new Error(message);
+        setData({
+            ...resetData(),
+            existing: whiteboard_data
+        });
     }
 
     const isOwner = () => (auth.user.username === username)
@@ -113,6 +121,11 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
                     </div>
                 )
             }
+            <Modal isOpen={modal} toggle={toggle} className="d-flex">
+                <div className="d-flex" onClick={() => window.open(currentImage.source)}>
+                    <img src={currentImage.image} alt="" />
+                </div>
+            </Modal>
             <div id="spread-sheet" className="card p-2 mt-3" style={{ defaultWidth, height }}>
                 {images}
             </div>
@@ -124,4 +137,4 @@ const mapStateToProps = state => ({
     auth: state.auth
 })
 
-export default connect(mapStateToProps)(Dashboard);
+export default withRouter(connect(mapStateToProps)(Dashboard));

@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { SignedInConfirmedHome, SignedInNotConfirmedHome, NotSignedInHome } from './signedHome';
+import Navbar from '../layout/navbar';
+
 
 class Home extends Component {
 
@@ -8,9 +10,12 @@ class Home extends Component {
         const { user } = this.props.auth;
         return (
             <Fragment>
-                {
-                    user.email ? user.confirmed ? <SignedInConfirmedHome /> : <SignedInNotConfirmedHome /> : <NotSignedInHome />
-                }
+                <Navbar />
+                <div className="container">
+                    {
+                        user.email ? user.confirmed ? <SignedInConfirmedHome /> : <SignedInNotConfirmedHome /> : <NotSignedInHome />
+                    }
+                </div>
             </Fragment>
         );
     }

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import Navbar from './components/layout/navbar';
 import Home from './components/home/home';
-import { BrowserRouter, Route } from 'react-router-dom';
-import ResetPasswordComponent from './components/signing/password/resetPasswordComponent';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
 import { SERVER } from './config';
 import { connect } from 'react-redux';
 import { storeUser } from './store/actions/authActions';
 import OAuthRedirect from './components/social-media/OAuthRedirect';
+import ErrorPage from './components/error';
+import ResetPasswordComponent from './components/signing/password/resetPasswordComponent';
 import MainPage from './components/home/main_page';
 
 class App extends Component {
@@ -31,13 +31,13 @@ class App extends Component {
     return this.state.loaded && (
       <BrowserRouter>
         <div className="App">
-          <Route exact path="/oauth_redirect" component={OAuthRedirect} />
-          <Navbar />
-          <div className="container">
+          <Switch>
+            <Route exact path="/oauth_redirect" component={OAuthRedirect} />
+            <Route exact path="/error_page" component={ErrorPage} />
             <Route exact path="/" component={Home} />
             <Route exact path="/reset_pw" component={ResetPasswordComponent} />
             <Route exact path="/:username" component={MainPage} />
-          </div>
+          </Switch>
         </div>
       </BrowserRouter>
     )
