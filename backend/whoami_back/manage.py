@@ -312,7 +312,7 @@ def register_medium(medium, email, access_token):
 
     return rtn_val
 
-def signin_user(email, password, hashed=False):
+def check_credential(email, password, hashed=False):
     rtn_val = {}
     user = db.query(User).filter(User.email == email).first()
 
@@ -339,6 +339,19 @@ def signin_user(email, password, hashed=False):
             rtn_val['user']['email'] = user.email
             rtn_val['user']['registered_on'] = user.registered_on
             rtn_val['user']['pw'] = user.password
+            user.last_signin = datetime.now()
+            db.commit()
+
+    return rtn_val
+
+def signin_user(email, password):
+    rtn_val = {}
+    rtn_val = check_credential(email, password)
+
+    if rtn_val['status'] == True:
+        user = db.query(User).filter(User.email == email).first()
+        user.last_signin = datetime.now()
+        db.commit()
 
     return rtn_val
 
@@ -434,7 +447,7 @@ def get_users():
     return rtn_val
 
 def delete_user(email, password):
-    rtn_val = signin_user(email, password)
+    rtn_val = check_credential(email, password)
 
     if rtn_val['status']:
         user = db.query(User).filter(User.email == email).first()
@@ -459,6 +472,21 @@ def modify_password(email, new_password):
         hashed_pw = get_pw_hash(new_password)
         user.password = hashed_pw
         rtn_val['hashed_new_pw'] = hashed_pw
+        db.commit()
+    else:
+        rtn_val = user
+
+    return rtn_val
+
+def update_last_signout(email):
+    user = get_user(email=email)
+    rtn_val = {}
+    
+    if user['status']:
+        rtn_val['status'] = True
+        rtn_val['message'] = "Successfully updated last_signout of the user"
+        user = db.query(User).filter(User.email == email).first()
+        user.last_signout = datetime.now()
         db.commit()
     else:
         rtn_val = user

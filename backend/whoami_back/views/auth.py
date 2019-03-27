@@ -153,7 +153,7 @@ def signin():
 
     if request.method == 'GET':
         if 'email' in session and 'password' in session:
-            rtn_val = manage.signin_user(session['email'], session['password'], hashed=True)
+            rtn_val = manage.check_credential(session['email'], session['password'], hashed=True)
 
             if rtn_val['status']:
                 rtn_val['message'] = "User already signed in"
@@ -189,8 +189,10 @@ def signout():
         if 'email' in session and 'password' in session:
             email = session.pop('email')
             session.pop('password')
-            rtn_val['status'] = True
-            rtn_val['message'] = "User successfully signed out"
+            rtn_val = manage.update_last_signout(email)
+
+            if rtn_val['status'] == True:
+                rtn_val['message'] = "User successfully signed out"
             rtn_val['email'] = email
         else:
             rtn_val['status'] = False
