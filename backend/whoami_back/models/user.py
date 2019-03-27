@@ -15,3 +15,5 @@ class User(Base):
     registered_on = Column(DateTime, default=datetime.now())
     confirmed = Column(Boolean, default=False)
     confirmed_on = Column(DateTime, nullable=True)
+    last_signout = Column(DateTime, nullable=True)
+    last_signin = Column(DateTime, nullable=True)
