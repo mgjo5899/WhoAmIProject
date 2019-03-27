@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { Carousel, CarouselItem } from 'reactstrap';
 import Dashboard from '../dashboard/Dashboard';
 import ConnectTo from '../dashboard/ConnectTo';
 import Spread from '../dashboard/Spread';
 import Contents from '../dashboard/Contents';
+import Navbar from '../layout/navbar';
 
 const MainPage = ({ match }) => {
 
@@ -106,16 +107,19 @@ const MainPage = ({ match }) => {
     ));
 
     return (
-        <div className="container">
-            <Carousel
-                activeIndex={activeIndex}
-                next={next}
-                previous={previous}
-                interval={false}
-            >
-                {slides}
-            </Carousel>
-        </div>
+        <Fragment>
+            <Navbar />
+            <div className="container">
+                <Carousel
+                    activeIndex={activeIndex}
+                    next={next}
+                    previous={previous}
+                    interval={false}
+                >
+                    {slides}
+                </Carousel>
+            </div>
+        </Fragment>
     );
 }
 

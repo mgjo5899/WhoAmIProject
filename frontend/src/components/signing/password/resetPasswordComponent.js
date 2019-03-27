@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Axios from 'axios';
 import { SERVER } from '../../../config';
 import SignedInSecure from '../../../secure/signedInSecure';
 import { connect } from 'react-redux';
+import Navbar from '../../layout/navbar';
 
 class ResetPasswordComponent extends Component {
 
@@ -49,21 +50,26 @@ class ResetPasswordComponent extends Component {
 
     render() {
         return (
-            <div className="card">
-                <h5 className="card-header">Reset password</h5>
-                <div className="card-body">
-                    <div className="form-group">
-                        <label htmlFor="newPassword">New password</label>
-                        <input type="password" className="form-control" id="newPassword" placeholder="New password" onChange={this.handleChange} />
+            <Fragment>
+                <Navbar />
+                <div className="container">
+                    <div className="card">
+                        <h5 className="card-header">Reset password</h5>
+                        <div className="card-body">
+                            <div className="form-group">
+                                <label htmlFor="newPassword">New password</label>
+                                <input type="password" className="form-control" id="newPassword" placeholder="New password" onChange={this.handleChange} />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="confirmPassword">Confirm password</label>
+                                <input type="password" className="form-control" id="confirmPassword" placeholder="Confirm password" onChange={this.handleChange} />
+                            </div>
+                            {this.state.errorMsg && <div className="alert alert-danger" role="alert">{this.state.errorMsg}</div>}
+                            <button className="btn btn-primary" onClick={this.handleSubmit}>Reset password</button>
+                        </div>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="confirmPassword">Confirm password</label>
-                        <input type="password" className="form-control" id="confirmPassword" placeholder="Confirm password" onChange={this.handleChange} />
-                    </div>
-                    {this.state.errorMsg && <div className="alert alert-danger" role="alert">{this.state.errorMsg}</div>}
-                    <button className="btn btn-primary" onClick={this.handleSubmit}>Reset password</button>
                 </div>
-            </div>
+            </Fragment>
         );
     }
 }

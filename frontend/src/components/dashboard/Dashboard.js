@@ -3,8 +3,9 @@ import Axios from 'axios';
 import { SERVER, SECRET_KEY } from '../../config';
 import { connect } from 'react-redux';
 import { Modal } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWidth, defaultHeight, resetData, username, auth }) => {
+const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWidth, defaultHeight, resetData, username, auth, history }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
@@ -77,40 +78,32 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
     }
 
     const getExistingImages = async () => {
-        if (isOwner()) {
-            await getOwnerExistingImages();
-        } else {
-            await getUserExistingImages();
+        try {
+            isOwner() ? await getOwnerExistingImages() : await getUserExistingImages();
+        } catch (error) {
+            history.push(`/error_page?msg=${error}`);
         }
     }
 
     const getOwnerExistingImages = async () => {
-        try {
-            const { status, whiteboard_data, message } = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
-            if (!status) throw new Error(message);
-            setData({
-                ...resetData(),
-                existing: whiteboard_data
-            });
-        } catch (error) {
-            console.log(error);
-        }
+        const { status, whiteboard_data, message } = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
+        if (!status) throw new Error(message);
+        setData({
+            ...resetData(),
+            existing: whiteboard_data
+        });
     }
 
     const getUserExistingImages = async () => {
-        try {
-            const { status, whiteboard_data, message } = (await Axios.post(SERVER + '/whiteboard/published_data', {
-                username,
-                secret_key: SECRET_KEY
-            })).data;
-            if (!status) throw new Error(message);
-            setData({
-                ...resetData(),
-                existing: whiteboard_data
-            });
-        } catch (error) {
-            console.log(error);
-        }
+        const { status, whiteboard_data, message } = (await Axios.post(SERVER + '/whiteboard/published_data', {
+            username,
+            secret_key: SECRET_KEY
+        })).data;
+        if (!status) throw new Error(message);
+        setData({
+            ...resetData(),
+            existing: whiteboard_data
+        });
     }
 
     const isOwner = () => (auth.user.username === username)
@@ -144,4 +137,4 @@ const mapStateToProps = state => ({
     auth: state.auth
 })
 
-export default connect(mapStateToProps)(Dashboard);
+export default withRouter(connect(mapStateToProps)(Dashboard));
