@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import InstagramLogo from '../../images/instagram/instagram-logo.png';
+import FacebookLogo from '../../images/facebook/facebook-logo.png';
 import Axios from 'axios';
 import { SERVER } from '../../config';
 
@@ -10,7 +11,6 @@ const ConnectTo = ({ previous, setElement, activeIndex, contentsIndex, next }) =
             medium: 'instagram',
             link: '/instagram/user_data',
             clientId: 'c8fdd62c5cdd4b26a25c13f98b222e08',
-            clientSecret: 'ab7c144fa18a467a97300c6377d1e364 ',
             authRedirectUri: 'http://localhost:8000/instagram/get_access_token',
             authURL: (clientId, authRedirectUri) => `https://api.instagram.com/oauth/authorize/?client_id=${clientId}&redirect_uri=${authRedirectUri}&response_type=code`,
             src: InstagramLogo,
@@ -18,6 +18,18 @@ const ConnectTo = ({ previous, setElement, activeIndex, contentsIndex, next }) =
             contents: 'instagram_contents',
             sourceUrl: 'instagram_url',
             specific: 'instagram_specific'
+        },
+        {
+            medium: 'facebook',
+            link: '/facebook/user_data',
+            clientId: '1050432755165601',
+            authRedirectUri: 'http://localhost:8000/facebook/get_access_token',
+            authURL: (clientId, authRedirectUri) => `https://www.facebook.com/v3.2/dialog/oauth?client_id=${clientId}&redirect_uri=${authRedirectUri}&state=gnsalswjddma&scope=user_photos`,
+            src: FacebookLogo,
+            authorized: false,
+            contents: 'facebook_contents',
+            sourceUrl: 'facebook_url',
+            specific: 'facebook_specific'
         }
     ]);
 
