@@ -10,14 +10,14 @@ import whoami_back.manage as manage
 instagram = Blueprint('instagram', __name__)
 
 
-def access_token_api(client_id, client_secret, grant_type, redirect_uri, code):
+def access_token_api(code):
     rtn_val = {}
     uri = instagram_conf.ACCESS_TOKEN_ENDPOINT
     payload = {
-                'client_id'     : client_id,
-                'client_secret' : client_secret,
-                'grant_type'    : grant_type,
-                'redirect_uri'  : redirect_uri,
+                'client_id'     : instagram_conf.CLIENT_ID,
+                'client_secret' : instagram_conf.CLIENT_SECRET,
+                'grant_type'    : instagram_conf.GRANT_TYPE,
+                'redirect_uri'  : instagram_conf.ACCESS_TOKEN_REDIRECT_URI,
                 'code'          : code
               }
 
@@ -39,10 +39,8 @@ def access_token_api(client_id, client_secret, grant_type, redirect_uri, code):
 def get_user_contents(access_token):
     rtn_val = {}
     uri = instagram_conf.USER_MEDIA_ENDPOINT
-    user_content_endpoint = '{}/?access_token={}'.format(uri, access_token)
-    r = requests.get(user_content_endpoint)
-
-    #print('user_content_endpoint: ', user_content_endpoint)
+    payload = {'access_token': access_token}
+    r = requests.get(uri, payload)
 
     if r.status_code == 200:
         rtn_val['status'] = True
@@ -99,7 +97,7 @@ def refine_raw_data(raw_contents_data):
     return contents
 
 @instagram.route('/instagram/user_data', methods=['GET'])
-def get_user_data():
+def get_user_instagram_data():
     rtn_val = {}
 
     if 'email' in session:
@@ -137,6 +135,9 @@ def get_user_data():
                 rtn_val['status'] = True
                 rtn_val['instagram_contents'] = refined_contents
                 rtn_val['email'] = session['email']
+            else:
+                rtn_val = raw_user_data
+                rtn_val['message'] = "Could not get user's Instagram contents"
         else:
             rtn_val['status'] = False
             rtn_val['message'] = "Could not find Instagram access token for the user with the given email"
@@ -147,16 +148,12 @@ def get_user_data():
     return jsonify(rtn_val)
 
 @instagram.route('/instagram/get_access_token', methods=['GET'])
-def get_access_token():
+def get_instagrram_access_token():
     rtn_val = {}
     req = utils.get_req_data()
 
     if 'code' in req:
-        rtn_val = access_token_api(instagram_conf.CLIENT_ID,
-                                   instagram_conf.CLIENT_SECRET,
-                                   instagram_conf.GRANT_TYPE,
-                                   instagram_conf.ACCESS_TOKEN_REDIRECT_URI,
-                                   req['code'])
+        rtn_val = access_token_api(req['code'])
 
         if rtn_val['status'] == True:
             if 'email' in session:
@@ -171,7 +168,7 @@ def get_access_token():
             rtn_val['error_code'] = 2
     else:
         rtn_val['status'] = False
-        rtn_val['message'] = "Failed to get code."
+        rtn_val['message'] = "Failed to get code"
         rtn_val['error_message'] = req
         rtn_val['error_code'] = 1
 

@@ -56,7 +56,8 @@ def whiteboard_user_data():
             rtn_val['update_results'] = []
 
             for updated_content in updated_contents:
-                update_status = manage.update_whiteboard_content(session['email'], updated_content)
+                update_status = manage.update_whiteboard_content(session['email'], \
+                                                                 updated_content)
 
                 # Debugging purpose
                 if update_status['status'] == False:
@@ -71,7 +72,8 @@ def whiteboard_user_data():
             rtn_val['delete_results'] = []
 
             for deleted_content_id in deleted_contents:
-                delete_status = manage.delete_whiteboard_content(session['email'], deleted_content_id)
+                delete_status = manage.delete_whiteboard_content(session['email'], \
+                                                                 deleted_content_id)
 
                 if delete_status['status'] == False:
                     print("deleted_content_id: ", deleted_content_id)
