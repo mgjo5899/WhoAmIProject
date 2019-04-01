@@ -8,6 +8,7 @@ from whoami_back.views.auth import auth
 from whoami_back.views.instagram import instagram
 from whoami_back.views.user import user
 from whoami_back.views.whiteboard import whiteboard
+from whoami_back.views.facebook import facebook
 
 
 app = Flask(__name__)
@@ -17,6 +18,7 @@ app.register_blueprint(auth)
 app.register_blueprint(instagram)
 app.register_blueprint(user)
 app.register_blueprint(whiteboard)
+app.register_blueprint(facebook)
 
 # Secret key for session
 app.secret_key = b'gkdlakdlspdladlwmwhtpq'

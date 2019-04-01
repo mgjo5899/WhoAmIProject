@@ -11,6 +11,7 @@ from whoami_back.models.base import Base, engine, get_db_url, db
 from whoami_back.models.user import User
 from whoami_back.models.authorized_medium import AuthorizedMedium
 from whoami_back.models.instagram_data import InstagramData
+from whoami_back.models.facebook_data import FacebookData
 from whoami_back.models.whiteboard_data import WhiteboardData
 import whoami_back.config as config
 

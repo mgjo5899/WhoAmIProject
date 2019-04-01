@@ -4,6 +4,7 @@ from datetime import datetime
 from whoami_back.models.user import User
 from whoami_back.models.authorized_medium import AuthorizedMedium
 from whoami_back.models.instagram_data import InstagramData
+from whoami_back.models.facebook_data import FacebookData
 from whoami_back.models.whiteboard_data import WhiteboardData
 from whoami_back.models.base import db
 from whoami_back.config import HASH_METHOD
@@ -28,7 +29,8 @@ def get_authorized_medium(email):
             rtn_val['authorized_medium'].append(curr_medium)
     else:
         rtn_val['status'] = False
-        rtn_val['message'] = "Could not find any authorized medium for the user with the given email"
+        rtn_val['message'] = "Could not find any authorized medium for the \
+                              user with the given email"
 
     return rtn_val
 
@@ -86,7 +88,8 @@ def get_whiteboard_data(username=None, email=None, medium=None):
             curr_insta_data['last_modified'] = content.last_modified
             curr_insta_data['status'] = content.status
 
-            insta_content = db.query(InstagramData).filter(InstagramData.whiteboard_data_id == content.id).first()
+            insta_content = db.query(InstagramData).filter(InstagramData.whiteboard_data_id == \
+                                                           content.id).first()
 
             if insta_content == None:
                 print("Something is wrong! There is a whiteboard data for \
@@ -125,6 +128,41 @@ def mark_content_unavailable(content_id):
 
     return rtn_val
 
+def add_facebook_content(email, type, pos_x, pos_y, raw_content_url, facebook_url, \
+                                            orig_width, orig_height, curr_width, curr_height):
+    rtn_val = {}
+
+    # TODO: Find a way to make this query faster
+    if db.query(FacebookData).filter(FacebookData.raw_content_url == raw_content_url).first():
+        rtn_val['status'] = False
+        rtn_val['message'] = "The given raw content URL already exists"
+    else:
+        rtn_val['status'] = True
+
+        # TODO: Find a way to group these queries into a single session (single DB interaction)
+        new_whiteboard_content = WhiteboardData(email=email, type=type, medium='facebook',\
+                                                status=1, pos_x=pos_x, pos_y=pos_y)
+        db.add(new_whiteboard_content)
+        db.commit()
+
+        # TODO: Find a way to get generated ID instantly once the whiteboard data has been added
+        whiteboard_data_id = new_whiteboard_content.id
+
+        new_facebook_content = FacebookData(whiteboard_data_id=whiteboard_data_id, \
+                                              raw_content_url=raw_content_url, \
+                                              facebook_url=facebook_url, \
+                                              orig_width=orig_width, orig_height=orig_height, \
+                                              curr_width=curr_width, curr_height=curr_height)
+        db.add(new_facebook_content)
+        db.commit()
+
+        rtn_val['id'] = whiteboard_data_id
+
+    rtn_val['medium'] = 'facebook'
+    rtn_val['email'] = email
+
+    return rtn_val
+
 def add_instagram_content(email, type, pos_x, pos_y, raw_content_url, instagram_url, \
                                             orig_width, orig_height, curr_width, curr_height):
     rtn_val = {}
@@ -137,8 +175,8 @@ def add_instagram_content(email, type, pos_x, pos_y, raw_content_url, instagram_
         rtn_val['status'] = True
 
         # TODO: Find a way to group these queries into a single session (single DB interaction)
-        new_whiteboard_content = WhiteboardData(email=email, type=type, medium='instagram', status=1,\
-                                                pos_x=pos_x, pos_y=pos_y)
+        new_whiteboard_content = WhiteboardData(email=email, type=type, medium='instagram', \
+                                                status=1,pos_x=pos_x, pos_y=pos_y)
         db.add(new_whiteboard_content)
         db.commit()
 
@@ -160,21 +198,54 @@ def add_instagram_content(email, type, pos_x, pos_y, raw_content_url, instagram_
 
     return rtn_val
 
-def update_instagram_content(email, whiteboard_data_id, pos_x=None, pos_y=None, curr_width=None, curr_height=None):
+def update_instagram_content(email, whiteboard_data_id, pos_x=None, pos_y=None, curr_width=None,\
+                             curr_height=None):
     rtn_val = {'id':whiteboard_data_id, 'email':email}
 
     whiteboard_data = db.query(WhiteboardData).filter(and_(WhiteboardData.email == email, \
-                                                           WhiteboardData.id == whiteboard_data_id)).first()
+                                                WhiteboardData.id == whiteboard_data_id)).first()
 
     if whiteboard_data == None:
         rtn_val['status'] = False
         rtn_val['message'] = "There is no whiteboard data with the given id for the given user"
     else:
-        instagram_data = db.query(InstagramData).filter(InstagramData.whiteboard_data_id == whiteboard_data_id).first()
+        facebook_data = db.query(FacebookData).filter(FacebookData.whiteboard_data_id == \
+                                                      whiteboard_data_id).first()
+
+        if facebook_data == None:
+            rtn_val['status'] = False
+            rtn_val['message'] = "There is no facebook data with the given id for the given user"
+        else:
+            facebook_data.curr_width = curr_width
+            facebook_data.curr_height = curr_height
+            whiteboard_data.pos_x = pos_x
+            whiteboard_data.pos_y = pos_y
+            whiteboard_data.last_modified = datetime.now()
+            db.commit()
+
+            rtn_val['status'] = True
+            rtn_val['medium'] = 'facebook'
+
+    return rtn_val
+
+def update_instagram_content(email, whiteboard_data_id, pos_x=None, pos_y=None, \
+                             curr_width=None, curr_height=None):
+    rtn_val = {'id':whiteboard_data_id, 'email':email}
+
+    whiteboard_data = db.query(WhiteboardData).filter(and_(WhiteboardData.email == email, \
+                                            WhiteboardData.id == whiteboard_data_id)).first()
+
+    if whiteboard_data == None:
+        rtn_val['status'] = False
+        rtn_val['message'] = "There is no whiteboard data with the given id for the given user"
+    else:
+        instagram_data = db.query(InstagramData).filter(InstagramData.whiteboard_data_id == \
+                                                                   whiteboard_data_id).first()
 
         if instagram_data == None:
             rtn_val['status'] = False
-            rtn_val['message'] = "There is no instagram data with the given id for the given user"
+            rtn_val['message'] = "There is no instagram data with the given id for \
+                                                                     the given user"
         else:
             instagram_data.curr_width = curr_width
             instagram_data.curr_height = curr_height
@@ -188,10 +259,28 @@ def update_instagram_content(email, whiteboard_data_id, pos_x=None, pos_y=None, 
 
     return rtn_val
 
+def delete_facebook_content(whiteboard_data_id):
+    rtn_val = {}
+
+    facebook_data = db.query(FacebookData).filter(FacebookData.whiteboard_data_id == \
+                                                  whiteboard_data_id).first()
+
+    if facebook_data == None:
+        rtn_val['status'] = False
+        rtn_val['message'] = "There is no facebook data with the given id for the given user"
+    else:
+        db.delete(facebook_data)
+        db.commit()
+        rtn_val['status'] = True
+        rtn_val['medium'] = 'facebook'
+
+    return rtn_val
+
 def delete_instagram_content(whiteboard_data_id):
     rtn_val = {}
 
-    instagram_data = db.query(InstagramData).filter(InstagramData.whiteboard_data_id == whiteboard_data_id).first()
+    instagram_data = db.query(InstagramData).filter(InstagramData.whiteboard_data_id == \
+                                                    whiteboard_data_id).first()
 
     if instagram_data == None:
         rtn_val['status'] = False
@@ -208,7 +297,7 @@ def delete_whiteboard_content(email, whiteboard_data_id):
     rtn_val = {}
 
     whiteboard_data = db.query(WhiteboardData).filter(and_(WhiteboardData.email == email, \
-                                                           WhiteboardData.id == whiteboard_data_id)).first()
+                                             WhiteboardData.id == whiteboard_data_id)).first()
 
     if whiteboard_data == None:
         rtn_val['status'] = False
@@ -216,6 +305,12 @@ def delete_whiteboard_content(email, whiteboard_data_id):
     else:
         if whiteboard_data.medium == 'instagram':
             rtn_val = delete_instagram_content(whiteboard_data_id)
+
+            if rtn_val['status'] == True:
+                db.delete(whiteboard_data)
+                db.commit()
+        elif whiteboard_data.medium == 'facebook':
+            rtn_val = delete_facebook_content(whiteboard_data_id)
 
             if rtn_val['status'] == True:
                 db.delete(whiteboard_data)
@@ -234,8 +329,13 @@ def update_whiteboard_content(email, update):
         rtn_val['message'] = "Could not find medium or id in the given data"
     else:
         if update['medium'] == 'instagram':
-            rtn_val = update_instagram_content(email, update['id'], update['pos_x'], update['pos_y'], \
-                                               update['curr_width'], update['curr_height'])
+            rtn_val = update_instagram_content(email, update['id'], update['pos_x'], \
+                                               update['pos_y'], update['curr_width'], \
+                                               update['curr_height'])
+        elif update['medium'] == 'facebook':
+            rtn_val = update_facebook_content(email, update['id'], update['pos_x'], \
+                                              update['pos_y'], update['curr_width'], \
+                                              update['curr_height'])
         else:
             # Medium provided not found
             rtn_val['message'] = "Could not find the given medium"
@@ -274,6 +374,30 @@ def add_whiteboard_content(email, new_content):
                                                     insta_data['orig_height'],
                                                     insta_data['curr_width'],
                                                     insta_data['curr_height'])
+        elif new_content['medium'] == 'facebook':
+            if not ('type' in new_content and 'pos_x' in new_content and 'pos_y' in new_content \
+                    and 'facebook_specific' in new_content):
+                rtn_val['status'] = False
+                rtn_val['message'] = "Not enough information for a new whiteboard content"
+            else:
+                fb_data = new_content['facebook_specific']
+
+                if not ('raw_content_url' in fb_data and 'facebook_url' in fb_data and \
+                        'orig_width' in fb_data and 'orig_height' in fb_data and \
+                        'curr_width' in fb_data and 'curr_height' in fb_data):
+                    rtn_val['status'] = False
+                    rtn_val['message'] = "Not enough information for a facebook content"
+                else:
+                    rtn_val = add_facebook_content(email,
+                                                   new_content['type'],
+                                                   new_content['pos_x'],
+                                                   new_content['pos_y'],
+                                                   fb_data['raw_content_url'],
+                                                   fb_data['facebook_url'],
+                                                   fb_data['orig_width'],
+                                                   fb_data['orig_height'],
+                                                   fb_data['curr_width'],
+                                                   fb_data['curr_height'])
         else:
             # Medium provided not found
             rtn_val['message'] = "Could not find the given medium"
@@ -305,7 +429,8 @@ def register_medium(medium, email, access_token):
         else:
             # Need a new registration in the AuthorizedMedium table
             print('Authorizing a new medium')
-            new_medium = AuthorizedMedium(email=email, medium='instagram', access_token=access_token)
+            new_medium = AuthorizedMedium(email=email, medium='instagram', \
+                                          access_token=access_token)
             db.add(new_medium)
             rtn_val['message'] = "Successfully registered Instagram account for the user"
         db.commit()
@@ -481,7 +606,7 @@ def modify_password(email, new_password):
 def update_last_signout(email):
     user = get_user(email=email)
     rtn_val = {}
-    
+
     if user['status']:
         rtn_val['status'] = True
         rtn_val['message'] = "Successfully updated last_signout of the user"
