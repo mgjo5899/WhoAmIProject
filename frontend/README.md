@@ -1,68 +1,53 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Client side
 
-## Available Scripts
+This directory is the client side of this project. It is made of React, using bootstrap framework to visualize.
 
-In the project directory, you can run:
+## Getting Started
 
-### `npm start`
+Client side of this project includes the way to run client server, install necessary modules to load
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Prerequisites
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+You should have your machine installed Node.js to start your client server. Once you install Node.js, you can check your Node.js version by executing this command.
 
-### `npm test`
+```
+node -v
+```
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+If this command does not make an error, you are ready to go.
 
-### `npm run build`
+### Installing
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Before loading your client server, you should have your package installed. You can install your package by executing this command.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+```
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+After you finished installing node modules, you can now run command
 
-### `npm run eject`
+```
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Router path
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Home [ `/` ]
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+This route goes to very first home page. In the home page, you can sign in, or sign up. Once you sign up, you will need to validate your account using email of your input.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Dashboard [ `/:username` ]
 
-## Learn More
+Once you validate your email, you will be able to go to your username homepage. If you go to home page(`/`), you will automatically redirect to your account page. You will be able to visit other user's dashboard by changing `username`, but if you type `username` that does not exist, then you will redirect to error page.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Resetting password [ `/reset_pw` ]
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This route makes you go to password reset of your account. This page should only be able to access once you request for change password. If you join into this page with no session in your browser, you will go to error page.
 
-### Code Splitting
+### Error page [ `/error_page ]
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+This page is a general error page of this project. If you pass the parameter of this page msg, for example, `/error_page?msg=Wrong`, then you will be able to see message in the error page. This message is from backend error message.
 
-### Analyzing the Bundle Size
+### OAuth redirect [ `/oauth_redirect` ]
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+This page is when you try to register OAuth from each social media. After backend stores access token in the server, server will redirect to this route with the parameter `status`, which will indicate either `true` or `false`.
