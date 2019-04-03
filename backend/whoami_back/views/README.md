@@ -3,6 +3,7 @@
 - [Authentication](#authentication)  
 - [Whiteboard](#whiteboard)
 - [Instagram](#instagram)
+- [Facebook](#facebook)
 - [User Data](#user-data)
 
 ## Authentication
@@ -395,6 +396,44 @@ This API lets the whiteboard data to be deleted.  It requirers the user crerdent
         }
 
 
+## Facebook
+
+## Facebook Access Token [/facebook/get_accesstoken]
+
+## Get User Access Token [GET]
+
+This API is the initial step for OAuth 2.0 sign in.  It lets a user to sign in to their account through Facebook's GUI login system.  After a successful sign in, the user could give our service a permission to use his/ her contents.  It responds by redirecting the OAuth page to `/oauth_redirect` URI with medium, facebook, and status, either true or false.  If the status is false, it provides an error code for a debugging purpose.  It looks for credential data in session.
+
+## Facebook User Data Related [/facebook/user_data]
+
+## Get User Data [GET]
+
+This API returns the Facebook data of the user who is signed in at the current session.
+
++ Response (application/json)
+
+        {
+            "status": true,
+            "email": "mgjo5899@gmail.com"
+            "facebook_contents": [
+                {
+                    "orig_width": 640,
+                    "orig_height": 640,
+                    "raw_content_url": "https://scontent.cdninstagram.com/vp/a9bd4032f373574b6b2182d47e722a9d/5D0FFEFA/t51.2885-15/sh0.08/e35/s640x640/53109635_123344238777449_8694827121769313550_n.jpg?_nc_ht=scontent.cdninstagram.com",
+                    "facebook_url": "https://www.instagram.com/p/BuwxR1vFjBm/",
+                    "type": 'image'
+                }
+            ]
+        }
+
+## Instagram
+
+## Instagram Access Token [/instagram/get_access_token]
+
+## Get User Access Token [GET]
+
+This API is the initial step for OAuth 2.0 sign in.  It lets a user to sign in to their account through Instagram's GUI login system.  After a successful sign in, the user could give our service a permission to use his/ her contents.  It responds by redirecting the OAuth page to `/oauth_redirect` URI with medium, instagram, and status, either true or false.  If the status is false, it provides an error code for a debugging purpose.  It looks for credential data in session.
+
 ## Instagram User Data Related [/instagram/user_data]
 
 ## Get User Data [GET]
@@ -409,20 +448,13 @@ This API returns the Instagram data of the user who is signed in at the current 
             "instagram_contents": [
                 {
                     "orig_width": 640,
-                    "orig_height": 480,
-                    "raw_content_url": "https://scontent.cdninstagram.com/vp/9572fc0348077bef240769a0e6c06c34/5D0B6328/t51.288515/sh0.08/e35/s640x640/53199887_348952865719289_2176542923815712269_n.jpg?_nc_ht=scontent.cdninstagram.com",
-                    "instagram_url": "https://www.instagram.com/p/Bu7vYu-F9z0/",
-                    "type": "image"
-								},
-                {
-                    "orig_width": 640,
                     "orig_height": 640,
                     "raw_content_url": "https://scontent.cdninstagram.com/vp/a9bd4032f373574b6b2182d47e722a9d/5D0FFEFA/t51.2885-15/sh0.08/e35/s640x640/53109635_123344238777449_8694827121769313550_n.jpg?_nc_ht=scontent.cdninstagram.com",
                     "instagram_url": "https://www.instagram.com/p/BuwxR1vFjBm/",
                     "type": 'image'
                 }
             ]
-      }
+        }
 
 
 ## User Data
