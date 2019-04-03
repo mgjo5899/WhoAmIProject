@@ -68,17 +68,18 @@ def refine_raw_data(raw_contents_data):
     for raw_content in raw_contents_data:
         content = {}
         content['facebook_url'] = raw_content['link']
-        content['orig_width'] = content['images'][0]['width']
-        content['orig_height'] = content['images'][0]['height']
-        content['raw_content_url'] = content['images'][0]['source']
+        content['orig_width'] = raw_content['images'][0]['width']
+        content['orig_height'] = raw_content['images'][0]['height']
+        content['raw_content_url'] = raw_content['images'][0]['source']
 
-        for image in content['images'][1:]:
+        for image in raw_content['images'][1:]:
             if image['width'] > content['orig_width']:
                 content['orig_width'] = image['width']
                 content['orig_height'] = image['height']
                 content['raw_content_url'] = image['source']
 
         content['type'] = 'image'
+        contents.append(content)
 
     return contents
 
@@ -94,7 +95,7 @@ def get_user_facebook_data():
 
             if raw_user_data['status'] == True:
                 # Refine the data
-                refined_contents = refine_raw_data(raw_user_data['user_contents']['data'])
+                refined_contents = refine_raw_data(raw_user_data['user_contents'])
                 existing_facebook_contents = manage.get_whiteboard_data(email=session['email'], medium='facebook')['whiteboard_data']
 
                 # Check if there's any unavailable contents and if there are, mark their status as 3
