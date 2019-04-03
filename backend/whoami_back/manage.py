@@ -429,7 +429,7 @@ def register_medium(medium, email, access_token):
         else:
             # Need a new registration in the AuthorizedMedium table
             print('Authorizing a new medium')
-            new_medium = AuthorizedMedium(email=email, medium='instagram', \
+            new_medium = AuthorizedMedium(email=email, medium=medium, \
                                           access_token=access_token)
             db.add(new_medium)
             rtn_val['message'] = "Successfully registered Instagram account for the user"
