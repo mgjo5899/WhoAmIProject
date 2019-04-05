@@ -229,7 +229,7 @@ def add_instagram_content(email, type, pos_x, pos_y, raw_content_url, instagram_
 
     return rtn_val
 
-def update_instagram_content(email, whiteboard_data_id, pos_x=None, pos_y=None, curr_width=None,\
+def update_facebook_content(email, whiteboard_data_id, pos_x=None, pos_y=None, curr_width=None,\
                              curr_height=None):
     rtn_val = {'id':whiteboard_data_id, 'email':email}
 
