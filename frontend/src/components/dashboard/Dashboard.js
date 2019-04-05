@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import Axios from 'axios';
-import { SERVER, SECRET_KEY } from '../../config';
+import { SERVER, SECRET_KEY, SOCIAL_MEDIA_COLOR } from '../../config';
 import { connect } from 'react-redux';
 import { Modal } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
@@ -40,7 +40,9 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
                             width: image.curr_width,
                             height: image.curr_height,
                             WebkitTransform: `translate(${image.pos_x}px, ${image.pos_y}px)`,
-                            transform: `translate(${image.pos_x}px, ${image.pos_y}px)`
+                            transform: `translate(${image.pos_x}px, ${image.pos_y}px)`,
+                            backgroundColor: SOCIAL_MEDIA_COLOR[image.medium],
+                            padding: 10
                         }}
                         data-x={image.pos_x}
                         data-y={image.pos_y}
@@ -121,9 +123,9 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
                     </div>
                 )
             }
-            <Modal isOpen={modal} toggle={toggle} className="d-flex">
+            <Modal isOpen={modal} centered={true} toggle={toggle} className="d-flex">
                 <div className="d-flex" onClick={() => window.open(currentImage.source)}>
-                    <img src={currentImage.image} alt="" />
+                    <img src={currentImage.image} alt="" className="w-100 h-100" />
                 </div>
             </Modal>
             <div id="spread-sheet" className="card p-2 mt-3" style={{ defaultWidth, height }}>
