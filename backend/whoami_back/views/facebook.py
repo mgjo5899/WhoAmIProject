@@ -101,7 +101,7 @@ def get_user_facebook_data():
                 # Check if there's any unavailable contents and if there are, mark their status as 3
                 # Also check if there's any existing used (1) or unused (2) content
                 # If there is, retrieve necessary information
-                for exisiting_content in existing_facebook_contents:
+                for existing_content in existing_facebook_contents:
                     available = False
 
                     for curr_content in refined_contents:
