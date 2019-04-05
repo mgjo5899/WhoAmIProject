@@ -103,6 +103,37 @@ def get_whiteboard_data(username=None, email=None, medium=None):
                 curr_insta_data['curr_width'] = insta_content.curr_width
                 curr_insta_data['curr_height'] = insta_content.curr_height
                 whiteboard_data.append(curr_insta_data)
+    if (medium == None or medium == 'facebook') and 'facebook' in authorized_media:
+        whiteboard_contents = db.query(WhiteboardData).filter(and_(\
+                                       WhiteboardData.email == user_email,\
+                                       WhiteboardData.medium == 'facebook',\
+                                       WhiteboardData.status != 3)).all()
+
+        for content in whiteboard_contents:
+            curr_facebook_data = {}
+            curr_facebook_data['id'] = content.id
+            curr_facebook_data['type'] = content.type
+            curr_facebook_data['medium'] = content.medium
+            curr_facebook_data['pos_x'] = content.pos_x
+            curr_facebook_data['pos_y'] = content.pos_y
+            curr_facebook_data['last_modified'] = content.last_modified
+            curr_facebook_data['status'] = content.status
+
+            facebook_content = db.query(FacebookData).filter(FacebookData.whiteboard_data_id == \
+                                                           content.id).first()
+
+            if facebook_content == None:
+                print("Something is wrong! There is a whiteboard data for \
+                        the following content but there's no Facebook data")
+                print('curr_facebook_data:', curr_facebook_data)
+            else:
+                curr_facebook_data['raw_content_url'] = facebook_content.raw_content_url
+                curr_facebook_data['facebook_url'] = facebook_content.facebook_url
+                curr_facebook_data['orig_width'] = facebook_content.orig_width
+                curr_facebook_data['orig_height'] = facebook_content.orig_height
+                curr_facebook_data['curr_width'] = facebook_content.curr_width
+                curr_facebook_data['curr_height'] = facebook_content.curr_height
+                whiteboard_data.append(curr_facebook_data)
 
     rtn_val['status'] = True
     rtn_val['whiteboard_data'] = whiteboard_data
