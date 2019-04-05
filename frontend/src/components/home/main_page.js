@@ -33,11 +33,16 @@ const MainPage = ({ match }) => {
     const [defaultWidth, defaultHeight] = [1000, 500];
 
     const deleteImage = img => {
-        img.isSelected = !img.isSelected;
+        // handle the case when it is not previously selected medium
+        const selectedMedium = img.isSelected !== undefined;
+        if (selectedMedium) img.isSelected = !img.isSelected;
         // everything based on src
         // find existing index
         const existingIndex = data.existing.findIndex(elem => elem.id === img.id) !== -1;
-        if (img.isSelected) {
+        if (!selectedMedium) {
+            // if the image is not from the selected medium, and if the user clicks delete button, then add the image to delete data
+            setData({ ...data, delete: [...data.delete, img] });
+        } else if (img.isSelected) {
             // selected
             // check if it is in existing one, if it is, then erase from delete, if it is not, then add the object to add state
             if (existingIndex) {

@@ -21,8 +21,13 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
     useEffect(() => {
         if (activeIndex === contentsIndex.spread) {
             setHeight(defaultHeight);
-            // combine selected image data and existing data where it is not part of selected medium
-            const imagesToShow = [...data.selected, ...data.existing.filter(img => img.medium !== element.medium)];
+            // create set for putting deleted data id
+            const deleteIdSet = new Set();
+            data.delete.forEach(img => {
+                deleteIdSet.add(img.id);
+            })
+            // combine selected image data and existing data where it is not part of selected medium, and filter it again where it is not in the deleted image
+            const imagesToShow = [...data.selected, ...data.existing.filter(img => img.medium !== element.medium).filter(img => !deleteIdSet.has(img.id))];
             setImages(
                 // get selected images from previous element
                 imagesToShow.map((image, key) => (
