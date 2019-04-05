@@ -64,7 +64,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
         } else {
             setCurrentImage({ ...currentImage, image: image.raw_content_url });
             // temporory easy way of handling
-            image.medium === 'instagram' ? setCurrentImage(currentImage => ({ ...currentImage, source: image.instagram_url })) : setCurrentImage({});
+            setCurrentImage(currentImage => ({ ...currentImage, source: image[image.medium + '_url'] }));
         }
         setModal(!modal);
     }

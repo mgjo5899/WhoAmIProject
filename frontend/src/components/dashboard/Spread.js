@@ -4,7 +4,7 @@ import { Drag } from './DragAndDrop';
 import Axios from 'axios';
 import { SERVER } from '../../config';
 
-const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage }) => {
+const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element }) => {
 
     const [changed, setChanged] = useState([]);
     const [images, setImages] = useState([]);
@@ -21,8 +21,11 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
     useEffect(() => {
         if (activeIndex === contentsIndex.spread) {
             setHeight(defaultHeight);
+            // combine selected image data and existing data where it is not part of selected medium
+            const imagesToShow = [...data.selected, ...data.existing.filter(img => img.medium !== element.medium)];
             setImages(
-                data.selected.map((image, key) => (
+                // get selected images from previous element
+                imagesToShow.map((image, key) => (
                     <div
                         id={image.id}
                         medium={image.medium}
@@ -33,17 +36,17 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
                         style={{
                             width: image.curr_width || 200,
                             height: 'auto',
-                            WebkitTransform: `translate(${image.posX}px, ${image.posY}px)`,
-                            transform: `translate(${image.posX}px, ${image.posY}px)`
+                            WebkitTransform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
+                            transform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`
                         }}
-                        data-x={image.posX}
-                        data-y={image.posY}>
+                        data-x={image.posX || image.pos_x}
+                        data-y={image.posY || image.pos_y}>
                         <button type="button" onClick={() => handleClose(image)} className="close position-absolute" style={{ top: '2%', right: '2%' }} aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <img
                             className="w-100 h-100"
-                            src={image.src}
+                            src={image.src || image.raw_content_url}
                             alt=""
                         />
                     </div>

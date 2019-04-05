@@ -7,11 +7,14 @@ import uuidv4 from 'uuid/v4';
 const Contents = ({ next, previous, element, contents, setContents, data, setData, activeIndex, contentsIndex, deleteImage, defaultWidth, defaultHeight }) => {
 
     const [markedImage, setMarkedImage] = useState(false);
+    const [spinner, setSpinner] = useState(false);
 
     // load images
     useEffect(() => {
         if (activeIndex === contentsIndex.contents) {
             // store images from api to data image
+            // set spinner while loading
+            setSpinner(true);
             fetchImage();
         }
     }, [activeIndex]);
@@ -44,6 +47,8 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
             );
             // give signal to contents
             setMarkedImage(false);
+            // turn off spinner
+            setSpinner(false);
         }
     }, [data.images]);
 
@@ -123,22 +128,29 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
             <hr />
             <h5 className="d-flex justify-content-center m-2">Select the image</h5>
             <hr />
-            <div style={{
-                display: "block",
-                minHeight: "1px",
-                width: "100%",
-                border: "1px solid #ddd",
-                overflow: "auto",
-                marginBottom: 100
-            }}>
-                {markedImage && (
-                    <Gallery
-                        images={contents}
-                        onSelectImage={onSelectImage}
-                        backdropClosesModal={true}
-                    />
-                )}
-            </div>
+            {
+                spinner ? (
+                    <div className="spinner-border d-block mx-auto my-auto" role="status" />
+                )
+                    : (
+                        <div style={{
+                            display: "block",
+                            minHeight: "1px",
+                            width: "100%",
+                            border: "1px solid #ddd",
+                            overflow: "auto",
+                            marginBottom: 100
+                        }}>
+                            {markedImage && (
+                                <Gallery
+                                    images={contents}
+                                    onSelectImage={onSelectImage}
+                                    backdropClosesModal={true}
+                                />
+                            )}
+                        </div>
+                    )
+            }
             <div className="fixed-bottom card-footer bg-secondary d-flex justify-content-center" style={{ opacity: 0.9 }}>
                 <button className="btn btn-danger mx-auto" onClick={previous}>Cancel</button>
                 <button className="btn btn-primary mx-auto" onClick={next}>Done</button>

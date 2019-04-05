@@ -97,6 +97,7 @@ const MainPage = ({ match }) => {
             defaultWidth={defaultWidth}
             defaultHeight={defaultHeight}
             deleteImage={deleteImage}
+            element={element}
         />
     ];
 
