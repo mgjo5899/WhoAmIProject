@@ -43,8 +43,8 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
                             height: 'auto',
                             WebkitTransform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
                             transform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
-                            backgroundColor: SOCIAL_MEDIA_COLOR[image.medium],
-                            padding: 10
+                            background: SOCIAL_MEDIA_COLOR[image.medium],
+                            padding: 3
                         }}
                         data-x={image.posX || image.pos_x}
                         data-y={image.posY || image.pos_y}>

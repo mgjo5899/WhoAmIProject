@@ -41,8 +41,8 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
                             height: image.curr_height,
                             WebkitTransform: `translate(${image.pos_x}px, ${image.pos_y}px)`,
                             transform: `translate(${image.pos_x}px, ${image.pos_y}px)`,
-                            backgroundColor: SOCIAL_MEDIA_COLOR[image.medium],
-                            padding: 10
+                            background: SOCIAL_MEDIA_COLOR[image.medium],
+                            padding: 3
                         }}
                         data-x={image.pos_x}
                         data-y={image.pos_y}
