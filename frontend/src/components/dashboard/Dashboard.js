@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import Axios from 'axios';
-import { SERVER, SECRET_KEY, SOCIAL_MEDIA_COLOR } from '../../config';
+import { SERVER, SECRET_KEY, SOCIAL_MEDIA_CONFIG } from '../../config';
 import { connect } from 'react-redux';
 import { Modal } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
@@ -41,7 +41,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
                             height: image.curr_height,
                             WebkitTransform: `translate(${image.pos_x}px, ${image.pos_y}px)`,
                             transform: `translate(${image.pos_x}px, ${image.pos_y}px)`,
-                            background: SOCIAL_MEDIA_COLOR[image.medium],
+                            background: SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium).backgroundBorderColor,
                             padding: 3
                         }}
                         data-x={image.pos_x}

@@ -1,37 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import InstagramLogo from '../../images/instagram/instagram-logo.png';
-import FacebookLogo from '../../images/facebook/facebook-logo.png';
 import Axios from 'axios';
-import { SERVER } from '../../config';
+import { SERVER, SOCIAL_MEDIA_CONFIG as socialMedia } from '../../config';
 
 const ConnectTo = ({ previous, setElement, activeIndex, contentsIndex, next }) => {
 
-    const [socialMedia, setSocialMedia] = useState([
-        {
-            medium: 'instagram',
-            link: '/instagram/user_data',
-            clientId: 'c8fdd62c5cdd4b26a25c13f98b222e08',
-            authRedirectUri: 'http://localhost:8000/instagram/get_access_token',
-            authURL: (clientId, authRedirectUri) => `https://api.instagram.com/oauth/authorize/?client_id=${clientId}&redirect_uri=${authRedirectUri}&response_type=code`,
-            src: InstagramLogo,
-            authorized: false,
-            contents: 'instagram_contents',
-            sourceUrl: 'instagram_url',
-            specific: 'instagram_specific'
-        },
-        {
-            medium: 'facebook',
-            link: '/facebook/user_data',
-            clientId: '1050432755165601',
-            authRedirectUri: 'http://localhost:8000/facebook/get_access_token',
-            authURL: (clientId, authRedirectUri) => `https://www.facebook.com/v3.2/dialog/oauth?client_id=${clientId}&redirect_uri=${authRedirectUri}&state=gnsalswjddma&scope=user_photos`,
-            src: FacebookLogo,
-            authorized: false,
-            contents: 'facebook_contents',
-            sourceUrl: 'facebook_url',
-            specific: 'facebook_specific'
-        }
-    ]);
+    const [authorized, setAuthorized] = useState({
+        instagram: false,
+        facebook: false
+    });
 
     useEffect(() => {
         // first check for the authorization
@@ -46,12 +22,9 @@ const ConnectTo = ({ previous, setElement, activeIndex, contentsIndex, next }) =
             if (status) {
                 //iterate through given data
                 authorized_medium.forEach(auth_obj => {
-                    setSocialMedia(socialMedia => {
-                        // iterate to find same medium
-                        let newSocialMedia = [...socialMedia];
-                        const media = newSocialMedia.find(obj => obj.medium === auth_obj.medium);
-                        if (media) media.authorized = true;
-                        return newSocialMedia;
+                    setAuthorized({
+                        ...authorized,
+                        [auth_obj.medium]: true
                     });
                 });
             }

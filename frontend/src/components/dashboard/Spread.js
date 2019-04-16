@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import { Drag } from './DragAndDrop';
 import Axios from 'axios';
-import { SERVER, SOCIAL_MEDIA_COLOR } from '../../config';
+import { SERVER, SOCIAL_MEDIA_CONFIG } from '../../config';
 
 const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element }) => {
 
@@ -43,7 +43,7 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
                             height: 'auto',
                             WebkitTransform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
                             transform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
-                            background: SOCIAL_MEDIA_COLOR[image.medium],
+                            background: SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium).backgroundBorderColor,
                             padding: 3
                         }}
                         data-x={image.posX || image.pos_x}
