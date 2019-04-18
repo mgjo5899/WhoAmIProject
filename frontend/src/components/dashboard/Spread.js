@@ -2,9 +2,9 @@ import React, { Fragment, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import { Drag } from './DragAndDrop';
 import Axios from 'axios';
-import { SERVER, SOCIAL_MEDIA_CONFIG } from '../../config';
+import { SERVER } from '../../config';
 
-const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element }) => {
+const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element, showImages }) => {
 
     const [changed, setChanged] = useState([]);
     const [images, setImages] = useState([]);
@@ -28,37 +28,7 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
             })
             // combine selected image data and existing data where it is not part of selected medium, and filter it again where it is not in the deleted image
             const imagesToShow = [...data.selected, ...data.existing.filter(img => img.medium !== element.medium).filter(img => !deleteIdSet.has(img.id))];
-            setImages(
-                // get selected images from previous element
-                imagesToShow.map((image, key) => (
-                    <div
-                        id={image.id}
-                        medium={image.medium}
-                        orig_width={image.orig_width}
-                        orig_height={image.orig_height}
-                        className="card draggable position-absolute resize-drag rounded"
-                        key={key}
-                        style={{
-                            width: image.curr_width || 200,
-                            height: 'auto',
-                            WebkitTransform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
-                            transform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
-                            background: SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium).backgroundBorderColor,
-                            padding: 3
-                        }}
-                        data-x={image.posX || image.pos_x}
-                        data-y={image.posY || image.pos_y}>
-                        <button type="button" onClick={() => handleClose(image)} className="close position-absolute" style={{ top: '2%', right: '2%' }} aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <img
-                            className="w-100 h-100"
-                            src={image.src || image.raw_content_url}
-                            alt=""
-                        />
-                    </div>
-                ))
-            );
+            setImages(showImages(imagesToShow, handleClose, true));
             // set height of whiteboard based on the selected images
             setHeight(getHeight());
         }

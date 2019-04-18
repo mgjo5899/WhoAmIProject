@@ -22,13 +22,13 @@ const SOCIAL_MEDIAS = [
     }
 ];
 
-export const SOCIAL_MEDIA_CONFIG = SOCIAL_MEDIAS.map(({ medium, backgroundBorderColor, clientId, authUrl, src }) => ({
+export const SOCIAL_MEDIA_CONFIG = SOCIAL_MEDIAS.map(({ medium, backgroundBorderColor, clientId, authURL, src }) => ({
     medium,
     backgroundBorderColor,
-    link: `${medium}/user_data`,
+    link: `/${medium}/user_data`,
     clientId,
-    authRedirectUri: `${SERVER}/${medium}/get_access_token`,
-    authUrl,
+    authRedirectUri: `/${SERVER}/${medium}/get_access_token`,
+    authURL,
     src,
     contents: `${medium}_contents`,
     sourceUrl: `${medium}_url`,

@@ -22,10 +22,10 @@ const ConnectTo = ({ previous, setElement, activeIndex, contentsIndex, next }) =
             if (status) {
                 //iterate through given data
                 authorized_medium.forEach(auth_obj => {
-                    setAuthorized({
+                    setAuthorized(authorized => ({
                         ...authorized,
                         [auth_obj.medium]: true
-                    });
+                    }));
                 });
             }
         } catch (error) {
@@ -35,7 +35,7 @@ const ConnectTo = ({ previous, setElement, activeIndex, contentsIndex, next }) =
 
     const handleRegister = elem => {
         // check if it is enabled or not. If not, call popup first, if it is, skip it
-        if (!elem.authorized) {
+        if (!authorized[elem.medium]) {
             // only if it is disabled
             // set function globally so that child window can grab parent's function
             window.checkAuthorizedSocialMedia = checkAuthorizedSocialMedia;
@@ -66,7 +66,7 @@ const ConnectTo = ({ previous, setElement, activeIndex, contentsIndex, next }) =
                         socialMedia.map((elem, index) => (
                             <div className="mx-auto col-sm-10 m-2 text-center" key={index}>
                                 <button onClick={() => handleRegister(elem)} className="list-group-item list-group-item-action">
-                                    <img src={elem.src} alt={elem.medium} className="w-25 h-25" style={!elem.authorized ? { filter: 'grayscale(100%)' } : {}} />
+                                    <img src={elem.src} alt={elem.medium} className="w-25 h-25" style={!authorized[elem.medium] ? { filter: 'grayscale(100%)' } : {}} />
                                 </button>
                             </div>)
                         )

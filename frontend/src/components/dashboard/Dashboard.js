@@ -1,11 +1,11 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import Axios from 'axios';
-import { SERVER, SECRET_KEY, SOCIAL_MEDIA_CONFIG } from '../../config';
+import { SERVER, SECRET_KEY } from '../../config';
 import { connect } from 'react-redux';
 import { Modal } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWidth, defaultHeight, resetData, username, auth, history }) => {
+const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWidth, defaultHeight, resetData, username, auth, history, showImages }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
@@ -20,42 +20,14 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, setData, defaultWid
         }
     }, [activeIndex]);
 
-    useEffect(() => {
-        console.log(data);
-    }, [data]);
+    // useEffect(() => {
+    //     console.log(data);
+    // }, [data]);
 
     useEffect(() => {
         if (data.existing) {
             // setting images forming to right elements
-            setImages(
-                data.existing.map((image, index) => (
-                    <div
-                        id={image.id}
-                        medium={image.medium}
-                        orig_width={image.orig_width}
-                        orig_height={image.orig_height}
-                        className="card position-absolute rounded"
-                        key={index}
-                        style={{
-                            width: image.curr_width,
-                            height: image.curr_height,
-                            WebkitTransform: `translate(${image.pos_x}px, ${image.pos_y}px)`,
-                            transform: `translate(${image.pos_x}px, ${image.pos_y}px)`,
-                            background: SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium).backgroundBorderColor,
-                            padding: 3
-                        }}
-                        data-x={image.pos_x}
-                        data-y={image.pos_y}
-                        onClick={() => toggle(image)}
-                    >
-                        <img
-                            className="w-100 h-100"
-                            src={image.raw_content_url}
-                            alt=""
-                        />
-                    </div>
-                ))
-            );
+            setImages(showImages(data.existing, toggle, false));
         }
         settingHeight();
     }, [data.existing]);
