@@ -27,7 +27,7 @@ export const SOCIAL_MEDIA_CONFIG = SOCIAL_MEDIAS.map(({ medium, backgroundBorder
     backgroundBorderColor,
     link: `/${medium}/user_data`,
     clientId,
-    authRedirectUri: `/${SERVER}/${medium}/get_access_token`,
+    authRedirectUri: `${SERVER}/${medium}/get_access_token`,
     authURL,
     src,
     contents: `${medium}_contents`,

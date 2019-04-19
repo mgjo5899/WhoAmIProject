@@ -26,6 +26,7 @@ class SignUp extends Component {
     }
 
     registerUser = userInfo => {
+        console.log(userInfo)
         axios.post(SERVER + '/register', userInfo)
             .then(res => {
                 const { status, message } = res.data;
@@ -46,6 +47,7 @@ class SignUp extends Component {
             password
         }).then(res => {
             this.props.storeUser(res.data.user);
+            console.log(res.data.user)
         }).catch(err => {
             console.log(err);
         });
