@@ -15,9 +15,9 @@ const SignOut = ({ auth, signOut, history }) => {
                 </DropdownToggle>
                 <DropdownMenu right>
                     <ChangePassword />
-                    <DropdownItem>
-                        Not Yet
-                        </DropdownItem>
+                    <DropdownItem onClick={() => history.push('/profile')}>
+                        Edit Profile
+                    </DropdownItem>
                     <DropdownItem divider />
                     <DropdownItem>
                         Not Yet

@@ -9,6 +9,7 @@ import OAuthRedirect from './components/social-media/OAuthRedirect';
 import ErrorPage from './components/error';
 import ResetPasswordComponent from './components/signing/password/resetPasswordComponent';
 import MainPage from './components/home/main_page';
+import Profile from './components/profile';
 
 class App extends Component {
 
@@ -36,6 +37,7 @@ class App extends Component {
             <Route exact path="/error_page" component={ErrorPage} />
             <Route exact path="/" component={Home} />
             <Route exact path="/reset_pw" component={ResetPasswordComponent} />
+            <Route exact path="/profile" component={Profile} />
             <Route exact path="/:username" component={MainPage} />
           </Switch>
         </div>
