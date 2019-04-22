@@ -20,3 +20,7 @@ export const signOut = history => {
             });
     }
 }
+
+export const resetData = () => ({
+    type: 'RESET_DATA'
+})

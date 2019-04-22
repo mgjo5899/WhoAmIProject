@@ -4,6 +4,13 @@ const initState = {
         username: '',
         confirmed_on: 0,
         confirmed: false
+    },
+    data: {
+        new: [],
+        images: [],
+        existing: [],
+        delete: [],
+        selected: []
     }
 }
 
@@ -17,6 +24,13 @@ const authReducer = (state = initState, action) => {
         case 'SIGNOUT_USER':
             return {
                 ...initState,
+            }
+        case 'RESET_DATA':
+            return {
+                ...state,
+                data: {
+                    ...initState.data
+                }
             }
         default:
             return state;
