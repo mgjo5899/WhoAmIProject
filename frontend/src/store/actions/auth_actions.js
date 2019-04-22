@@ -8,7 +8,6 @@ export const storeUser = user => {
 }
 
 export const signOut = history => {
-    console.log(history);
     return dispatch => {
         axios.get(SERVER + '/signout')
             .then(() => {
@@ -20,7 +19,3 @@ export const signOut = history => {
             });
     }
 }
-
-export const resetData = () => ({
-    type: 'RESET_DATA'
-})

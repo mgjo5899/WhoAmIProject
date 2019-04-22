@@ -4,13 +4,6 @@ const initState = {
         username: '',
         confirmed_on: 0,
         confirmed: false
-    },
-    data: {
-        new: [],
-        images: [],
-        existing: [],
-        delete: [],
-        selected: []
     }
 }
 
