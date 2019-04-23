@@ -15,6 +15,11 @@ const dataReducer = (state = initState, action) => {
                 ...state,
                 ...action.data
             }
+        case 'SHOW_IMAGES':
+            return {
+                ...state,
+                images: action.images
+            }
         default:
             return state;
     }

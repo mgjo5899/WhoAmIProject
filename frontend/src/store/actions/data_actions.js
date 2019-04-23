@@ -1,5 +1,6 @@
 import React from 'react';
-import { SOCIAL_MEDIA_CONFIG } from '../../config';
+import Axios from 'axios';
+import { SOCIAL_MEDIA_CONFIG, SECRET_KEY, SERVER } from '../../config';
 
 export const resetData = () => ({
     type: 'RESET_DATA'
@@ -51,3 +52,35 @@ export const showImages = (imageData, clickFunc, close) => (
         </div>
     ))
 )
+
+export const isOwner = (auth, username) => (auth.user.username === username)
+
+export const getExistingImages = (auth, username, history) => async dispatch => {
+    try {
+        isOwner(auth, username) ? await getOwnerExistingImages(dispatch) : await getUserExistingImages(username, dispatch);
+    } catch (error) {
+        console.log(error)
+        history.push(`/error_page?msg=${error}`);
+    }
+}
+
+const getOwnerExistingImages = async dispatch => {
+    const { status, whiteboard_data, message } = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
+    if (!status) throw new Error(message);
+    dispatch(resetData());
+    dispatch(setData({
+        existing: whiteboard_data
+    }));
+}
+
+const getUserExistingImages = async (username, dispatch) => {
+    const { status, whiteboard_data, message } = (await Axios.post(SERVER + '/whiteboard/published_data', {
+        username,
+        secret_key: SECRET_KEY
+    })).data;
+    if (!status) throw new Error(message);
+    dispatch(resetData());
+    dispatch(setData({
+        existing: whiteboard_data
+    }));
+}
