@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { SERVER } from '../../config';
-import { storeUser } from '../../store/actions/authActions';
+import { storeUser } from '../../store/actions/auth_actions';
 
 class SignUp extends Component {
     state = {

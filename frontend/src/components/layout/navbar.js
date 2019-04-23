@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import SignIn from '../signing/signin';
 import SignOut from '../signing/signout';
 import { connect } from 'react-redux';
-import { storeUser } from '../../store/actions/authActions';
+import { storeUser } from '../../store/actions/auth_actions';
 
 class NavbarLayout extends Component {
 

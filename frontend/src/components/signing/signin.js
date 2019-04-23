@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, NavItem } from 'reactstrap';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { storeUser } from '../../store/actions/authActions';
+import { storeUser } from '../../store/actions/auth_actions';
 import axios from 'axios';
 import { SERVER } from '../../config';
 

@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
 import { SERVER } from './config';
 import { connect } from 'react-redux';
-import { storeUser } from './store/actions/authActions';
+import { storeUser } from './store/actions/auth_actions';
 import OAuthRedirect from './components/social-media/OAuthRedirect';
 import ErrorPage from './components/error';
 import ResetPasswordComponent from './components/signing/password/resetPasswordComponent';
@@ -37,7 +37,7 @@ class App extends Component {
             <Route exact path="/error_page" component={ErrorPage} />
             <Route exact path="/" component={Home} />
             <Route exact path="/reset_pw" component={ResetPasswordComponent} />
-            <Route exact path="/profile" component={Profile} />
+            <Route exact path="/:username/profile" component={Profile} />
             <Route exact path="/:username" component={MainPage} />
           </Switch>
         </div>
