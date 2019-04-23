@@ -17,11 +17,11 @@ const activeIndexFlagMap = {
 const moveIndex = (state, action, flag) => {
     const operator = flag ? 1 : -1;
     const activeIndexFlag = action.activeIndexFlag;
-    const indexType = activeIndexFlagMap[activeIndexFlag.indexType];
+    const indexType = activeIndexFlagMap[activeIndexFlag].indexType;
     const activeIndex = state[indexType];
     return {
         ...state,
-        [indexType]: (activeIndex + operator) % activeIndexFlagMap[activeIndexFlag.indexSize]
+        [indexType]: (activeIndex + operator) % activeIndexFlagMap[activeIndexFlag].indexSize
     }
 }
 
@@ -29,7 +29,6 @@ const CarouselReducer = (state = initState, action) => {
     switch (action.type) {
         case 'RESET_INDEX':
             return initState;
-
         case 'NEXT':
             return moveIndex(state, action, true);
         case 'PREVIOUS':
