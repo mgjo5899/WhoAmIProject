@@ -5,24 +5,15 @@ import ConnectTo from '../dashboard/ConnectTo';
 import Spread from '../dashboard/Spread';
 import Contents from '../dashboard/Contents';
 import Navbar from '../layout/navbar';
-import { SOCIAL_MEDIA_CONFIG } from '../../config';
+import { connect } from 'react-redux';
+import { resetData, setData, showImages } from '../../store/actions/data_actions';
+import { next, previous } from '../../store/actions/carousel_actions';
 
-const MainPage = ({ match }) => {
+const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex }) => {
 
     // this component contains many children components, which requires multiple states to use
-    const [activeIndex, setActiveIndex] = useState(0);
     const [element, setElement] = useState(null);
     const [contents, setContents] = useState([]);
-
-    const resetData = () => ({
-        new: [],
-        images: [],
-        existing: [],
-        delete: [],
-        selected: []
-    })
-
-    const [data, setData] = useState(resetData());
 
     const contentsIndex = {
         dashboard: 0,
@@ -64,58 +55,6 @@ const MainPage = ({ match }) => {
         setData(data => ({ ...data, selected: contents.filter(content => content.isSelected) }));
         setContents(contents);
     }
-
-    // moving to next slide
-    const next = () => {
-        activeIndex + 1 === items.length ? setActiveIndex(0) : setActiveIndex(activeIndex + 1);
-    }
-
-    // moving to previous slide
-    const previous = () => {
-        activeIndex === 0 ? setActiveIndex(items.length - 1) : setActiveIndex(activeIndex - 1);
-    }
-
-    // showing the images to the end users
-    /**
-     * 
-     * @param {list} imageData - image data to show up
-     * @param {function} clickFunc - operate function when click
-     * @param {boolean} close - whether it has close button or not
-     */
-    const showImages = (imageData, clickFunc, close) => (
-        imageData.map((image, index) => (
-            <div
-                id={image.id}
-                medium={image.medium}
-                orig_width={image.orig_width}
-                orig_height={image.orig_height}
-                className="card position-absolute rounded"
-                key={index}
-                style={{
-                    width: image.curr_width || 200,
-                    height: image.curr_height || 'auto',
-                    WebkitTransform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
-                    transform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
-                    background: SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium).backgroundBorderColor,
-                    padding: 3
-                }}
-                data-x={image.posX || image.pos_x}
-                data-y={image.posY || image.pos_y}
-                onClick={!close ? (() => clickFunc(image)) : undefined}
-            >
-                {close && (
-                    <button type="button" onClick={() => clickFunc(image)} className="close position-absolute" style={{ top: '2%', right: '2%' }} aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                )}
-                <img
-                    className="w-100 h-100"
-                    src={image.src || image.raw_content_url}
-                    alt=""
-                />
-            </div>
-        ))
-    )
 
     // basic props to inherit
     const props = {
@@ -173,4 +112,16 @@ const MainPage = ({ match }) => {
     );
 }
 
-export default MainPage;
+const mapStateToProps = state => ({
+    data: state.data,
+    activeIndex: state.carousel.dashboardActiveIndex
+})
+
+const mapDispatchToProps = dispatch => ({
+    resetData: () => dispatch(resetData()),
+    setData: data => dispatch(setData(data)),
+    next: () => dispatch(next('DASHBOARD')),
+    previous: () => dispatch(previous('DASHBOARD'))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
