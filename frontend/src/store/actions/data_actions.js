@@ -25,11 +25,11 @@ export const showImages = (imageData, clickFunc, close) => (
             medium={image.medium}
             orig_width={image.orig_width}
             orig_height={image.orig_height}
-            className="card position-absolute rounded"
+            className={"card position-absolute rounded" + (close ? ' draggable resize-drag' : '')}
             key={index}
             style={{
                 width: image.curr_width || 200,
-                height: image.curr_height || 'auto',
+                height: 'auto',
                 WebkitTransform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
                 transform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
                 background: SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium).backgroundBorderColor,

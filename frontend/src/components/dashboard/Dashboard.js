@@ -27,7 +27,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defau
         if (data.existing) {
             // setting images forming to right elements
             setImages(showImages(data.existing, toggle, false));
-            console.log('here')
         }
         settingHeight();
     }, [data.existing]);
