@@ -32,7 +32,9 @@ export const showImages = (imageData, clickFunc, close) => (
                 height: 'auto',
                 WebkitTransform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
                 transform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
-                background: SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium).backgroundBorderColor,
+                background: SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium) ?
+                    SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium).backgroundBorderColor :
+                    '#000',
                 padding: 3
             }}
             data-x={image.posX || image.pos_x}
@@ -44,11 +46,19 @@ export const showImages = (imageData, clickFunc, close) => (
                     <span aria-hidden="true">&times;</span>
                 </button>
             )}
-            <img
-                className="w-100 h-100"
-                src={image.src || image.raw_content_url}
-                alt=""
-            />
+            {
+                image.medium !== 'profile' ? (
+                    <img
+                        className="w-100 h-100"
+                        src={image.src || image.raw_content_url}
+                        alt=""
+                    />
+                ) : (
+                        <div className="card w-100 h-100">
+                            <h1>Profile</h1>
+                        </div>
+                    )
+            }
         </div>
     ))
 )

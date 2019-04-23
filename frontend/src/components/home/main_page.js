@@ -33,26 +33,26 @@ const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex
         const existingIndex = data.existing.findIndex(elem => elem.id === img.id) !== -1;
         if (!selectedMedium) {
             // if the image is not from the selected medium, and if the user clicks delete button, then add the image to delete data
-            setData({ ...data, delete: [...data.delete, img] });
+            setData({ delete: [...data.delete, img] });
         } else if (img.isSelected) {
             // selected
             // check if it is in existing one, if it is, then erase from delete, if it is not, then add the object to add state
             if (existingIndex) {
-                setData({ ...data, delete: data.delete.filter(elem => elem.id !== img.id) });
+                setData({ delete: data.delete.filter(elem => elem.id !== img.id) });
             } else {
-                setData({ ...data, new: [...data.new, img] });
+                setData({ new: [...data.new, img] });
             }
         } else {
             // unselect
             // check existing one, if it exists, then add into delete, if it is not, then erase from add
             if (existingIndex) {
-                setData({ ...data, delete: [...data.delete, img] });
+                setData({ delete: [...data.delete, img] });
             } else {
-                setData({ ...data, new: data.new.filter(elem => elem.id !== img.id) });
+                setData({ new: data.new.filter(elem => elem.id !== img.id) });
             }
         }
         // update to data and contents
-        setData(data => ({ ...data, selected: contents.filter(content => content.isSelected) }));
+        setData({ selected: contents.filter(content => content.isSelected) });
         setContents(contents);
     }
 
