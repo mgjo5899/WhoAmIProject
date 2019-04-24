@@ -15,7 +15,7 @@ const SignOut = ({ auth, signOut, history }) => {
                 </DropdownToggle>
                 <DropdownMenu right>
                     <ChangePassword />
-                    <DropdownItem onClick={() => history.push(`/${auth.user.username}/profile`)}>
+                    <DropdownItem onClick={() => history.push('/profile')}>
                         Edit Profile
                     </DropdownItem>
                     <DropdownItem divider />

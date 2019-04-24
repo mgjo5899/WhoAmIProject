@@ -4,7 +4,7 @@ import { Drag } from './DragAndDrop';
 import Axios from 'axios';
 import { SERVER } from '../../config';
 
-const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element, showImages }) => {
+const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element, showImages, profileElement }) => {
 
     const [changed, setChanged] = useState([]);
     const [images, setImages] = useState([]);
@@ -27,7 +27,9 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
                 deleteIdSet.add(img.id);
             })
             // combine selected image data and existing data where it is not part of selected medium, and filter it again where it is not in the deleted image
+            console.log(data)
             const imagesToShow = [...data.selected, ...data.existing.filter(img => img.medium !== element.medium).filter(img => !deleteIdSet.has(img.id))];
+            profileElement && imagesToShow.push(profileElement);
             setImages(showImages(imagesToShow, handleClose, true));
             // set height of whiteboard based on the selected images
             setHeight(getHeight());
@@ -124,7 +126,7 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
                 pageStart={0}
                 loadMore={handleLoadMore}
                 hasMore={true}
-                loader={<div className="loader" key={0}>Loading ...</div>}
+                // loader={<div className="loader" key={0}>Loading ...</div>}
                 threshold={0}
             >
                 <div id="spread-sheet" className="card p-2 mt-3" style={{ defaultWidth, height }}>
