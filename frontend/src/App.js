@@ -5,9 +5,9 @@ import axios from 'axios';
 import { SERVER } from './config';
 import { connect } from 'react-redux';
 import { storeUser } from './store/actions/auth_actions';
-import OAuthRedirect from './components/social-media/OAuthRedirect';
+import OAuthRedirect from './components/social-media/o_auth_redirect';
 import ErrorPage from './components/error/error_page';
-import ResetPasswordComponent from './components/signing/password/resetPasswordComponent';
+import ResetPasswordComponent from './components/signing/password/reset_password_component';
 import MainPage from './components/home/main_page';
 import Profile from './components/profile/profile';
 

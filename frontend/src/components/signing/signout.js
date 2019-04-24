@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Button, NavItem, UncontrolledDropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'reactstrap';
 import { connect } from 'react-redux';
 import { signOut } from '../../store/actions/auth_actions';
-import ChangePassword from './password/changePassword';
+import ChangePassword from './password/change_password';
 import { withRouter } from 'react-router-dom';
 
 const SignOut = ({ auth, signOut, history }) => {

@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
-import { SignedInConfirmedHome, SignedInNotConfirmedHome, NotSignedInHome } from './signedHome';
+import { SignedInConfirmedHome, SignedInNotConfirmedHome, NotSignedInHome } from './signed_home';
 import Navbar from '../layout/navbar';
 
 

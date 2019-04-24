@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import { Drag } from './DragAndDrop';
+import { Drag } from './drag_and_drop';
 import Axios from 'axios';
 import { SERVER } from '../../config';
 
