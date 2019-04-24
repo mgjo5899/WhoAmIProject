@@ -1,7 +1,11 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
-const WhiteBoard = () => {
-    return (<Fragment></Fragment>);
+const WhiteBoard = ({ images, defaultWidth, height }) => {
+    return (
+        <div id="spread-sheet" className="card p-2 mt-3" style={{ defaultWidth, height }}>
+            {images}
+        </div>
+    );
 }
- 
+
 export default WhiteBoard;

@@ -1,8 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroller';
 import { Drag } from './drag_and_drop';
 import Axios from 'axios';
 import { SERVER } from '../../config';
+import InfiniteScroll from 'react-infinite-scroller';
+import { WhiteBoard } from './whiteboard';
 
 const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element, showImages, profileElement }) => {
 
@@ -129,11 +130,8 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
                 // loader={<div className="loader" key={0}>Loading ...</div>}
                 threshold={0}
             >
-                <div id="spread-sheet" className="card p-2 mt-3" style={{ defaultWidth, height }}>
-                    {images}
-                </div>
-            </InfiniteScroll>
-            <hr />
+                <WhiteBoard {...{ defaultWidth, height, images }} />
+            </InfiniteScroll>            <hr />
             <div className="fixed-bottom card-footer bg-secondary d-flex justify-content-center" style={{ opacity: 0.9 }}>
                 <button className="btn btn-danger mx-auto" onClick={previous}>Cancel</button>
                 <button className="btn btn-primary mx-auto" onClick={handleNext}>Publish</button>
