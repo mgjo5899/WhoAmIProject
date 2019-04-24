@@ -1,9 +1,6 @@
 import React, { useState, Fragment } from 'react';
 import { Carousel, CarouselItem } from 'reactstrap';
-import Dashboard from '../dashboard/dashboard';
-import ConnectTo from '../dashboard/connect_to';
-import Spread from '../dashboard/spread';
-import Contents from '../dashboard/contents';
+import { Dashboard, ConnectTo, Contents, Spread } from '../dashboard';
 import Navbar from '../layout/navbar';
 import { connect } from 'react-redux';
 import { resetData, setData, showImages } from '../../store/actions/data_actions';
