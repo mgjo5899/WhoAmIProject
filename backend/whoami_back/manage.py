@@ -6,10 +6,81 @@ from whoami_back.models.authorized_medium import AuthorizedMedium
 from whoami_back.models.instagram_data import InstagramData
 from whoami_back.models.facebook_data import FacebookData
 from whoami_back.models.whiteboard_data import WhiteboardData
+from whoami_back.models.user_profile import UserProfile
 from whoami_back.models.base import db
 from whoami_back.config import HASH_METHOD
 from whoami_back.utils import get_pw_hash, check_pw_hash
 
+
+def get_user_profile(email):
+    user = get_user(email=email)
+    rtn_val = {}
+
+    if user['status'] == False:
+        rtn_val = user
+    else:
+        user_profile = db.query(UserProfile).filter(UserProfile.email == email).first()
+
+        if user_profile == None:
+            rtn_val['status'] = False
+            rtn_val['message'] = "Could not find a profile for the given user"
+        else:
+            rtn_val['status'] = True
+            rtn_val['email'] = email
+            rtn_val['profile'] = {}
+
+            if user_profile.bio != '':
+                rtn_val['profile']['bio'] = user_profile.bio
+            if user_profile.company != '':
+                rtn_val['profile']['company'] = user_profile.company
+            if user_profile.location != '':
+                rtn_val['profile']['location'] = user_profile.location
+            if user_profile.website != '':
+                rtn_val['profile']['website'] = user_profile.website
+            if user_profile.profile_image_url != '':
+                rtn_val['profile']['profile_image_url'] = user_profile.profile_image_url
+
+    return rtn_val
+
+def update_user_profile(email, profile_image_url, bio, company, location, website):
+    user = get_user(email=email)
+    rtn_val = {}
+
+    if user['status'] == False:
+        rtn_val = user
+    else:
+        user_profile = db.query(UserProfile).filter(UserProfile.email == email).first()
+
+        if user_profile == None: # New entry
+            user_profile = UserProfile(email=email, profile_image_url=profile_image_url, \
+                                       bio=bio, company=company, location=location, \
+                                       website=website)
+            db.add(user_profile)
+        else:
+            user_profile.profile_image_url = profile_image_url
+            user_profile.bio = bio
+            user_profile.company = company
+            user_profile.location = location
+            user_profile.website = website
+        db.commit()
+
+        rtn_val['status'] = True
+        rtn_val['message'] = "Successfully updated the user profile"
+        rtn_val['email'] = email
+        rtn_val['profile'] = {}
+
+        if profile_image_url != '':
+            rtn_val['profile']['profile_image_url'] = profile_image_url
+        if bio != '':
+            rtn_val['profile']['bio'] = bio
+        if company != '':
+            rtn_val['profile']['company'] = company
+        if location != '':
+            rtn_val['profile']['location'] = location
+        if website != '':
+            rtn_val['profile']['website'] = website
+
+    return rtn_val
 
 def get_authorized_medium(email):
     rtn_val = {}
@@ -72,6 +143,12 @@ def get_whiteboard_data(username=None, email=None, medium=None):
     whiteboard_data = []
 
     # Keep adding new type of social medium
+    """
+    if (medium == None or medium == 'whoami') and 'whoami' in authorized_media:
+        # Currently, this part is only used by whoami profile
+        #######################################################################
+    """
+
     if (medium == None or medium == 'instagram') and 'instagram' in authorized_media:
         whiteboard_contents = db.query(WhiteboardData).filter(and_(\
                                        WhiteboardData.email == user_email,\
@@ -103,6 +180,7 @@ def get_whiteboard_data(username=None, email=None, medium=None):
                 curr_insta_data['curr_width'] = insta_content.curr_width
                 curr_insta_data['curr_height'] = insta_content.curr_height
                 whiteboard_data.append(curr_insta_data)
+
     if (medium == None or medium == 'facebook') and 'facebook' in authorized_media:
         whiteboard_contents = db.query(WhiteboardData).filter(and_(\
                                        WhiteboardData.email == user_email,\

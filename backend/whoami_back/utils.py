@@ -13,6 +13,8 @@ from whoami_back.models.authorized_medium import AuthorizedMedium
 from whoami_back.models.instagram_data import InstagramData
 from whoami_back.models.facebook_data import FacebookData
 from whoami_back.models.whiteboard_data import WhiteboardData
+from whoami_back.models.user_profile import UserProfile
+from whoami_back.models.user_profile_data import UserProfileData
 import whoami_back.config as config
 
 

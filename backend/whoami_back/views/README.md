@@ -12,9 +12,8 @@
 
 ### Check user credential with session [GET]
 
-Once you have successfully authenticated the user, session should
-contain user's email and hashed_password.  This API checks if current session
-contains correct user credential.
+
+(Credential in session required) This API signs a user in if correct session found
 
 + Response 200 (application/json)
 
@@ -60,7 +59,7 @@ the session.
 
 ### Signing out by removing session data [GET]
 
-Signing out by removing session data.
+(Credential in session required) Signing out by removing session data.
 
 + Response 200 (application/json)
 
@@ -201,10 +200,9 @@ This API sends a password reset email to the requested user.
 
 ### Resets a user's password [PUT]
 
-This endpoint resets a user's password.  When a user presses reset button in password
+(Credential in session required) This endpoint resets a user's password.
+When a user presses reset button in password
 reset email and his/her token is correct, then it directs the user to this endpoint.
-It checks on session for the user email so the user should have already logged in so
-the session contains his/her email prior to this call.
 
 + Request Body (application/json)
 
@@ -269,7 +267,7 @@ This API returns whiteboard contents data related to the given user.
 
 ### Get user data that's on the whiteboard [GET]
 
-This API returns data related to the user contents on the user's whiteboard.  It requires the user credential in the session cookie.
+(Credential in session required) This API returns data related to the user contents on the user's whiteboard.
 
 + Response (application/json)
 
@@ -296,7 +294,7 @@ This API returns data related to the user contents on the user's whiteboard.  It
 
 ### Add contents [POST]
 
-This API lets you add whiteboard data.  It requires the user crerdential in the session cookie.
+(Credential in session required) This API lets you add whiteboard data.
 
 + Request Body (application/json)
 
@@ -338,7 +336,7 @@ This API lets you add whiteboard data.  It requires the user crerdential in the 
 
 ### Updating whiteboard data [PUT]
 
-This API lets the whiteboard data to be updated.  It requirers the user crerdential in the session cookie.
+(Credential in session required) This API lets the whiteboard data to be updated.
 
 + Request Body (application/json)
 
@@ -371,7 +369,7 @@ This API lets the whiteboard data to be updated.  It requirers the user crerdent
 
 ### Deleting whiteboard data [DELETE]
 
-This API lets the whiteboard data to be deleted.  It requirers the user crerdential in the session cookie.
+(Credential in session required) This API lets the whiteboard data to be deleted.
 
 + Request Body (application/json)
 
@@ -402,13 +400,13 @@ This API lets the whiteboard data to be deleted.  It requirers the user crerdent
 
 ## Get User Access Token [GET]
 
-This API is the initial step for OAuth 2.0 sign in.  It lets a user to sign in to their account through Facebook's GUI login system.  After a successful sign in, the user could give our service a permission to use his/ her contents.  It responds by redirecting the OAuth page to `/oauth_redirect` URI with medium, facebook, and status, either true or false.  If the status is false, it provides an error code for a debugging purpose.  It looks for credential data in session.
+(Credential in session required) This API is the initial step for OAuth 2.0 sign in.  It lets a user to sign in to their account through Facebook's GUI login system.  After a successful sign in, the user could give our service a permission to use his/ her contents.  It responds by redirecting the OAuth page to `/oauth_redirect` URI with medium, facebook, and status, either true or false.  If the status is false, it provides an error code for a debugging purpose.
 
 ## Facebook User Data Related [/facebook/user_data]
 
 ## Get User Data [GET]
 
-This API returns the Facebook data of the user who is signed in at the current session.
+(Credential in session required) This API returns the Facebook data of the user who is signed in at the current session.
 
 + Response (application/json)
 
@@ -432,13 +430,13 @@ This API returns the Facebook data of the user who is signed in at the current s
 
 ## Get User Access Token [GET]
 
-This API is the initial step for OAuth 2.0 sign in.  It lets a user to sign in to their account through Instagram's GUI login system.  After a successful sign in, the user could give our service a permission to use his/ her contents.  It responds by redirecting the OAuth page to `/oauth_redirect` URI with medium, instagram, and status, either true or false.  If the status is false, it provides an error code for a debugging purpose.  It looks for credential data in session.
+(Credential in session required) This API is the initial step for OAuth 2.0 sign in.  It lets a user to sign in to their account through Instagram's GUI login system.  After a successful sign in, the user could give our service a permission to use his/ her contents.  It responds by redirecting the OAuth page to `/oauth_redirect` URI with medium, instagram, and status, either true or false.  If the status is false, it provides an error code for a debugging purpose.
 
 ## Instagram User Data Related [/instagram/user_data]
 
 ## Get User Data [GET]
 
-This API returns the Instagram data of the user who is signed in at the current session.
+(Credential in session required) This API returns the Instagram data of the user who is signed in at the current session.
 
 + Response (application/json)
 
@@ -476,4 +474,53 @@ This API returns the Instagram data of the user who is signed in at the current 
                 }
             ],
             "status": true
+        }
+
+## User Profile
+
+### Get user profile [GET]
+
+(Credential in session required) This API gets user profile.
+
++ Response 200 (application/json)
+
+        {
+            "profile": {
+                # Ones with an empty string as its value won't be returned
+                "profile_image_url": "https://www.some_url.com/some_image",
+                "bio": "I am someone from somewhere for something and hi.",
+                "company": "whoami",
+                "location": "Champaign, IL, USA",
+                "website": "https://www.somewebiste.com"
+            },
+            "email": "mgjo5899@gmail.com",
+            "status": true
+        }
+
+## Update profile [POST]
+(Credential in session required) This API updates a user's profile.
+
++ Request Body (application/json)
+    
+        {
+            "profile_image_url": "https://www.some_url.com/some_image",
+            "bio": "I am someone from somewhere for something and hi.",
+            "company": "", # Could be an empty string, either to remove
+            "location": "Champaign, IL, USA",
+            "website": "https://www.somewebiste.com"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "profile": {
+                # Ones with an empty string as its value won't be returned
+                "profile_image_url": "https://www.some_url.com/some_image",
+                "bio": "I am someone from somewhere for something and hi.",
+                "location": "Champaign, IL, USA",
+                "website": "https://www.somewebiste.com"
+            },
+            "email": "mgjo5899@gmail.com",
+            "status": true,
+            "message": "Successfully updated the user profile"
         }
