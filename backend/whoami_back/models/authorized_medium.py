@@ -1,6 +1,5 @@
 from sqlalchemy import Column, String, DateTime, ForeignKey
 from sqlalchemy import PrimaryKeyConstraint
-from sqlalchemy.types import TIMESTAMP
 from datetime import datetime
 
 from whoami_back.models.base import Base

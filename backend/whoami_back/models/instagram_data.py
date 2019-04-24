@@ -1,7 +1,5 @@
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy import String, Integer, DateTime
-from sqlalchemy.types import TIMESTAMP
-from datetime import datetime
+from sqlalchemy import String, Integer
 
 from whoami_back.models.base import Base
 from whoami_back.models.whiteboard_data import WhiteboardData
