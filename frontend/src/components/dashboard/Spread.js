@@ -1,10 +1,11 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroller';
-import { Drag } from './DragAndDrop';
+import { Drag } from './drag_and_drop';
 import Axios from 'axios';
 import { SERVER } from '../../config';
+import InfiniteScroll from 'react-infinite-scroller';
+import { WhiteBoard } from './whiteboard';
 
-const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element, showImages }) => {
+const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element, showImages, profileElement }) => {
 
     const [changed, setChanged] = useState([]);
     const [images, setImages] = useState([]);
@@ -27,7 +28,9 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
                 deleteIdSet.add(img.id);
             })
             // combine selected image data and existing data where it is not part of selected medium, and filter it again where it is not in the deleted image
+            console.log(data)
             const imagesToShow = [...data.selected, ...data.existing.filter(img => img.medium !== element.medium).filter(img => !deleteIdSet.has(img.id))];
+            profileElement && imagesToShow.push(profileElement);
             setImages(showImages(imagesToShow, handleClose, true));
             // set height of whiteboard based on the selected images
             setHeight(getHeight());
@@ -124,14 +127,11 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
                 pageStart={0}
                 loadMore={handleLoadMore}
                 hasMore={true}
-                loader={<div className="loader" key={0}>Loading ...</div>}
+                // loader={<div className="loader" key={0}>Loading ...</div>}
                 threshold={0}
             >
-                <div id="spread-sheet" className="card p-2 mt-3" style={{ defaultWidth, height }}>
-                    {images}
-                </div>
-            </InfiniteScroll>
-            <hr />
+                <WhiteBoard {...{ defaultWidth, height, images }} />
+            </InfiniteScroll>            <hr />
             <div className="fixed-bottom card-footer bg-secondary d-flex justify-content-center" style={{ opacity: 0.9 }}>
                 <button className="btn btn-danger mx-auto" onClick={previous}>Cancel</button>
                 <button className="btn btn-primary mx-auto" onClick={handleNext}>Publish</button>

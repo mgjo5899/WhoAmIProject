@@ -28,7 +28,10 @@ const moveIndex = (state, action, flag) => {
 const CarouselReducer = (state = initState, action) => {
     switch (action.type) {
         case 'RESET_INDEX':
-            return initState;
+            return {
+                ...state,
+                [activeIndexFlagMap[action.activeIndexFlag].indexType]: 0
+            };
         case 'NEXT':
             return moveIndex(state, action, true);
         case 'PREVIOUS':

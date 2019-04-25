@@ -1,30 +1,41 @@
-import React, { Component, Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { connect } from 'react-redux';
-import { SignedInConfirmedHome, SignedInNotConfirmedHome, NotSignedInHome } from './signedHome';
+import { SignedInConfirmedHome, SignedInNotConfirmedHome, NotSignedInHome } from './signed_home';
 import Navbar from '../layout/navbar';
+import { resetActiveIndex } from '../../store/actions/carousel_actions';
+import { resetData } from '../../store/actions/data_actions';
 
 
-class Home extends Component {
+const Home = ({ resetActiveIndex, resetData, data, auth: {user}, carousel }) => {
 
-    render() {
-        const { user } = this.props.auth;
-        return (
-            <Fragment>
-                <Navbar />
-                <div className="container">
-                    {
-                        user.email ? user.confirmed ? <SignedInConfirmedHome /> : <SignedInNotConfirmedHome /> : <NotSignedInHome />
-                    }
-                </div>
-            </Fragment>
-        );
-    }
+    useEffect(() => {
+        resetActiveIndex('DASHBOARD');
+        resetActiveIndex('PROFILE');
+        // resetData();
+        // console.log(data, carousel)
+    }, [])
+
+    return (
+        <Fragment>
+            <Navbar />
+            <div className="container">
+                {
+                    user.email ? user.confirmed ? <SignedInConfirmedHome /> : <SignedInNotConfirmedHome /> : <NotSignedInHome />
+                }
+            </div>
+        </Fragment>
+    );
 }
 
-const mapStateToProps = state => {
-    return {
-        auth: state.auth
-    }
-}
+const mapStateToProps = state => ({
+    auth: state.auth,
+    data: state.data,
+    carousel: state.carousel
+})
 
-export default connect(mapStateToProps)(Home);
+const mapDispatchToProps = dispatch => ({
+    resetActiveIndex: activeIndexFlag => dispatch(resetActiveIndex(activeIndexFlag)),
+    resetData: () => dispatch(resetData())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import Axios from 'axios';
 import { SERVER } from '../../../config';
-import SignedInSecure from '../../../secure/signedInSecure';
+import SignedInSecure from '../../../secure/signed_in_secure';
 import { connect } from 'react-redux';
 import Navbar from '../../layout/navbar';
 

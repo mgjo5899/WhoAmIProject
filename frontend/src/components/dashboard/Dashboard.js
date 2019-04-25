@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Modal } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { getExistingImages, isOwner } from '../../store/actions/data_actions';
+import { PlusButton, WhiteBoard } from './whiteboard';
 
 const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defaultHeight, username, auth, history, showImages, getExistingImages }) => {
 
@@ -52,25 +53,13 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defau
 
     return (
         <Fragment>
-            {
-                isOwner(auth, username) && (
-                    <div className="d-block">
-                        <div className="d-flex justify-content-end">
-                            <svg id="i-plus" onClick={next} className="m-2 text-dark bg-primary rounded-circle" viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentcolor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
-                                <path d="M16 2 L16 30 M2 16 L30 16" />
-                            </svg>
-                        </div>
-                    </div>
-                )
-            }
+            <PlusButton isOwner={isOwner(auth, username)} next={next} />
             <Modal isOpen={modal} centered={true} toggle={toggle} className="d-flex">
                 <div className="d-flex" onClick={() => window.open(currentImage.source)}>
                     <img src={currentImage.image} alt="" className="w-100 h-100" />
                 </div>
             </Modal>
-            <div id="spread-sheet" className="card p-2 mt-3" style={{ defaultWidth, height }}>
-                {images}
-            </div>
+            <WhiteBoard {...{ defaultWidth, height, images }} />
         </Fragment>
     );
 }

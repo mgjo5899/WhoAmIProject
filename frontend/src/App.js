@@ -5,11 +5,11 @@ import axios from 'axios';
 import { SERVER } from './config';
 import { connect } from 'react-redux';
 import { storeUser } from './store/actions/auth_actions';
-import OAuthRedirect from './components/social-media/OAuthRedirect';
-import ErrorPage from './components/error';
-import ResetPasswordComponent from './components/signing/password/resetPasswordComponent';
+import OAuthRedirect from './components/social-media/o_auth_redirect';
+import ErrorPage from './components/error/error_page';
+import ResetPasswordComponent from './components/signing/password/reset_password_component';
 import MainPage from './components/home/main_page';
-import Profile from './components/profile';
+import Profile from './components/profile/profile';
 
 class App extends Component {
 
@@ -37,7 +37,7 @@ class App extends Component {
             <Route exact path="/error_page" component={ErrorPage} />
             <Route exact path="/" component={Home} />
             <Route exact path="/reset_pw" component={ResetPasswordComponent} />
-            <Route exact path="/:username/profile" component={Profile} />
+            <Route exact path="/profile" component={Profile} />
             <Route exact path="/:username" component={MainPage} />
           </Switch>
         </div>
