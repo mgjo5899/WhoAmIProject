@@ -21,7 +21,7 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
 
     // call when image loading changes
     useEffect(() => {
-        if (data.images && data.images.length > 0) {
+        if (data.images && data.images.length > 0 && element) {
             // make the form for making gallery
             // setting contents which would display on the screen
             setContents(
