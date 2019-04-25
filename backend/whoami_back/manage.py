@@ -7,6 +7,7 @@ from whoami_back.models.instagram_data import InstagramData
 from whoami_back.models.facebook_data import FacebookData
 from whoami_back.models.whiteboard_data import WhiteboardData
 from whoami_back.models.user_profile import UserProfile
+from whoami_back.models.user_profile_data import UserProfileData
 from whoami_back.models.base import db
 from whoami_back.config import HASH_METHOD
 from whoami_back.utils import get_pw_hash, check_pw_hash
@@ -82,6 +83,50 @@ def update_user_profile(email, profile_image_url, bio, company, location, websit
 
     return rtn_val
 
+def add_whoami_content(email, type, pos_x, pos_y, curr_width, curr_height):
+    rtn_val = {}
+
+    profile_data = get_user_profile(email)
+
+    if profile_data['status'] == False:
+        rtn_val = profile_data
+    else:
+        if type == 'profile':
+            if len(get_whiteboard_data(email=email, medium='whoami')['whiteboard_data']) > 0:
+                rtn_val['status'] = False
+                rtn_val['message'] = "User profile data already exists as a whiteboard content"
+            else:
+                user_profile = db.query(UserProfile).filter(UserProfile.email == email).first()
+
+                if user_profile == None:
+                    rtn_val['status'] = False
+                    rtn_val['message'] = "User profile not found with the given email"
+                else:
+                    new_whiteboard_content = WhiteboardData(email=email, type=type, \
+                                                            medium='whoami', status=1, \
+                                                            pos_x=pos_x, pos_y=pos_y)
+                    db.add(new_whiteboard_content)
+                    db.commit()
+
+                    whiteboard_data_id = new_whiteboard_content.id
+
+                    new_user_profile_data = UserProfileData(\
+                                                    whiteboard_data_id=whiteboard_data_id, \
+                                                    user_profile_id=user_profile.id, \
+                                                    curr_width=curr_width, \
+                                                    curr_height=curr_height)
+                    db.add(new_user_profile_data)
+                    db.commit()
+
+                    rtn_val['status'] = True
+                    rtn_val['id'] = whiteboard_data_id
+
+    rtn_val['medium'] = 'whoami'
+    rtn_val['type'] = type
+    rtn_val['email'] = email
+
+    return rtn_val
+
 def get_authorized_medium(email):
     rtn_val = {}
 
@@ -143,11 +188,44 @@ def get_whiteboard_data(username=None, email=None, medium=None):
     whiteboard_data = []
 
     # Keep adding new type of social medium
-    """
-    if (medium == None or medium == 'whoami') and 'whoami' in authorized_media:
+    if medium == None or medium == 'whoami':
         # Currently, this part is only used by whoami profile
-        #######################################################################
-    """
+        profile_data = db.query(WhiteboardData, UserProfileData, UserProfile)\
+                                .filter(and_(WhiteboardData.email == user_email, \
+                                             WhiteboardData.medium == 'whoami'))\
+                                .filter(UserProfile.email == user_email)\
+                                .filter(UserProfileData.whiteboard_data_id == WhiteboardData.id)\
+                                .first()
+
+        if profile_data and profile_data[0] and profile_data[1] and profile_data[2]:
+            user_profile = {}
+
+            # Whiteboard data
+            user_profile['id'] = profile_data[0].id
+            user_profile['type'] = profile_data[0].type
+            user_profile['medium'] = profile_data[0].medium
+            user_profile['pos_x'] = profile_data[0].pos_x
+            user_profile['pos_y'] = profile_data[0].pos_y
+            user_profile['last_modified'] = profile_data[0].last_modified
+            user_profile['status'] = profile_data[0].status
+
+            # User profile data
+            user_profile['curr_width'] = profile_data[1].curr_width
+            user_profile['curr_height'] = profile_data[1].curr_height
+
+            # User profile
+            if profile_data[2].profile_image_url != '':
+                user_profile['profile_image_url'] = profile_data[2].profile_image_url
+            if profile_data[2].bio != '':
+                user_profile['bio'] = profile_data[2].bio
+            if profile_data[2].company != '':
+                user_profile['company'] = profile_data[2].company
+            if profile_data[2].location != '':
+                user_profile['location'] = profile_data[2].location
+            if profile_data[2].website != '':
+                user_profile['website'] = profile_data[2].website
+
+            whiteboard_data.append(user_profile)
 
     if (medium == None or medium == 'instagram') and 'instagram' in authorized_media:
         whiteboard_contents = db.query(WhiteboardData).filter(and_(\
@@ -268,6 +346,7 @@ def add_facebook_content(email, type, pos_x, pos_y, raw_content_url, facebook_ur
         rtn_val['id'] = whiteboard_data_id
 
     rtn_val['medium'] = 'facebook'
+    rtn_val['type'] = type
     rtn_val['email'] = email
 
     return rtn_val
@@ -303,7 +382,41 @@ def add_instagram_content(email, type, pos_x, pos_y, raw_content_url, instagram_
         rtn_val['id'] = whiteboard_data_id
 
     rtn_val['medium'] = 'instagram'
+    rtn_val['type'] = type
     rtn_val['email'] = email
+
+    return rtn_val
+
+def update_whoami_content(email, whiteboard_data_id, pos_x=None, pos_y=None, curr_width=None,\
+                             curr_height=None):
+    rtn_val = {'id':whiteboard_data_id, 'email':email}
+
+    whiteboard_data = db.query(WhiteboardData).filter(and_(WhiteboardData.email == email, \
+                                                WhiteboardData.id == whiteboard_data_id)).first()
+
+    if whiteboard_data == None:
+        rtn_val['status'] = False
+        rtn_val['message'] = "There is no whiteboard data with the given id for the given user"
+    else:
+        user_profile_data = db.query(UserProfileData)\
+                                .filter(UserProfileData.whiteboard_data_id==whiteboard_data_id)\
+                                .first()
+
+        if user_profile_data == None:
+            rtn_val['status'] = False
+            rtn_val['message'] = "There is no user profile data \
+                                  with the given id for the given user"
+        else:
+            user_profile_data.curr_width = curr_width
+            user_profile_data.curr_height = curr_height
+            whiteboard_data.pos_x = pos_x
+            whiteboard_data.pos_y = pos_y
+            whiteboard_data.last_modified = datetime.now()
+            db.commit()
+
+            rtn_val['status'] = True
+            rtn_val['medium'] = 'whoami'
+            rtn_val['type'] = whiteboard_data.type
 
     return rtn_val
 
@@ -334,6 +447,7 @@ def update_facebook_content(email, whiteboard_data_id, pos_x=None, pos_y=None, c
 
             rtn_val['status'] = True
             rtn_val['medium'] = 'facebook'
+            rtn_val['type'] = whiteboard_data.type
 
     return rtn_val
 
@@ -365,6 +479,7 @@ def update_instagram_content(email, whiteboard_data_id, pos_x=None, pos_y=None, 
 
             rtn_val['status'] = True
             rtn_val['medium'] = 'instagram'
+            rtn_val['type'] = whiteboard_data.type
 
     return rtn_val
 
@@ -402,6 +517,25 @@ def delete_instagram_content(whiteboard_data_id):
 
     return rtn_val
 
+def delete_whoami_content(whiteboard_data_id):
+    rtn_val = {}
+
+    user_profile_data = db.query(UserProfileData)\
+                                 .filter(UserProfileData.whiteboard_data_id == \
+                                         whiteboard_data_id)\
+                                 .first()
+
+    if user_profile_data == None:
+        rtn_val['status'] = False
+        rtn_val['message'] = "There is no user profile data with the given id for the given user"
+    else:
+        db.delete(user_profile_data)
+        db.commit()
+        rtn_val['status'] = True
+        rtn_val['medium'] = 'whoami'
+
+    return rtn_val
+
 def delete_whiteboard_content(email, whiteboard_data_id):
     rtn_val = {}
 
@@ -420,6 +554,12 @@ def delete_whiteboard_content(email, whiteboard_data_id):
                 db.commit()
         elif whiteboard_data.medium == 'facebook':
             rtn_val = delete_facebook_content(whiteboard_data_id)
+
+            if rtn_val['status'] == True:
+                db.delete(whiteboard_data)
+                db.commit()
+        elif whiteboard_data.medium == 'whoami':
+            rtn_val = delete_whoami_content(whiteboard_data_id)
 
             if rtn_val['status'] == True:
                 db.delete(whiteboard_data)
@@ -445,6 +585,10 @@ def update_whiteboard_content(email, update):
             rtn_val = update_facebook_content(email, update['id'], update['pos_x'], \
                                               update['pos_y'], update['curr_width'], \
                                               update['curr_height'])
+        elif update['medium'] == 'whoami':
+            rtn_val = update_whoami_content(email, update['id'], update['pos_x'], \
+                                            update['pos_y'], update['curr_width'], \
+                                            update['curr_height'])
         else:
             # Medium provided not found
             rtn_val['message'] = "Could not find the given medium"
@@ -507,6 +651,25 @@ def add_whiteboard_content(email, new_content):
                                                    fb_data['orig_height'],
                                                    fb_data['curr_width'],
                                                    fb_data['curr_height'])
+        elif new_content['medium'] == 'whoami':
+            if not ('type' in new_content and 'pos_x' in new_content and 'pos_y' in new_content \
+                    and 'whoami_specific' in new_content):
+                rtn_val['status'] = False
+                rtn_val['message'] = "Not enough information for a new whiteboard content"
+            else:
+                whoami_data = new_content['whoami_specific']
+
+                if not ('curr_width' in whoami_data and 'curr_height' in whoami_data):
+                    rtn_val['status'] = False
+                    rtn_val['message'] = "Not enough information for a whoami content"
+                else:
+                    rtn_val = add_whoami_content(email,
+                                                 new_conetent['type'],
+                                                 new_content['pos_x'],
+                                                 new_content['pos_y'],
+                                                 whoami_data['curr_width'],
+                                                 whoami_data['curr_height']
+                                                )
         else:
             # Medium provided not found
             rtn_val['message'] = "Could not find the given medium"
