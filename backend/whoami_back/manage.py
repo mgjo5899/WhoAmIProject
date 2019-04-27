@@ -664,7 +664,7 @@ def add_whiteboard_content(email, new_content):
                     rtn_val['message'] = "Not enough information for a whoami content"
                 else:
                     rtn_val = add_whoami_content(email,
-                                                 new_conetent['type'],
+                                                 new_content['type'],
                                                  new_content['pos_x'],
                                                  new_content['pos_y'],
                                                  whoami_data['curr_width'],

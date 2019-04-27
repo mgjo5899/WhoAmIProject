@@ -457,7 +457,7 @@ This API returns whiteboard contents data related to the given user.
 
 ## User Data
 
-## Authorized Social Media
+## Authorized Social Media [/user/authorized_media]
 
 ### Get authorized social media [GET]
 
@@ -476,7 +476,7 @@ This API returns whiteboard contents data related to the given user.
             "status": true
         }
 
-## User Profile
+## User Profile [/user/profile]
 
 ### Get user profile [GET]
 
