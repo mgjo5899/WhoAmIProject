@@ -20,10 +20,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defau
         }
     }, [activeIndex]);
 
-    // useEffect(() => {
-    //     console.log(data);
-    // }, [data]);
-
     useEffect(() => {
         if (data.existing) {
             // setting images forming to right elements

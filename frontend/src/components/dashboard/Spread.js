@@ -5,14 +5,28 @@ import { SERVER } from '../../config';
 import InfiniteScroll from 'react-infinite-scroller';
 import { WhiteBoard } from './whiteboard';
 
-const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element, showImages, profileElement }) => {
+const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element, showImages, profile }) => {
 
     const [changed, setChanged] = useState([]);
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
 
     const handleClose = image => {
-        deleteImage(image);
+        // if it is closing profile element, then just filter it out
+        if (image.medium === 'whoami' && image.type === 'profile') {
+            // if the profile element is already in there, put it into delete data
+            // find index of the data to judge
+            const existingIndex = data.existing.findIndex(img => img.id === image.id);
+            // if there is an index, then remove selected
+            if (existingIndex !== -1) {
+                setData({ existing: data.existing.filter(img => img.id !== data.existing[existingIndex].id) });
+            }
+            // filter out of selected
+            setData({ selected: data.selected.filter(img => img.id !== data.existing[existingIndex].id) });
+        } else {
+            // just make it regular
+            deleteImage(image);
+        }
     }
 
     useEffect(() => {
@@ -21,16 +35,25 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
 
     useEffect(() => {
         if (activeIndex === contentsIndex.spread) {
+            // combine selected image data and existing data where it is not part of selected medium, and filter it again where it is not in the deleted image
+            console.log(data)
+            // if it is dealing with profile, then we should also show up profile element
+            // if (profileElement) {
+            //     // put the profile element into selected data
+            //     setData({ selected: [...data.selected, profileElement] })
+            // }
+        }
+    }, [activeIndex])
+
+    useEffect(() => {
+        if (activeIndex === contentsIndex.spread) {
             setHeight(defaultHeight);
             // create set for putting deleted data id
             const deleteIdSet = new Set();
             data.delete.forEach(img => {
                 deleteIdSet.add(img.id);
-            })
-            // combine selected image data and existing data where it is not part of selected medium, and filter it again where it is not in the deleted image
-            console.log(data)
+            });
             const imagesToShow = [...data.selected, ...data.existing.filter(img => img.medium !== element.medium).filter(img => !deleteIdSet.has(img.id))];
-            profileElement && imagesToShow.push(profileElement);
             setImages(showImages(imagesToShow, handleClose, true));
             // set height of whiteboard based on the selected images
             setHeight(getHeight());
