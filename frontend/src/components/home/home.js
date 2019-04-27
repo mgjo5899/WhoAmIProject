@@ -6,14 +6,12 @@ import { resetActiveIndex } from '../../store/actions/carousel_actions';
 import { resetData } from '../../store/actions/data_actions';
 
 
-const Home = ({ resetActiveIndex, resetData, data, auth: { user }, carousel }) => {
+const Home = ({ resetActiveIndex, auth: { user } }) => {
 
     useEffect(() => {
         resetActiveIndex('DASHBOARD');
         resetActiveIndex('PROFILE');
-        // resetData();
-        console.log(data, carousel)
-    }, [])
+    }, []);
 
     return (
         <Fragment>
