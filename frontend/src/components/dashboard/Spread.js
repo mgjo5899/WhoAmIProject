@@ -35,18 +35,7 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
 
     useEffect(() => {
         if (activeIndex === contentsIndex.spread) {
-            // combine selected image data and existing data where it is not part of selected medium, and filter it again where it is not in the deleted image
-            console.log(data)
-            // if it is dealing with profile, then we should also show up profile element
-            // if (profileElement) {
-            //     // put the profile element into selected data
-            //     setData({ selected: [...data.selected, profileElement] })
-            // }
-        }
-    }, [activeIndex])
-
-    useEffect(() => {
-        if (activeIndex === contentsIndex.spread) {
+            console.log(contentsIndex)
             setHeight(defaultHeight);
             // create set for putting deleted data id
             const deleteIdSet = new Set();
@@ -154,7 +143,8 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
                 threshold={0}
             >
                 <WhiteBoard {...{ defaultWidth, height, images }} />
-            </InfiniteScroll>            <hr />
+            </InfiniteScroll>
+            <hr />
             <div className="fixed-bottom card-footer bg-secondary d-flex justify-content-center" style={{ opacity: 0.9 }}>
                 <button className="btn btn-danger mx-auto" onClick={previous}>Cancel</button>
                 <button className="btn btn-primary mx-auto" onClick={handleNext}>Publish</button>

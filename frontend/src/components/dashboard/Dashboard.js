@@ -1,11 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'reactstrap';
-import { withRouter } from 'react-router-dom';
 import { getExistingImages, isOwner } from '../../store/actions/data_actions';
 import { PlusButton, WhiteBoard } from './whiteboard';
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defaultHeight, username, auth, history, showImages, getExistingImages }) => {
+const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defaultHeight, username, auth, showImages, getExistingImages }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
@@ -16,7 +15,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defau
         if (activeIndex === contentsIndex.dashboard) {
             // when first loaded to dashboard, get existing data from server
             setHeight(defaultHeight);
-            getExistingImages(auth, username, history);
+            getExistingImages(auth, username);
         }
     }, [activeIndex]);
 
@@ -68,4 +67,4 @@ const mapDispatchToProps = dispatch => ({
     getExistingImages: (auth, username, history) => dispatch(getExistingImages(auth, username, history)),
 })
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Dashboard));
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
