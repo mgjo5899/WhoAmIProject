@@ -17,7 +17,7 @@ class App extends Component {
     loaded: false
   }
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     axios.get(SERVER + '/signin')
       .then(res => {
         const { status, user } = res.data;
