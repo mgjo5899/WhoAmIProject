@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { SignedInConfirmedHome, SignedInNotConfirmedHome, NotSignedInHome } from './signed_home';
 import Navbar from '../layout/navbar';
 import { resetActiveIndex } from '../../store/actions/carousel_actions';
-import { resetData } from '../../store/actions/data_actions';
 
 
 const Home = ({ resetActiveIndex, auth: { user } }) => {
@@ -33,7 +32,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     resetActiveIndex: activeIndexFlag => dispatch(resetActiveIndex(activeIndexFlag)),
-    resetData: () => dispatch(resetData())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
