@@ -5,58 +5,63 @@ import { CarouselItem, Carousel } from 'reactstrap';
 import Form from './form';
 import Spread from '../dashboard/spread';
 import { next, previous } from '../../store/actions/carousel_actions';
-import { showImages, getExistingImages } from '../../store/actions/data_actions';
+import { showImages, getExistingImages, setData } from '../../store/actions/data_actions';
 import uuidv4 from 'uuid/v4';
 
-const Profile = ({ auth, activeIndex, next, previous, data, history }) => {
+const Profile = ({ auth, activeIndex, next, previous, data, history, setData, getExistingImages }) => {
 
     const [profile, setProfile] = useState({
-        bio: '',
-        company: '',
-        location: '',
-        website: ''
+        data: {
+            profile_image_url: '',
+            bio: '',
+            company: '',
+            location: '',
+            website: ''
+        },
+        element: {}
     });
-
-    const [profileElement, setProfileElement] = useState({});
-
-    const handleChange = e => {
-        e.persist();
-        setProfile(profile => ({
-            ...profile,
-            [e.target.id]: e.target.value
-        }));
-        console.log(profile)
-    }
+    const [defaultWidth, defaultHeight] = [1000, 500];
 
     useEffect(() => {
         if (activeIndex === contentsIndex.profile) {
+            // if there is profile data available, then copy it to the value of it
             getExistingImages(auth, auth.user.username, history);
         }
-    }, [activeIndex])
+    }, [activeIndex]);
 
     useEffect(() => {
-        const profileData = data.existing.find(img => img.medium === 'profile');
-        if (profileData) {
-            const { bio, company, location, website } = profileData;
-            setProfile({
-                bio,
-                company,
-                location,
-                website
-            });
+        // when data exists, execute the command, giving conditions to useEffect
+        if (data.existing.length !== 0) {
+            const profileData = data.existing.find(img => img.medium === 'whoami' && img.type === 'profile');
+            if (profileData) {
+                const { bio, company, location, website } = profileData;
+                setProfile({
+                    ...profile,
+                    data: {
+                        ...profile.data,
+                        bio,
+                        company,
+                        location,
+                        website
+                    }
+                });
+            }
+            setProfile(profile => ({
+                ...profile,
+                element: {
+                    id: profileData ? profileData.id : uuidv4(),
+                    posX: profileData ? profileData.pos_x : Math.floor(Math.random() * (defaultWidth - 200)),
+                    posY: profileData ? profileData.pos_y : Math.floor(Math.random() * (defaultHeight - 200)),
+                    medium: 'whoami',
+                    type: 'profile',
+                    orig_width: 200,
+                    orig_height: 200,
+                    curr_width: profileData ? profileData.curr_width : 200,
+                    curr_height: profileData ? profileData.curr_height : 200,
+                    selected: true
+                }
+            }))
         }
-        const [defaultWidth, defaultHeight] = [1000, 500];
-
-        setProfileElement({
-            id: profileData ? profileData.id : uuidv4(),
-            posX: profileData ? profileData.pos_x : Math.floor(Math.random() * (defaultWidth - 200)),
-            posY: profileData ? profileData.pos_y : Math.floor(Math.random() * (defaultHeight - 200)),
-            medium: 'profile',
-            orig_width: 200,
-            orig_height: 200,
-            curr_width: profileData ? profileData.curr_width : 200,
-            curr_height: profileData ? profileData.curr_height : 200,
-        })
     }, [data.existing]);
 
     const contentsIndex = {
@@ -68,23 +73,25 @@ const Profile = ({ auth, activeIndex, next, previous, data, history }) => {
     const items = [
         <Form
             {...{
-                handleChange,
+                profile,
+                setProfile,
                 auth,
                 next
             }}
         />,
         <Spread
             {...{
+                profile,
+                showImages,
                 next,
                 previous,
-                showImages,
-                element: { medium: 'profile' },
-                defaultWidth: 200,
-                defaultHeight: 200,
                 data,
+                defaultWidth,
+                defaultHeight,
                 activeIndex,
                 contentsIndex,
-                profileElement
+                element: { medium: 'whoami' },
+                setData
             }}
         />
     ];
@@ -121,7 +128,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     next: () => dispatch(next('PROFILE')),
     previous: () => dispatch(previous('PROFILE')),
-    getExistingImages: (auth, username, history) => dispatch(getExistingImages(auth, username, history))
+    getExistingImages: (auth, username, history) => dispatch(getExistingImages(auth, username, history)),
+    setData: data => dispatch(setData(data))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
