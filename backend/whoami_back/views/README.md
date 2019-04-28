@@ -245,20 +245,40 @@ This API returns whiteboard contents data related to the given user.
             "status": true,
             "whiteboard_data": [
                 {
-                    "curr_height": 200,
-                    "curr_width": 200,
                     "id": 3,
-                    "instagram_url": "https://www.instagram.com/p/BsgqgMIFOLYtWUVgkt6d9v6McEw7x99KFerztw0/",
-                    "last_modified": "Tue, 19 Mar 2019 21:54:41 GMT",
                     "medium": "instagram",
-                    "orig_height": 640,
-                    "orig_width": 640,
+                    "type": "image",
                     "pos_x": 381,
                     "pos_y": 56,
-                    "raw_content_url": "https://scontent.cdninstagram.com/vp/9f4a41d8a9add1cf3e6efc75df0e6ef4/5D20C069/t51.2885-15/sh0.08/e35/s640x640/49759352_2281406505226870_3927099686951390228_n.jpg?_nc_ht=scontent.cdninstagram.com",
                     "status": 1,
-                    "type": "image"
-                }
+                    "last_modified": "Tue, 19 Mar 2019 21:54:41 GMT",
+                    "specifics": {
+                        "orig_height": 640,
+                        "orig_width": 640,
+                        "curr_height": 200,
+                        "curr_width": 200,
+                        "content_url": "https://www.instagram.com/p/BsgqgMIFOLYtWUVgkt6d9v6McEw7x99KFerztw0/",
+                        "raw_content_url": "https://scontent.cdninstagram.com/vp/9f4a41d8a9add1cf3e6efc75df0e6ef4/5D20C069/t51.2885-15/sh0.08/e35/s640x640/49759352_2281406505226870_3927099686951390228_n.jpg?_nc_ht=scontent.cdninstagram.com"
+                    }
+                },
+								{
+										"id": 1,
+										"medium": "whoami",
+										"type": "profile",
+										"pos_x": 33,
+										"pos_y": 33,
+										"status": 1,
+										"last_modified": "Thu, 25 Apr 2019 16:35:16 GMT",
+										"specifics": {
+												"curr_height": 100,
+												"curr_width": 100,
+												"bio": "something bio",
+												"company": "some company",
+												"location": "some location",
+												"profile_image_url": "https://hi.com",
+												"website": "https://somewebsite.com"
+										}
+								}
             ]
         }
 
@@ -275,20 +295,40 @@ This API returns whiteboard contents data related to the given user.
             "status": true,
             "whiteboard_data": [
                 {
-                    "curr_height": 480,
-                    "curr_width": 640,
-                    "id": 2,
-                    "instagram_url": "https://www.instagram.com/p/Bu7vYu-F9z0/",
-                    "last_modified": "Wed, 13 Mar 2019 21:20:39 GMT",
+                    "id": 3,
                     "medium": "instagram",
-                    "orig_height": 480,
-                    "orig_width": 640,
-                    "pos_x": 10,
-                    "pos_y": 10,
-                    "raw_content_url": "https://scontent.cdninstagram.com/vp/9572fc0348077bef240769a0e6c06c34/5D0B6328/t51.2885-15/sh0.08/e35/s640x640/53199887_348952865719289_2176542923815712269_n.jpg?_nc_ht=scontent.cdninstagram.com",
+                    "type": "image",
+                    "pos_x": 381,
+                    "pos_y": 56,
                     "status": 1,
-                    "type": "image"
-                }
+                    "last_modified": "Tue, 19 Mar 2019 21:54:41 GMT",
+                    "specifics": {
+                        "orig_height": 640,
+                        "orig_width": 640,
+                        "curr_height": 200,
+                        "curr_width": 200,
+                        "content_url": "https://www.instagram.com/p/BsgqgMIFOLYtWUVgkt6d9v6McEw7x99KFerztw0/",
+                        "raw_content_url": "https://scontent.cdninstagram.com/vp/9f4a41d8a9add1cf3e6efc75df0e6ef4/5D20C069/t51.2885-15/sh0.08/e35/s640x640/49759352_2281406505226870_3927099686951390228_n.jpg?_nc_ht=scontent.cdninstagram.com"
+                    }
+                },
+								{
+										"id": 1,
+										"medium": "whoami",
+										"type": "profile",
+										"pos_x": 33,
+										"pos_y": 33,
+										"status": 1,
+										"last_modified": "Thu, 25 Apr 2019 16:35:16 GMT",
+										"specifics": {
+												"curr_height": 100,
+												"curr_width": 100,
+												"bio": "something bio",
+												"company": "some company",
+												"location": "some location",
+												"profile_image_url": "https://hi.com",
+												"website": "https://somewebsite.com"
+										}
+								}
             ]
         }
 
@@ -298,27 +338,34 @@ This API returns whiteboard contents data related to the given user.
 
 + Request Body (application/json)
 
-        {
-            "new_contents": [
-                {
-                    # General information
-                    "type": "image",
-                    "medium": "instagram",
-                    "pos_x": 10,
-                    "pos_y": 10,
-
-                    # Medium specific information
-                    "instagram_specific": {
-                        "raw_content_url": "https://scontent.cdninstagram.com/vp/9572fc0348077bef240769a0e6c06c34/5D0B6328/t51.2885-15/sh0.08/e35/s640x640/53199887_348952865719289_2176542923815712269_n.jpg?_nc_ht=scontent.cdninstagram.com",
-                        "instagram_url": "https://www.instagram.com/p/Bu7vYu-F9z0/",
-                        "orig_width": 640,
-                        "orig_height": 480,
-                        "curr_width": 640,
-                        "curr_height": 480
-                    }
-                }
-            ]
-        }
+				{
+						"new_contents": [
+								{
+										"type": "image",
+										"medium": "instagram",
+										"pos_x": 10,
+										"pos_y": 10,
+										"specifics": {
+												"raw_content_url": "https://scontent.cdninstagram.com/vp/9572fc0348077bef240769a0e6c06c34/5D0B6328/t51.2885-15/sh0.08/e35/s640x640/53199887_348952865719289_2176542923815712269_n.jpg?_nc_ht=scontent.cdninstagram.com",
+												"content_url": "https://www.instagram.com/p/Bu7vYu-F9z0/",
+												"orig_width": 640,
+												"orig_height": 480,
+												"curr_width": 640,
+												"curr_height": 480
+										}
+								},
+								{
+										“medium”: “whoami”,
+										“type”: “profile”,
+										“pos_x”: 33,
+										“pos_y”: 33,
+										"specifics": {
+												“curr_height”: 100,
+												“curr_width”: 100
+										}
+								}
+						]
+				}
 
 + Response (application/json)
 
@@ -347,8 +394,10 @@ This API returns whiteboard contents data related to the given user.
                     "medium": "instagram",
                     "pos_x": 10,
                     "pos_y": 10,
-                    "curr_width": 640,
-                    "curr_height": 480
+                    "specifics": {
+                        "curr_width": 640,
+                        "curr_height": 480
+                    }
                 }
             ]
         }
