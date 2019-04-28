@@ -22,7 +22,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defau
     useEffect(() => {
         if (data.existing) {
             // setting images forming to right elements
-            setImages(showImages(data.existing, toggle, false));
+            setImages(showImages(data.existing, toggle, 0));
         }
         settingHeight();
     }, [data.existing]);

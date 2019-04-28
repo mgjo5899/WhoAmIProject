@@ -7,61 +7,65 @@ import Spread from '../dashboard/spread';
 import { next, previous } from '../../store/actions/carousel_actions';
 import { showImages, getExistingImages, setData } from '../../store/actions/data_actions';
 import uuidv4 from 'uuid/v4';
+import Axios from 'axios';
+import { SERVER } from '../../config';
 
-const Profile = ({ auth, activeIndex, next, previous, data, history, setData, getExistingImages }) => {
+const Profile = ({ auth, activeIndex, next, previous, data, setData, getExistingImages }) => {
 
-    const [profile, setProfile] = useState({
-        data: {
-            profile_image_url: '',
-            bio: '',
-            company: '',
-            location: '',
-            website: ''
-        },
-        element: {}
+    const [profileData, setProfileData] = useState({
+        profile_image_url: '',
+        bio: '',
+        company: '',
+        location: '',
+        website: ''
     });
     const [defaultWidth, defaultHeight] = [1000, 500];
 
+    const setExistingProfileData = async () => {
+        const { profile } = (await Axios.get(SERVER + '/user/profile')).data;
+        setProfileData({
+            ...profileData,
+            ...profile
+        });
+        const profileForm = document.getElementById('profile-form');
+        for (const key in profile) {
+            profileForm[key].value = profile[key];
+        }
+    }
+
+    const deleteProfile = profile => {
+        setData({ selected: data.selected.filter(selectedData => selectedData.id !== profile.id) });
+    }
+
     useEffect(() => {
-        if (activeIndex === contentsIndex.profile) {
-            // if there is profile data available, then copy it to the value of it
-            getExistingImages(auth, auth.user.username, history);
+        switch (activeIndex) {
+            case contentsIndex.profile:
+                setExistingProfileData();
+                break;
+            case contentsIndex.spread:
+                getExistingImages(auth, auth.user.username);
+                break;
+            default:
+                break;
         }
     }, [activeIndex]);
 
     useEffect(() => {
         // when data exists, execute the command, giving conditions to useEffect
-        if (data.existing.length !== 0) {
-            const profileData = data.existing.find(img => img.medium === 'whoami' && img.type === 'profile');
-            if (profileData) {
-                const { bio, company, location, website } = profileData;
-                setProfile({
-                    ...profile,
-                    data: {
-                        ...profile.data,
-                        bio,
-                        company,
-                        location,
-                        website
-                    }
-                });
-            }
-            setProfile(profile => ({
-                ...profile,
-                element: {
-                    id: profileData ? profileData.id : uuidv4(),
-                    posX: profileData ? profileData.pos_x : Math.floor(Math.random() * (defaultWidth - 200)),
-                    posY: profileData ? profileData.pos_y : Math.floor(Math.random() * (defaultHeight - 200)),
-                    medium: 'whoami',
-                    type: 'profile',
-                    orig_width: 200,
-                    orig_height: 200,
-                    curr_width: profileData ? profileData.curr_width : 200,
-                    curr_height: profileData ? profileData.curr_height : 200,
-                    selected: true
-                }
-            }))
-        }
+        const existingProfileData = data.existing.find(existingData => existingData.type === 'profile');
+        const profileElement = {
+            id: existingProfileData ? existingProfileData.id : uuidv4(),
+            posX: existingProfileData ? existingProfileData.pos_x : Math.floor(Math.random() * (defaultWidth - 200)),
+            posY: existingProfileData ? existingProfileData.pos_y : Math.floor(Math.random() * (defaultHeight - 200)),
+            medium: 'whoami',
+            type: 'profile',
+            orig_width: 200,
+            orig_height: 200,
+            curr_width: existingProfileData ? existingProfileData.curr_width : 200,
+            curr_height: existingProfileData ? existingProfileData.curr_height : 200,
+            selected: true
+        };
+        setData({ selected: [...data.selected, profileElement] });
     }, [data.existing]);
 
     const contentsIndex = {
@@ -73,15 +77,15 @@ const Profile = ({ auth, activeIndex, next, previous, data, history, setData, ge
     const items = [
         <Form
             {...{
-                profile,
-                setProfile,
+                profileData,
+                setProfileData,
                 auth,
                 next
             }}
         />,
         <Spread
             {...{
-                profile,
+                profile: profileData,
                 showImages,
                 next,
                 previous,
@@ -91,7 +95,9 @@ const Profile = ({ auth, activeIndex, next, previous, data, history, setData, ge
                 activeIndex,
                 contentsIndex,
                 element: { medium: 'whoami' },
-                setData
+                setData,
+                deleteImage: deleteProfile,
+                flag: 2
             }}
         />
     ];
@@ -105,7 +111,7 @@ const Profile = ({ auth, activeIndex, next, previous, data, history, setData, ge
     return (
         <Fragment>
             <Navbar />
-            <div className="container w-50">
+            <div className="container">
                 <Carousel
                     activeIndex={activeIndex}
                     next={next}
@@ -128,7 +134,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     next: () => dispatch(next('PROFILE')),
     previous: () => dispatch(previous('PROFILE')),
-    getExistingImages: (auth, username, history) => dispatch(getExistingImages(auth, username, history)),
+    getExistingImages: (auth, username) => dispatch(getExistingImages(auth, username)),
     setData: data => dispatch(setData(data))
 })
 

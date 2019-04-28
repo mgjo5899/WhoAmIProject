@@ -83,6 +83,8 @@ const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex
             deleteImage={deleteImage}
             element={element}
             showImages={showImages}
+            setData={setData}
+            flag={1}
         />
     ];
 

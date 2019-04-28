@@ -5,7 +5,7 @@ import { SERVER } from '../../config';
 import InfiniteScroll from 'react-infinite-scroller';
 import { WhiteBoard } from './whiteboard';
 
-const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element, showImages, profile }) => {
+const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element, showImages, flag }) => {
 
     const [changed, setChanged] = useState([]);
     const [images, setImages] = useState([]);
@@ -20,9 +20,10 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
             // if there is an index, then remove selected
             if (existingIndex !== -1) {
                 setData({ existing: data.existing.filter(img => img.id !== data.existing[existingIndex].id) });
+            } else {
+                // filter out of selected
+                deleteImage(image);
             }
-            // filter out of selected
-            setData({ selected: data.selected.filter(img => img.id !== data.existing[existingIndex].id) });
         } else {
             // just make it regular
             deleteImage(image);
@@ -35,7 +36,6 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
 
     useEffect(() => {
         if (activeIndex === contentsIndex.spread) {
-            console.log(contentsIndex)
             setHeight(defaultHeight);
             // create set for putting deleted data id
             const deleteIdSet = new Set();
@@ -43,7 +43,8 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
                 deleteIdSet.add(img.id);
             });
             const imagesToShow = [...data.selected, ...data.existing.filter(img => img.medium !== element.medium).filter(img => !deleteIdSet.has(img.id))];
-            setImages(showImages(imagesToShow, handleClose, true));
+            console.log(imagesToShow)
+            setImages(showImages(imagesToShow, handleClose, flag));
             // set height of whiteboard based on the selected images
             setHeight(getHeight());
         }
@@ -54,6 +55,7 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
         // iterate through every array, get maximum and return 200 added
         images.forEach(image => {
             maxHeight = Math.max(maxHeight, image.props['data-y'] + 300);
+            console.log(maxHeight)
         });
         return maxHeight;
     }
