@@ -23,6 +23,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defau
         if (data.existing) {
             // setting images forming to right elements
             setImages(showImages(data.existing, toggle, 0));
+            console.log(data.existing)
         }
         settingHeight();
     }, [data.existing]);
@@ -31,9 +32,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defau
         if (modal) {
             setCurrentImage({});
         } else {
-            setCurrentImage({ ...currentImage, image: image.raw_content_url });
-            // temporory easy way of handling
-            setCurrentImage(currentImage => ({ ...currentImage, source: image[image.medium + '_url'] }));
+            setCurrentImage({ ...currentImage, image: image.specifics.raw_content_url, source: image.specifics.content_url });
         }
         setModal(!modal);
     }
@@ -41,7 +40,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defau
     const settingHeight = () => {
         let maxHeight = defaultHeight;
         data.existing.forEach(elem => {
-            maxHeight = Math.max(maxHeight, elem.pos_y + elem.curr_height + 100);
+            maxHeight = Math.max(maxHeight, elem.pos_y + elem.specifics.curr_height + 100);
         });
         setHeight(maxHeight);
     }

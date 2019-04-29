@@ -85,6 +85,7 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
         // fetch data in the link
         try {
             const userData = (await Axios.get(SERVER + element.link)).data;
+            console.log(userData)
             if (!userData.status) throw new Error(userData.message);
             // fetching contents
             const contentsData = userData[element.contents];
