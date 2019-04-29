@@ -3,7 +3,7 @@ import Navbar from '../layout/navbar';
 import { connect } from 'react-redux';
 import { CarouselItem, Carousel } from 'reactstrap';
 import Form from './form';
-import Spread from '../dashboard/spread';
+import Spread from '../dashboard/Spread';
 import { next, previous } from '../../store/actions/carousel_actions';
 import { showImages, getExistingImages, setData } from '../../store/actions/data_actions';
 import uuidv4 from 'uuid/v4';
