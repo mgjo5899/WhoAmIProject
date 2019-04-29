@@ -55,7 +55,6 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
         // iterate through every array, get maximum and return 200 added
         images.forEach(image => {
             maxHeight = Math.max(maxHeight, image.props['data-y'] + 300);
-            console.log(maxHeight)
         });
         return maxHeight;
     }
@@ -66,16 +65,18 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
 
     const addData = async () => {
         try {
-            await Axios.post(SERVER + '/whiteboard/user_data', {
+            console.log(data);
+            console.log((await Axios.post(SERVER + '/whiteboard/user_data', {
                 new_contents: data.new.map(elem => {
+                    console.log(elem)
                     return {
                         type: elem.type,
                         medium: elem.medium,
                         pos_x: changed[elem.id] ? changed[elem.id].posX : elem.posX,
                         pos_y: changed[elem.id] ? changed[elem.id].posY : elem.posY,
-                        [elem.specific]: {
+                        specifics: {
                             raw_content_url: elem.src,
-                            [elem.elementSourceUrl]: elem.sourceUrl,
+                            content_url: elem.content_url,
                             orig_width: elem.orig_width,
                             orig_height: elem.orig_height,
                             curr_width: changed[elem.id] ? changed[elem.id].width : 200,
@@ -83,7 +84,7 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
                         }
                     };
                 })
-            });
+            })).data);
         } catch (error) {
             console.log(error);
         }

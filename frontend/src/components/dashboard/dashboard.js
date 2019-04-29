@@ -3,27 +3,29 @@ import { connect } from 'react-redux';
 import { Modal } from 'reactstrap';
 import { getExistingImages, isOwner } from '../../store/actions/data_actions';
 import { PlusButton, WhiteBoard } from './whiteboard';
+import { withRouter } from 'react-router';
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defaultHeight, username, auth, showImages, getExistingImages }) => {
+const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defaultHeight, username, auth, showImages, getExistingImages, history }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
     const [modal, setModal] = useState(false);
     const [currentImage, setCurrentImage] = useState({});
 
+
     useEffect(() => {
         if (activeIndex === contentsIndex.dashboard) {
             // when first loaded to dashboard, get existing data from server
             setHeight(defaultHeight);
-            getExistingImages(auth, username);
+            getExistingImages(auth, username, history);
         }
     }, [activeIndex]);
 
     useEffect(() => {
         if (data.existing) {
+            console.log(data);
             // setting images forming to right elements
             setImages(showImages(data.existing, toggle, 0));
-            console.log(data.existing)
         }
         settingHeight();
     }, [data.existing]);
@@ -66,4 +68,4 @@ const mapDispatchToProps = dispatch => ({
     getExistingImages: (auth, username, history) => dispatch(getExistingImages(auth, username, history)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Dashboard));

@@ -10,7 +10,7 @@ import uuidv4 from 'uuid/v4';
 import Axios from 'axios';
 import { SERVER } from '../../config';
 
-const Profile = ({ auth, activeIndex, next, previous, data, setData, getExistingImages }) => {
+const Profile = ({ auth, activeIndex, next, previous, data, setData, getExistingImages, history }) => {
 
     const [profileData, setProfileData] = useState({
         profile_image_url: '',
@@ -21,15 +21,18 @@ const Profile = ({ auth, activeIndex, next, previous, data, setData, getExisting
     });
     const [defaultWidth, defaultHeight] = [1000, 500];
 
+    const [loaded, setLoaded] = useState(false);
+
     const setExistingProfileData = async () => {
         const { profile } = (await Axios.get(SERVER + '/user/profile')).data;
+        console.log(profile)
         setProfileData({
             ...profileData,
             ...profile
         });
         const profileForm = document.getElementById('profile-form');
         for (const key in profile) {
-            profileForm[key].value = profile[key];
+            if (key !== 'id') profileForm[key].value = profile[key];
         }
     }
 
@@ -41,9 +44,10 @@ const Profile = ({ auth, activeIndex, next, previous, data, setData, getExisting
         switch (activeIndex) {
             case contentsIndex.profile:
                 setExistingProfileData();
+                getExistingImages(auth, auth.user.username, history);
+                setLoaded(true);
                 break;
             case contentsIndex.spread:
-                getExistingImages(auth, auth.user.username);
                 break;
             default:
                 break;
@@ -52,21 +56,28 @@ const Profile = ({ auth, activeIndex, next, previous, data, setData, getExisting
 
     useEffect(() => {
         // when data exists, execute the command, giving conditions to useEffect
-        const existingProfileData = data.existing.find(existingData => existingData.type === 'profile');
-        const profileElement = {
-            id: existingProfileData ? existingProfileData.id : uuidv4(),
-            posX: existingProfileData ? existingProfileData.pos_x : Math.floor(Math.random() * (defaultWidth - 200)),
-            posY: existingProfileData ? existingProfileData.pos_y : Math.floor(Math.random() * (defaultHeight - 200)),
-            medium: 'whoami',
-            type: 'profile',
-            orig_width: 200,
-            orig_height: 200,
-            curr_width: existingProfileData ? existingProfileData.curr_width : 200,
-            curr_height: existingProfileData ? existingProfileData.curr_height : 200,
-            selected: true
-        };
-        setData({ selected: [...data.selected, profileElement] });
-    }, [data.existing]);
+        if (loaded) {
+            console.log(data)
+            if (data.selected.findIndex(existingData => existingData.type === 'profile') !== -1) return;
+            console.log(data)
+            const existingProfileData = data.existing.find(existingData => existingData.type === 'profile');
+            const profileElement = {
+                id: existingProfileData ? existingProfileData.id : uuidv4(),
+                posX: existingProfileData ? existingProfileData.pos_x : Math.floor(Math.random() * (defaultWidth - 200)),
+                posY: existingProfileData ? existingProfileData.pos_y : Math.floor(Math.random() * (defaultHeight - 200)),
+                medium: 'whoami',
+                type: 'profile',
+                specifics: {
+                    orig_width: 200,
+                    orig_height: 200,
+                    curr_width: existingProfileData ? existingProfileData.curr_width : 200,
+                    curr_height: existingProfileData ? existingProfileData.curr_height : 200,
+                },
+                selected: true
+            };
+            setData({ selected: [...data.selected, profileElement] });
+        }
+    }, [loaded]);
 
     const contentsIndex = {
         profile: 0,
@@ -134,7 +145,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     next: () => dispatch(next('PROFILE')),
     previous: () => dispatch(previous('PROFILE')),
-    getExistingImages: (auth, username) => dispatch(getExistingImages(auth, username)),
+    getExistingImages: (auth, username, history) => dispatch(getExistingImages(auth, username, history)),
     setData: data => dispatch(setData(data))
 })
 

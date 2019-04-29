@@ -18,7 +18,6 @@ const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex
         contents: 2,
         spread: 3
     }
-
     const [defaultWidth, defaultHeight] = [1000, 500];
 
     const deleteImage = img => {
@@ -112,6 +111,7 @@ const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex
 }
 
 const mapStateToProps = state => ({
+    auth: state.auth,
     data: state.data,
     activeIndex: state.carousel.dashboardActiveIndex
 })
