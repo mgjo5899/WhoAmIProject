@@ -13,7 +13,7 @@ from whoami_back.config import HASH_METHOD
 from whoami_back.utils import get_pw_hash, check_pw_hash
 
 
-def get_user_profile(email):
+def get_user_profile(email, internal_use=False):
     user = get_user(email=email)
     rtn_val = {}
 
@@ -28,7 +28,10 @@ def get_user_profile(email):
         else:
             rtn_val['status'] = True
             rtn_val['email'] = email
-            rtn_val['profile'] = {'id':user_profile.id}
+            rtn_val['profile'] = {}
+
+            if internal_use == True:
+                rtn_val['profile']['id'] = user_profile.id
 
             if user_profile.bio != '':
                 rtn_val['profile']['bio'] = user_profile.bio
@@ -90,7 +93,7 @@ def add_whoami_content(email, new_content):
 
     # Keep adding types for whoami contents
     if new_content['type'] == 'profile':
-        user_profile = get_user_profile(email)
+        user_profile = get_user_profile(email, internal_use=True)
 
         if user_profile['status'] == False:
             rtn_val = user_profile
