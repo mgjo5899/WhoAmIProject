@@ -190,11 +190,11 @@ def get_whiteboard_data(username=None, email=None, medium=None):
     if medium == None or medium == 'whoami':
         # Currently, this part is only used by whoami profile
         profile_data = db.query(WhiteboardData, UserProfileData, UserProfile)\
-                                .filter(and_(WhiteboardData.email == user_email, \
-                                             WhiteboardData.medium == 'whoami'))\
-                                .filter(UserProfile.email == user_email)\
-                                .filter(UserProfileData.whiteboard_data_id == WhiteboardData.id)\
-                                .first()
+                          .filter(and_(WhiteboardData.email == user_email, \
+                                       WhiteboardData.medium == 'whoami'))\
+                          .filter(UserProfile.email == user_email)\
+                          .filter(UserProfileData.whiteboard_data_id == WhiteboardData.id)\
+                          .first()
 
         if profile_data and profile_data[0] and profile_data[1] and profile_data[2]:
             user_profile = {}
@@ -484,7 +484,6 @@ def update_facebook_content(email, update):
 
     return rtn_val
 
-# Try to first sort it with type
 def update_instagram_content(email, update):
     rtn_val = {'id':update['id'], 'email':email}
     medium = update['medium']
@@ -520,8 +519,6 @@ def update_instagram_content(email, update):
                 rtn_val['medium'] = medium
                 rtn_val['type'] = whiteboard_data.type
 
-    print(whiteboard_data)
-    print(rtn_val)
     return rtn_val
 
 def delete_facebook_content(whiteboard_data_id):
