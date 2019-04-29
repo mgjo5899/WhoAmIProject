@@ -1,7 +1,7 @@
-import Dashboard from './dashboard';
+import Dashboard from './Dashboard';
 import ConnectTo from './connect_to';
-import Contents from './contents';
-import Spread from './spread';
+import Contents from './Contents';
+import Spread from './Spread';
 
 export {
     Dashboard,

@@ -261,24 +261,24 @@ This API returns whiteboard contents data related to the given user.
                         "raw_content_url": "https://scontent.cdninstagram.com/vp/9f4a41d8a9add1cf3e6efc75df0e6ef4/5D20C069/t51.2885-15/sh0.08/e35/s640x640/49759352_2281406505226870_3927099686951390228_n.jpg?_nc_ht=scontent.cdninstagram.com"
                     }
                 },
-								{
-										"id": 1,
-										"medium": "whoami",
-										"type": "profile",
-										"pos_x": 33,
-										"pos_y": 33,
-										"status": 1,
-										"last_modified": "Thu, 25 Apr 2019 16:35:16 GMT",
-										"specifics": {
-												"curr_height": 100,
-												"curr_width": 100,
-												"bio": "something bio",
-												"company": "some company",
-												"location": "some location",
-												"profile_image_url": "https://hi.com",
-												"website": "https://somewebsite.com"
-										}
-								}
+                {
+                    "id": 1,
+                    "medium": "whoami",
+                    "type": "profile",
+                    "pos_x": 33,
+                    "pos_y": 33,
+                    "status": 1,
+                    "last_modified": "Thu, 25 Apr 2019 16:35:16 GMT",
+                    "specifics": {
+                        "curr_height": 100,
+                        "curr_width": 100,
+                        "bio": "something bio",
+                        "company": "some company",
+                        "location": "some location",
+                        "profile_image_url": "https://hi.com",
+                        "website": "https://somewebsite.com"
+                    }
+                }
             ]
         }
 
@@ -311,24 +311,24 @@ This API returns whiteboard contents data related to the given user.
                         "raw_content_url": "https://scontent.cdninstagram.com/vp/9f4a41d8a9add1cf3e6efc75df0e6ef4/5D20C069/t51.2885-15/sh0.08/e35/s640x640/49759352_2281406505226870_3927099686951390228_n.jpg?_nc_ht=scontent.cdninstagram.com"
                     }
                 },
-								{
-										"id": 1,
-										"medium": "whoami",
-										"type": "profile",
-										"pos_x": 33,
-										"pos_y": 33,
-										"status": 1,
-										"last_modified": "Thu, 25 Apr 2019 16:35:16 GMT",
-										"specifics": {
-												"curr_height": 100,
-												"curr_width": 100,
-												"bio": "something bio",
-												"company": "some company",
-												"location": "some location",
-												"profile_image_url": "https://hi.com",
-												"website": "https://somewebsite.com"
-										}
-								}
+                {
+                    "id": 1,
+                    "medium": "whoami",
+                    "type": "profile",
+                    "pos_x": 33,
+                    "pos_y": 33,
+                    "status": 1,
+                    "last_modified": "Thu, 25 Apr 2019 16:35:16 GMT",
+                    "specifics": {
+                        "curr_height": 100,
+                        "curr_width": 100,
+                        "bio": "something bio",
+                        "company": "some company",
+                        "location": "some location",
+                        "profile_image_url": "https://hi.com",
+                        "website": "https://somewebsite.com"
+                    }
+                }
             ]
         }
 
@@ -338,34 +338,34 @@ This API returns whiteboard contents data related to the given user.
 
 + Request Body (application/json)
 
-				{
-						"new_contents": [
-								{
-										"type": "image",
-										"medium": "instagram",
-										"pos_x": 10,
-										"pos_y": 10,
-										"specifics": {
-												"raw_content_url": "https://scontent.cdninstagram.com/vp/9572fc0348077bef240769a0e6c06c34/5D0B6328/t51.2885-15/sh0.08/e35/s640x640/53199887_348952865719289_2176542923815712269_n.jpg?_nc_ht=scontent.cdninstagram.com",
-												"content_url": "https://www.instagram.com/p/Bu7vYu-F9z0/",
-												"orig_width": 640,
-												"orig_height": 480,
-												"curr_width": 640,
-												"curr_height": 480
-										}
-								},
-								{
-										“medium”: “whoami”,
-										“type”: “profile”,
-										“pos_x”: 33,
-										“pos_y”: 33,
-										"specifics": {
-												“curr_height”: 100,
-												“curr_width”: 100
-										}
-								}
-						]
-				}
+        {
+            "new_contents": [
+                {
+                    "type": "image",
+                    "medium": "instagram",
+                    "pos_x": 10,
+                    "pos_y": 10,
+                    "specifics": {
+                        "raw_content_url": "https://scontent.cdninstagram.com/vp/9572fc0348077bef240769a0e6c06c34/5D0B6328/t51.2885-15/sh0.08/e35/s640x640/53199887_348952865719289_2176542923815712269_n.jpg?_nc_ht=scontent.cdninstagram.com",
+                        "content_url": "https://www.instagram.com/p/Bu7vYu-F9z0/",
+                        "orig_width": 640,
+                        "orig_height": 480,
+                        "curr_width": 640,
+                        "curr_height": 480
+                    }
+                },
+                {
+                    "medium": "whoami",
+                    "type": "profile",
+                    "pos_x": 33,
+                    "pos_y": 33,
+                    "specifics": {
+                        "curr_height": 100,
+                        "curr_width": 100
+                    }
+                }
+            ]
+        }
 
 + Response (application/json)
 
@@ -462,13 +462,29 @@ This API returns whiteboard contents data related to the given user.
         {
             "status": true,
             "email": "mgjo5899@gmail.com"
-            "facebook_contents": [
+            "contents": [
                 {
                     "orig_width": 640,
                     "orig_height": 640,
                     "raw_content_url": "https://scontent.cdninstagram.com/vp/a9bd4032f373574b6b2182d47e722a9d/5D0FFEFA/t51.2885-15/sh0.08/e35/s640x640/53109635_123344238777449_8694827121769313550_n.jpg?_nc_ht=scontent.cdninstagram.com",
-                    "facebook_url": "https://www.instagram.com/p/BuwxR1vFjBm/",
-                    "type": 'image'
+                    "content_url": "https://www.instagram.com/p/BuwxR1vFjBm/",
+                    "type": "image"
+                },
+                {
+                    # Contents saved in whoami
+                    "id": 1,
+                    "pos_x": 100,
+                    "pos_y": 100,
+                    "last_modified": "Tue, 19 Mar 2019 21:54:41 GMT",
+                    "status": 1,
+                    "curr_width": 320,
+                    "curr_height": 320,
+
+                    "orig_width": 640,
+                    "orig_height": 640,
+                    "raw_content_url": "https://scontent.cdninstagram.com/vp/a9bd4032f373574b6b2182d47e722a9d/5D0FFEFA/t51.2885-15/sh0.08/e35/s640x640/53109635_123344238777449_8694827121769313550_n.jpg?_nc_ht=scontent.cdninstagram.com",
+                    "content_url": "https://www.instagram.com/p/BuwxR1vFjBm/",
+                    "type": "image"
                 }
             ]
         }
@@ -492,13 +508,30 @@ This API returns whiteboard contents data related to the given user.
         {
             "status": true,
             "email": "mgjo5899@gmail.com"
-            "instagram_contents": [
+            "contents": [
                 {
+                    # Contents new to whoami
                     "orig_width": 640,
                     "orig_height": 640,
                     "raw_content_url": "https://scontent.cdninstagram.com/vp/a9bd4032f373574b6b2182d47e722a9d/5D0FFEFA/t51.2885-15/sh0.08/e35/s640x640/53109635_123344238777449_8694827121769313550_n.jpg?_nc_ht=scontent.cdninstagram.com",
-                    "instagram_url": "https://www.instagram.com/p/BuwxR1vFjBm/",
-                    "type": 'image'
+                    "content_url": "https://www.instagram.com/p/BuwxR1vFjBm/",
+                    "type": "image"
+                },
+                {
+                    # Contents saved in whoami
+                    "id": 1,
+                    "pos_x": 100,
+                    "pos_y": 100,
+                    "last_modified": "Tue, 19 Mar 2019 21:54:41 GMT",
+                    "status": 1,
+                    "curr_width": 320,
+                    "curr_height": 320,
+
+                    "orig_width": 640,
+                    "orig_height": 640,
+                    "raw_content_url": "https://scontent.cdninstagram.com/vp/a9bd4032f373574b6b2182d47e722a9d/5D0FFEFA/t51.2885-15/sh0.08/e35/s640x640/53109635_123344238777449_8694827121769313550_n.jpg?_nc_ht=scontent.cdninstagram.com",
+                    "content_url": "https://www.instagram.com/p/BuwxR1vFjBm/",
+                    "type": "image"
                 }
             ]
         }
