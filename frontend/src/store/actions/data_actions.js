@@ -19,7 +19,7 @@ export const setData = data => ({
  * @param {int} flag - 0 ==> dashboard 1 ==> image spread 2 ==> profile spread
  */
 export const showImages = (imageData, clickFunc, flag) => {
-
+    console.log(imageData)
     return imageData.map((image, index) => {
 
         let className = 'card position-absolute rounded';
@@ -29,17 +29,16 @@ export const showImages = (imageData, clickFunc, flag) => {
         if ([1, 2].includes(flag)) {
             className += ' draggable resize-drag';
         }
-
         return (
             <div
                 id={image.id}
                 medium={image.medium}
-                orig_width={image.orig_width}
-                orig_height={image.orig_height}
+                orig_width={image.specifics.orig_width}
+                orig_height={image.specifics.orig_height}
                 className={className}
                 key={index}
                 style={{
-                    width: image.curr_width || 200,
+                    width: image.specifics.curr_width || 200,
                     height: 'auto',
                     WebkitTransform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
                     transform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
@@ -57,7 +56,7 @@ export const showImages = (imageData, clickFunc, flag) => {
                         ? (
                             <img
                                 className="w-100 h-100"
-                                src={image.src || image.raw_content_url}
+                                src={image.src || image.specifics.raw_content_url}
                                 alt=""
                             />
                         )
@@ -79,15 +78,16 @@ export const showImages = (imageData, clickFunc, flag) => {
 
 export const isOwner = (auth, username) => (auth.user.username === username)
 
-export const getExistingImages = (auth, username) => async dispatch => {
+export const getExistingImages = (auth, username, history) => dispatch => {
     try {
-        isOwner(auth, username) ? await getOwnerExistingImages(dispatch) : await getUserExistingImages(username, dispatch);
+        isOwner(auth, username) ? dispatch(getOwnerExistingImages()) : dispatch(getUserExistingImages(username));
     } catch (error) {
-        console.log(error)
+        history.push('/error_page');
+        console.log(error);
     }
 }
 
-const getOwnerExistingImages = async dispatch => {
+const getOwnerExistingImages = () => async dispatch => {
     const { status, whiteboard_data, message } = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
     if (!status) throw new Error(message);
     dispatch(resetData());
@@ -96,7 +96,7 @@ const getOwnerExistingImages = async dispatch => {
     }));
 }
 
-const getUserExistingImages = async (username, dispatch) => {
+const getUserExistingImages = username => async dispatch => {
     const { status, whiteboard_data, message } = (await Axios.post(SERVER + '/whiteboard/published_data', {
         username,
         secret_key: SECRET_KEY
