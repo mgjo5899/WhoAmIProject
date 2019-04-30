@@ -61,8 +61,8 @@ export const showImages = (imageData, clickFunc, flag) => {
                             />
                         )
                         : (
-                            <div className="card w-100 h-100">
-                                <h1>Profile</h1>
+                            <div className="card">
+                                <h1 style={{ width: 'auto', height: 'auto' }}>Profile</h1>
                             </div>
                         )
                 }
@@ -80,7 +80,7 @@ export const isOwner = (auth, username) => (auth.user.username === username)
 
 export const getExistingImages = (auth, username, history) => dispatch => {
     try {
-        isOwner(auth, username) ? dispatch(getOwnerExistingImages()) : dispatch(getUserExistingImages(username));
+        return isOwner(auth, username) ? dispatch(getOwnerExistingImages()) : dispatch(getUserExistingImages(username));
     } catch (error) {
         history.push('/error_page');
         console.log(error);

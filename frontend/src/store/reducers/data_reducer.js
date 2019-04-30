@@ -9,6 +9,7 @@ const initState = {
 const dataReducer = (state = initState, action) => {
     switch (action.type) {
         case 'RESET_DATA':
+            console.log('haha')
             return initState;
         case 'SET_DATA':
             return {
