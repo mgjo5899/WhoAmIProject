@@ -54,6 +54,7 @@ def refine_raw_data(raw_contents_data):
     for raw_content in raw_contents_data:
         if raw_content['type'] == 'carousel':
             for carousel_content in raw_content['carousel_media']:
+                carousel_content['link'] = raw_content['link']
                 raw_contents.append(carousel_content)
         else:
             raw_contents.append(raw_content)
