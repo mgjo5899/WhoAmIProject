@@ -31,10 +31,23 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defau
     const toggle = image => {
         if (modal) {
             setCurrentImage({});
-        } else {
-            setCurrentImage({ ...currentImage, image: image.specifics.raw_content_url, source: image.specifics.content_url });
+        }
+        else {
+            if (image.type === 'profile') {
+                toggleProfile(image);
+            } else {
+                toggleImage(image);
+            }
         }
         setModal(!modal);
+    }
+
+    const toggleImage = image => {
+        setCurrentImage({ ...currentImage, image: image.specifics.raw_content_url, source: image.specifics.content_url });
+    }
+
+    const toggleProfile = image => {
+        console.log(image);
     }
 
     const settingHeight = () => {
