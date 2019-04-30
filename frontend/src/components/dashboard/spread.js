@@ -5,29 +5,14 @@ import { SERVER } from '../../config';
 import InfiniteScroll from 'react-infinite-scroller';
 import { WhiteBoard } from './whiteboard';
 
-const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element, showImages, flag }) => {
+const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element, showImages, flag }) => {
 
     const [changed, setChanged] = useState([]);
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
 
     const handleClose = image => {
-        // if it is closing profile element, then just filter it out
-        if (image.medium === 'whoami' && image.type === 'profile') {
-            // if the profile element is already in there, put it into delete data
-            // find index of the data to judge
-            const existingIndex = data.existing.findIndex(img => img.id === image.id);
-            // if there is an index, then remove selected
-            if (existingIndex !== -1) {
-                setData({ existing: data.existing.filter(img => img.id !== data.existing[existingIndex].id) });
-            } else {
-                // filter out of selected
-                deleteImage(image);
-            }
-        } else {
-            // just make it regular
-            deleteImage(image);
-        }
+        deleteImage(image);
     }
 
     useEffect(() => {
@@ -96,6 +81,7 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
         data.existing.forEach(elem => {
             existingIdSet.add(elem.id);
         });
+        console.log(changed)
         try {
             await Axios.put(SERVER + '/whiteboard/user_data', {
                 updated_contents: images.filter(image => existingIdSet.has(image.props.id) && changed[image.props.id]).map(image => ({
@@ -103,8 +89,10 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
                     medium: image.props.medium,
                     pos_x: changed[image.props.id].posX,
                     pos_y: changed[image.props.id].posY,
-                    curr_width: changed[image.props.id].width,
-                    curr_height: changed[image.props.id].height
+                    specifics: {
+                        curr_width: changed[image.props.id].width,
+                        curr_height: changed[image.props.id].height
+                    }
                 })
                 )
             });
