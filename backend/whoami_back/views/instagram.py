@@ -53,8 +53,8 @@ def refine_raw_data(raw_contents_data):
     # Go through and fill up raw_contents with raw data
     for raw_content in raw_contents_data:
         if raw_content['type'] == 'carousel':
-            for raw_content in raw_content['carousel_media']:
-                raw_contents.append(raw_content)
+            for carousel_content in raw_content['carousel_media']:
+                raw_contents.append(carousel_content)
         else:
             raw_contents.append(raw_content)
 
@@ -133,6 +133,7 @@ def get_user_instagram_data():
                 rtn_val['contents'] = refined_contents
                 rtn_val['email'] = session['email']
 
+    print(rtn_val)
     return jsonify(rtn_val)
 
 @instagram.route('/instagram/get_access_token', methods=['GET'])
