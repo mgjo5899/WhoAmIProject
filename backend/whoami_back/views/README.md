@@ -276,7 +276,8 @@ This API returns whiteboard contents data related to the given user.
                         "company": "some company",
                         "location": "some location",
                         "profile_image_url": "https://hi.com",
-                        "website": "https://somewebsite.com"
+                        "website": "https://somewebsite.com",
+                        "email": "mgjo5899@gmail.com"
                     }
                 }
             ]
@@ -326,7 +327,8 @@ This API returns whiteboard contents data related to the given user.
                         "company": "some company",
                         "location": "some location",
                         "profile_image_url": "https://hi.com",
-                        "website": "https://somewebsite.com"
+                        "website": "https://somewebsite.com",
+                        "email": "mgjo5899@gmail.com"
                     }
                 }
             ]
@@ -376,6 +378,12 @@ This API returns whiteboard contents data related to the given user.
                     "status": true,
                     "id": 2,
                     "medium": "instagram",
+                    "email": "mgjo5899@gmail.com"
+                },
+                {
+                    "status": true,
+                    "id": 3,
+                    "medium": "whoami",
                     "email": "mgjo5899@gmail.com"
                 }
             ]
@@ -569,11 +577,13 @@ This API returns whiteboard contents data related to the given user.
         {
             "profile": {
                 # Ones with an empty string as its value won't be returned
+                # If include_email is set to False, email won't be returned in the profile
                 "profile_image_url": "https://www.some_url.com/some_image",
                 "bio": "I am someone from somewhere for something and hi.",
                 "company": "whoami",
                 "location": "Champaign, IL, USA",
-                "website": "https://www.somewebiste.com"
+                "website": "https://www.somewebiste.com",
+                "email": "mgjo5899@gmail.com"
             },
             "email": "mgjo5899@gmail.com",
             "status": true
@@ -587,9 +597,10 @@ This API returns whiteboard contents data related to the given user.
         {
             "profile_image_url": "https://www.some_url.com/some_image",
             "bio": "I am someone from somewhere for something and hi.",
-            "company": "", # Could be an empty string, either to remove
+            "company": "", # Could be an empty string
             "location": "Champaign, IL, USA",
-            "website": "https://www.somewebiste.com"
+            "website": "https://www.somewebiste.com",
+            "include_email": True
         }
 
 + Response 200 (application/json)
@@ -600,7 +611,8 @@ This API returns whiteboard contents data related to the given user.
                 "profile_image_url": "https://www.some_url.com/some_image",
                 "bio": "I am someone from somewhere for something and hi.",
                 "location": "Champaign, IL, USA",
-                "website": "https://www.somewebiste.com"
+                "website": "https://www.somewebiste.com",
+                "email": "mgjo5899@gmail.com"
             },
             "email": "mgjo5899@gmail.com",
             "status": true,
