@@ -2,16 +2,20 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'reactstrap';
 import { getExistingImages, isOwner } from '../../store/actions/data_actions';
+import { setExistingProfileData } from '../../store/actions/profile_action';
 import { PlusButton, WhiteBoard } from './whiteboard';
 import { withRouter } from 'react-router';
 import { DEFAULT_WIDTH, DEFAULT_HEIGHT } from '../../config';
+import InputForm from '../profile/input_form';
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, showImages, getExistingImages, history }) => {
+const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, showImages, getExistingImages, history, profile }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
     const [modal, setModal] = useState(false);
     const [currentImage, setCurrentImage] = useState({});
+
+    const [modalContent, setModalContent] = useState(null);
 
 
     useEffect(() => {
@@ -23,7 +27,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
     }, [activeIndex]);
 
     useEffect(() => {
-        console.log(data);
         // setting images forming to right elements
         setImages(showImages(data.existing, toggle, 0));
         settingHeight();
@@ -32,6 +35,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
     const toggle = image => {
         if (modal) {
             setCurrentImage({});
+            // setModalContent(null);
         }
         else {
             if (image.type === 'profile') {
@@ -47,8 +51,30 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
         setCurrentImage({ ...currentImage, image: image.specifics.raw_content_url, source: image.specifics.content_url });
     }
 
-    const toggleProfile = image => {
+    useEffect(() => {
+        setModalContent(
+            <div className="d-flex" onClick={() => window.open(currentImage.source)}>
+                <img src={currentImage.image} alt="" className="w-100 h-100" />
+            </div>
+        );
+    }, [currentImage]);
 
+    const toggleProfile = async image => {
+        console.log(image)
+        const userProfile = {};
+        for (const key in profile) {
+            userProfile[key] = image.specifics[key] ? image.specifics[key] : '';
+        }
+        setModalContent(
+            <div className="card">
+                <div className="card-header">
+                    Profile
+                </div>
+                <div className="card-body">
+                    <InputForm auth={auth} readOnly={true} profile={userProfile} />
+                </div>
+            </div>
+        )
     }
 
     const settingHeight = () => {
@@ -63,9 +89,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
         <Fragment>
             <PlusButton isOwner={isOwner(auth, username)} next={next} />
             <Modal isOpen={modal} centered={true} toggle={toggle} className="d-flex">
-                <div className="d-flex" onClick={() => window.open(currentImage.source)}>
-                    <img src={currentImage.image} alt="" className="w-100 h-100" />
-                </div>
+                {modalContent}
             </Modal>
             <WhiteBoard {...{ DEFAULT_WIDTH, height, images }} />
         </Fragment>
@@ -74,10 +98,12 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
 
 const mapStateToProps = state => ({
     auth: state.auth,
+    profile: state.profile
 })
 
 const mapDispatchToProps = dispatch => ({
     getExistingImages: (auth, username, history) => dispatch(getExistingImages(auth, username, history)),
+    setExistingProfileData: document => dispatch(setExistingProfileData(document))
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Dashboard));
