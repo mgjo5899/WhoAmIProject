@@ -88,7 +88,9 @@ export const getExistingImages = (auth, username, history) => dispatch => {
 }
 
 const getOwnerExistingImages = () => async dispatch => {
-    const { status, whiteboard_data, message } = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
+    const data = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
+    console.log(data)
+    const { status, whiteboard_data, message } = data;
     if (!status) throw new Error(message);
     dispatch(resetData());
     dispatch(setData({

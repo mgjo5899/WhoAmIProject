@@ -1,29 +1,19 @@
-const initState = {
-    new: [],
-    images: [],
-    existing: [],
-    delete: [],
-    selected: []
-}
+import Axios from 'axios';
+import { SERVER } from '../../config';
 
-const dataReducer = (state = initState, action) => {
-    switch (action.type) {
-        case 'RESET_DATA':
-            console.log('haha')
-            return initState;
-        case 'SET_DATA':
-            return {
-                ...state,
-                ...action.data
-            }
-        case 'SHOW_IMAGES':
-            return {
-                ...state,
-                images: action.images
-            }
-        default:
-            return state;
+export const resetData = () => ({
+    type: 'RESET_PROFILE'
+});
+
+export const setProfile = profile => ({
+    type: 'SET_PROFILE',
+    profile
+});
+
+export const setExistingProfileData = () => {
+    return async dispatch => {
+        const { profile } = (await Axios.get(SERVER + '/user/profile')).data;
+        console.log(profile)
+        dispatch(setProfile(profile));
     }
 }
-
-export default dataReducer;

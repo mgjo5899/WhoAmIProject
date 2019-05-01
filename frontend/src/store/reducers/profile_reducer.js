@@ -1,25 +1,20 @@
 const initState = {
-    new: [],
-    images: [],
-    existing: [],
-    delete: [],
-    selected: []
+    profile_image_url: '',
+    bio: '',
+    company: '',
+    location: '',
+    website: '',
+    include_email: true
 }
 
 const dataReducer = (state = initState, action) => {
     switch (action.type) {
-        case 'RESET_DATA':
-            console.log('haha')
+        case 'RESET_PROFILE':
             return initState;
-        case 'SET_DATA':
+        case 'SET_PROFILE':
             return {
                 ...state,
-                ...action.data
-            }
-        case 'SHOW_IMAGES':
-            return {
-                ...state,
-                images: action.images
+                ...action.profile
             }
         default:
             return state;

@@ -9,10 +9,11 @@ import { showImages, getExistingImages, setData } from '../../store/actions/data
 import { setExistingProfileData, setProfile } from '../../store/actions/profile_action';
 import uuidv4 from 'uuid/v4';
 import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE, DEFAULT_PROFILE_SIZE_VALUE } from '../../config';
+import signedInSecure from '../../secure/signed_in_secure';
 
 const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, getExistingImages, history, setExistingProfileData, setProfile }) => {
 
-    const [loaded, setLoaded] = useState(null);
+    const [loaded, setLoaded] = useState(false);
     const [backup, setBackup] = useState(null);
 
     const deleteProfile = profile => {
@@ -26,6 +27,10 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
         }
         setData({ selected: data.selected.filter(selectedData => selectedData.id !== profile.id) });
     }
+
+    useEffect(() => {
+        signedInSecure({ auth, history }, '/');
+    }, []);
 
     const getProfileSelectedBackUp = () => {
         setBackup({
@@ -41,10 +46,10 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
                 setLoaded(false);
                 getProfileSelectedBackUp();
                 (async () => {
-                    await setExistingProfileData(document);
+                    await setExistingProfileData();
                     await getExistingImages(auth, auth.user.username, history);
-                    setLoaded(true);
                 })();
+                setLoaded(true);
                 break;
             case contentsIndex.spread:
                 break;

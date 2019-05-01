@@ -50,26 +50,22 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
 
     const addData = async () => {
         try {
-            console.log(data);
-            console.log((await Axios.post(SERVER + '/whiteboard/user_data', {
-                new_contents: data.new.map(elem => {
-                    console.log(elem)
-                    return {
-                        type: elem.type,
-                        medium: elem.medium,
-                        pos_x: changed[elem.id] ? changed[elem.id].posX : elem.posX,
-                        pos_y: changed[elem.id] ? changed[elem.id].posY : elem.posY,
-                        specifics: {
-                            raw_content_url: elem.src,
-                            content_url: elem.content_url,
-                            orig_width: elem.orig_width,
-                            orig_height: elem.orig_height,
-                            curr_width: changed[elem.id] ? changed[elem.id].width : 200,
-                            curr_height: changed[elem.id] ? changed[elem.id].height : (elem.orig_height / elem.orig_width * 200)
-                        }
-                    };
-                })
-            })).data);
+            (await Axios.post(SERVER + '/whiteboard/user_data', {
+                new_contents: data.new.map(elem => ({
+                    type: elem.type,
+                    medium: elem.medium,
+                    pos_x: changed[elem.id] ? changed[elem.id].posX : elem.posX,
+                    pos_y: changed[elem.id] ? changed[elem.id].posY : elem.posY,
+                    specifics: {
+                        raw_content_url: elem.specifics.raw_content_url,
+                        content_url: elem.specifics.content_url,
+                        orig_width: elem.specifics.orig_width,
+                        orig_height: elem.specifics.orig_height,
+                        curr_width: changed[elem.id] ? changed[elem.id].width : 200,
+                        curr_height: changed[elem.id] ? changed[elem.id].height : (elem.orig_height / elem.orig_width * 200)
+                    }
+                }))
+            }));
         } catch (error) {
             console.log(error);
         }
@@ -81,7 +77,6 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
         data.existing.forEach(elem => {
             existingIdSet.add(elem.id);
         });
-        console.log(changed)
         try {
             await Axios.put(SERVER + '/whiteboard/user_data', {
                 updated_contents: images.filter(image => existingIdSet.has(image.props.id) && changed[image.props.id]).map(image => ({
