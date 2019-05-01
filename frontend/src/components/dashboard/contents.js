@@ -1,10 +1,10 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { SERVER } from '../../config';
+import { SERVER, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE } from '../../config';
 import Axios from 'axios';
 import Gallery from 'react-grid-gallery';
 import uuidv4 from 'uuid/v4';
 
-const Contents = ({ next, previous, element, contents, setContents, data, setData, activeIndex, contentsIndex, deleteImage, defaultWidth, defaultHeight }) => {
+const Contents = ({ next, previous, element, contents, setContents, data, setData, activeIndex, contentsIndex, deleteImage }) => {
 
     const [markedImage, setMarkedImage] = useState(false);
     const [spinner, setSpinner] = useState(false);
@@ -31,8 +31,8 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
                     thumbnail: image.specifics.raw_content_url,
                     thumbnailWidth: image.specifics.orig_width,
                     thumbnailHeight: image.specifics.orig_height,
-                    posX: image.pos_x !== undefined ? image.pos_x : Math.floor(Math.random() * (defaultWidth - 200)),
-                    posY: image.pos_y !== undefined ? image.pos_y : Math.floor(Math.random() * (defaultHeight - 200)),
+                    posX: image.pos_x !== undefined ? image.pos_x : Math.floor(Math.random() * (DEFAULT_WIDTH - DEFAULT_SUBTRACTING_VALUE)),
+                    posY: image.pos_y !== undefined ? image.pos_y : Math.floor(Math.random() * (DEFAULT_HEIGHT - DEFAULT_SUBTRACTING_VALUE)),
                     isSelected: false,
                     medium: image.medium,
                     content_url: image.specifics.content_url,

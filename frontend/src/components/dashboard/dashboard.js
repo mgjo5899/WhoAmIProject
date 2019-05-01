@@ -4,8 +4,9 @@ import { Modal } from 'reactstrap';
 import { getExistingImages, isOwner } from '../../store/actions/data_actions';
 import { PlusButton, WhiteBoard } from './whiteboard';
 import { withRouter } from 'react-router';
+import { DEFAULT_WIDTH, DEFAULT_HEIGHT } from '../../config';
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defaultHeight, username, auth, showImages, getExistingImages, history }) => {
+const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, showImages, getExistingImages, history }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
@@ -16,7 +17,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defau
     useEffect(() => {
         if (activeIndex === contentsIndex.dashboard) {
             // when first loaded to dashboard, get existing data from server
-            setHeight(defaultHeight);
+            setHeight(DEFAULT_HEIGHT);
             getExistingImages(auth, username, history);
         }
     }, [activeIndex]);
@@ -47,11 +48,11 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defau
     }
 
     const toggleProfile = image => {
-        console.log(image);
+
     }
 
     const settingHeight = () => {
-        let maxHeight = defaultHeight;
+        let maxHeight = DEFAULT_HEIGHT;
         data.existing.forEach(elem => {
             maxHeight = Math.max(maxHeight, elem.pos_y + elem.specifics.curr_height + 100);
         });
@@ -66,7 +67,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defau
                     <img src={currentImage.image} alt="" className="w-100 h-100" />
                 </div>
             </Modal>
-            <WhiteBoard {...{ defaultWidth, height, images }} />
+            <WhiteBoard {...{ DEFAULT_WIDTH, height, images }} />
         </Fragment>
     );
 }

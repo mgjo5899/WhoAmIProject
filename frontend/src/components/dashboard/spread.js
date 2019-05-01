@@ -1,11 +1,11 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Drag } from './drag_and_drop';
 import Axios from 'axios';
-import { SERVER } from '../../config';
+import { SERVER, DEFAULT_WIDTH, DEFAULT_HEIGHT } from '../../config';
 import InfiniteScroll from 'react-infinite-scroller';
 import { WhiteBoard } from './whiteboard';
 
-const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element, showImages, flag }) => {
+const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage, element, showImages, flag }) => {
 
     const [changed, setChanged] = useState([]);
     const [images, setImages] = useState([]);
@@ -21,7 +21,7 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
 
     useEffect(() => {
         if (activeIndex === contentsIndex.spread) {
-            setHeight(defaultHeight);
+            setHeight(DEFAULT_HEIGHT);
             // create set for putting deleted data id
             const deleteIdSet = new Set();
             data.delete.forEach(img => {
@@ -133,7 +133,7 @@ const Spread = ({ next, previous, data, defaultWidth, defaultHeight, activeIndex
                 // loader={<div className="loader" key={0}>Loading ...</div>}
                 threshold={0}
             >
-                <WhiteBoard {...{ defaultWidth, height, images }} />
+                <WhiteBoard {...{ DEFAULT_WIDTH, height, images }} />
             </InfiniteScroll>
             <hr />
             <div className="fixed-bottom card-footer bg-secondary d-flex justify-content-center" style={{ opacity: 0.9 }}>

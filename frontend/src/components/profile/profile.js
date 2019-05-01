@@ -8,7 +8,7 @@ import { next, previous } from '../../store/actions/carousel_actions';
 import { showImages, getExistingImages, setData } from '../../store/actions/data_actions';
 import uuidv4 from 'uuid/v4';
 import Axios from 'axios';
-import { SERVER } from '../../config';
+import { SERVER, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE, DEFAULT_PROFILE_SIZE_VALUE } from '../../config';
 
 const Profile = ({ auth, activeIndex, next, previous, data, setData, getExistingImages, history }) => {
 
@@ -19,7 +19,6 @@ const Profile = ({ auth, activeIndex, next, previous, data, setData, getExisting
         location: '',
         website: ''
     });
-    const [defaultWidth, defaultHeight] = [1000, 500];
     const [loaded, setLoaded] = useState(null);
     const [backup, setBackup] = useState(null);
 
@@ -31,7 +30,7 @@ const Profile = ({ auth, activeIndex, next, previous, data, setData, getExisting
         });
         const profileForm = document.getElementById('profile-form');
         for (const key in profile) {
-            if (key !== 'id') profileForm[key].value = profile[key];
+            profileForm[key].value = profile[key];
         }
     }
 
@@ -83,15 +82,15 @@ const Profile = ({ auth, activeIndex, next, previous, data, setData, getExisting
                 console.log(existingProfileData)
                 const profileElement = {
                     id: existingProfileData ? existingProfileData.id : uuidv4(),
-                    posX: existingProfileData ? existingProfileData.pos_x : Math.floor(Math.random() * (defaultWidth - 200)),
-                    posY: existingProfileData ? existingProfileData.pos_y : Math.floor(Math.random() * (defaultHeight - 200)),
+                    posX: existingProfileData ? existingProfileData.pos_x : Math.floor(Math.random() * (DEFAULT_WIDTH - DEFAULT_SUBTRACTING_VALUE)),
+                    posY: existingProfileData ? existingProfileData.pos_y : Math.floor(Math.random() * (DEFAULT_HEIGHT - DEFAULT_SUBTRACTING_VALUE)),
                     medium: 'whoami',
                     type: 'profile',
                     specifics: {
-                        orig_width: 200,
-                        orig_height: 200,
-                        curr_width: existingProfileData ? existingProfileData.specifics.curr_width : 200,
-                        curr_height: existingProfileData ? existingProfileData.specifics.curr_height : 200,
+                        orig_width: DEFAULT_PROFILE_SIZE_VALUE,
+                        orig_height: DEFAULT_PROFILE_SIZE_VALUE,
+                        curr_width: existingProfileData ? existingProfileData.specifics.curr_width : DEFAULT_PROFILE_SIZE_VALUE,
+                        curr_height: existingProfileData ? existingProfileData.specifics.curr_height : DEFAULT_PROFILE_SIZE_VALUE,
                     },
                     selected: true
                 };
@@ -125,8 +124,6 @@ const Profile = ({ auth, activeIndex, next, previous, data, setData, getExisting
                 next: () => history.push('/'),
                 previous,
                 data,
-                defaultWidth,
-                defaultHeight,
                 activeIndex,
                 contentsIndex,
                 element: { medium: 'whoami' },
