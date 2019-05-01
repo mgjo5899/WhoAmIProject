@@ -217,11 +217,8 @@ def get_whiteboard_data(username=None, email=None, medium=None):
 
             user_profile['specifics'] = {}
 
-            # User profile data
-            user_profile['specifics']['curr_width'] = profile_data[1].curr_width
-            user_profile['specifics']['curr_height'] = profile_data[1].curr_height
-
             # User profile
+            #user_profile['specifics'] = get_user_profile(email)['profile']
             if profile_data[2].profile_image_url != '':
                 user_profile['specifics']['profile_image_url'] = profile_data[2].profile_image_url
             if profile_data[2].bio != '':
@@ -232,6 +229,12 @@ def get_whiteboard_data(username=None, email=None, medium=None):
                 user_profile['specifics']['location'] = profile_data[2].location
             if profile_data[2].website != '':
                 user_profile['specifics']['website'] = profile_data[2].website
+            if profile_data[2].include_email == True:
+                user_profile['specifics']['email'] = user_email
+
+            # User profile data
+            user_profile['specifics']['curr_width'] = profile_data[1].curr_width
+            user_profile['specifics']['curr_height'] = profile_data[1].curr_height
 
             whiteboard_data.append(user_profile)
 
