@@ -6,33 +6,14 @@ import Form from './form';
 import Spread from '../dashboard/spread';
 import { next, previous } from '../../store/actions/carousel_actions';
 import { showImages, getExistingImages, setData } from '../../store/actions/data_actions';
+import { setExistingProfileData, setProfile } from '../../store/actions/profile_action';
 import uuidv4 from 'uuid/v4';
-import Axios from 'axios';
-import { SERVER, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE, DEFAULT_PROFILE_SIZE_VALUE } from '../../config';
+import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE, DEFAULT_PROFILE_SIZE_VALUE } from '../../config';
 
-const Profile = ({ auth, activeIndex, next, previous, data, setData, getExistingImages, history }) => {
+const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, getExistingImages, history, setExistingProfileData, setProfile }) => {
 
-    const [profileData, setProfileData] = useState({
-        profile_image_url: '',
-        bio: '',
-        company: '',
-        location: '',
-        website: ''
-    });
     const [loaded, setLoaded] = useState(null);
     const [backup, setBackup] = useState(null);
-
-    const setExistingProfileData = async () => {
-        const { profile } = (await Axios.get(SERVER + '/user/profile')).data
-        setProfileData({
-            ...profileData,
-            ...profile
-        });
-        const profileForm = document.getElementById('profile-form');
-        for (const key in profile) {
-            profileForm[key].value = profile[key];
-        }
-    }
 
     const deleteProfile = profile => {
         const existingIndex = data.existing.findIndex(elem => elem.id === profile.id) !== -1;
@@ -60,7 +41,7 @@ const Profile = ({ auth, activeIndex, next, previous, data, setData, getExisting
                 setLoaded(false);
                 getProfileSelectedBackUp();
                 (async () => {
-                    await setExistingProfileData();
+                    await setExistingProfileData(document);
                     await getExistingImages(auth, auth.user.username, history);
                     setLoaded(true);
                 })();
@@ -73,6 +54,7 @@ const Profile = ({ auth, activeIndex, next, previous, data, setData, getExisting
     }, [activeIndex]);
 
     useEffect(() => {
+        console.log(loaded)
         if (loaded) {
             // when data exists, execute the command, giving conditions to useEffect
             if (backup.selected.length > 0) {
@@ -111,15 +93,15 @@ const Profile = ({ auth, activeIndex, next, previous, data, setData, getExisting
     const items = [
         <Form
             {...{
-                profileData,
-                setProfileData,
+                profile,
+                setProfile,
                 auth,
                 next
             }}
         />,
         <Spread
             {...{
-                profile: profileData,
+                profile,
                 showImages,
                 next: () => history.push('/'),
                 previous,
@@ -160,14 +142,17 @@ const Profile = ({ auth, activeIndex, next, previous, data, setData, getExisting
 const mapStateToProps = state => ({
     auth: state.auth,
     activeIndex: state.carousel.profileActiveIndex,
-    data: state.data
+    data: state.data,
+    profile: state.profile
 })
 
 const mapDispatchToProps = dispatch => ({
     next: () => dispatch(next('PROFILE')),
     previous: () => dispatch(previous('PROFILE')),
     getExistingImages: (auth, username, history) => dispatch(getExistingImages(auth, username, history)),
-    setData: data => dispatch(setData(data))
+    setData: data => dispatch(setData(data)),
+    setExistingProfileData: () => dispatch(setExistingProfileData()),
+    setProfile: profile => dispatch(setProfile(profile))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
