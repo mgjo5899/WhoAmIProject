@@ -43,10 +43,12 @@ def get_user_profile(email, internal_use=False):
                 rtn_val['profile']['website'] = user_profile.website
             if user_profile.profile_image_url != '':
                 rtn_val['profile']['profile_image_url'] = user_profile.profile_image_url
+            if user_profile.include_email == True:
+                rtn_Val['profile']['email'] = user_profile.email
 
     return rtn_val
 
-def update_user_profile(email, profile_image_url, bio, company, location, website):
+def update_user_profile(email, profile_image_url, bio, company, location, website, include_email):
     user = get_user(email=email)
     rtn_val = {}
 
@@ -58,7 +60,7 @@ def update_user_profile(email, profile_image_url, bio, company, location, websit
         if user_profile == None: # New entry
             user_profile = UserProfile(email=email, profile_image_url=profile_image_url, \
                                        bio=bio, company=company, location=location, \
-                                       website=website)
+                                       website=website, include_email=include_email)
             db.add(user_profile)
         else:
             user_profile.profile_image_url = profile_image_url
@@ -66,6 +68,7 @@ def update_user_profile(email, profile_image_url, bio, company, location, websit
             user_profile.company = company
             user_profile.location = location
             user_profile.website = website
+            user_profile.include_email = include_email
         db.commit()
 
         rtn_val['status'] = True
@@ -83,6 +86,7 @@ def update_user_profile(email, profile_image_url, bio, company, location, websit
             rtn_val['profile']['location'] = location
         if website != '':
             rtn_val['profile']['website'] = website
+        rtn_val['profile']['include_email'] = include_email
 
     return rtn_val
 
@@ -257,7 +261,7 @@ def get_whiteboard_data(username=None, email=None, medium=None):
             else:
                 curr_insta_data['specifics'] = {}
                 curr_insta_data['specifics']['raw_content_url'] = insta_content.raw_content_url
-                curr_insta_data['specifics']['content_url'] = insta_content.instagram_url
+                curr_insta_data['specifics']['content_url'] = insta_content.content_url
                 curr_insta_data['specifics']['orig_width'] = insta_content.orig_width
                 curr_insta_data['specifics']['orig_height'] = insta_content.orig_height
                 curr_insta_data['specifics']['curr_width'] = insta_content.curr_width
@@ -291,7 +295,7 @@ def get_whiteboard_data(username=None, email=None, medium=None):
                 curr_facebook_data['specifics'] = {}
                 curr_facebook_data['specifics']['raw_content_url'] = \
                                                                facebook_content.raw_content_url
-                curr_facebook_data['specifics']['content_url'] = facebook_content.facebook_url
+                curr_facebook_data['specifics']['content_url'] = facebook_content.content_url
                 curr_facebook_data['specifics']['orig_width'] = facebook_content.orig_width
                 curr_facebook_data['specifics']['orig_height'] = facebook_content.orig_height
                 curr_facebook_data['specifics']['curr_width'] = facebook_content.curr_width
@@ -351,7 +355,7 @@ def add_facebook_content(email, new_content):
 
             new_facebook_content = FacebookData(whiteboard_data_id=whiteboard_data_id, \
                                                   raw_content_url=specifics['raw_content_url'], \
-                                                  facebook_url=specifics['content_url'], \
+                                                  content_url=specifics['content_url'], \
                                                   orig_width=specifics['orig_width'], \
                                                   orig_height=specifics['orig_height'], \
                                                   curr_width=specifics['curr_width'], \
@@ -397,7 +401,7 @@ def add_instagram_content(email, new_content):
 
             new_instagram_content = InstagramData(whiteboard_data_id=whiteboard_data_id, \
                                                   raw_content_url=specifics['raw_content_url'], \
-                                                  instagram_url=specifics['content_url'], \
+                                                  content_url=specifics['content_url'], \
                                                   orig_width=specifics['orig_width'], \
                                                   orig_height=specifics['orig_height'], \
                                                   curr_width=specifics['curr_width'], \

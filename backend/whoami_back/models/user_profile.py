@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column, ForeignKey, Boolean
 from sqlalchemy import String, Integer
 
 from whoami_back.models.base import Base
@@ -16,3 +16,4 @@ class UserProfile(Base):
     company = Column(String(250), nullable=False)
     location = Column(String(250), nullable=False)
     website = Column(String(250), nullable=False)
+    include_email = Column(Boolean, default=False, nullable=False)

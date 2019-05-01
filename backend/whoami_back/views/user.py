@@ -34,13 +34,11 @@ def user_profile():
             rtn_val = manage.get_user_profile(session['email'])
         elif request.method == 'POST':
             if 'profile_image_url' in req and 'bio' in req and 'company' in req and \
-                    'location' in req and 'website' in req:
-                rtn_val = manage.update_user_profile(
-                                                        session['email'],
-                                                        req['profile_image_url'], req['bio'],
-                                                        req['company'], req['location'],
-                                                        req['website']
-                                                    )
+                    'location' in req and 'website' in req and 'include_email' in req:
+                rtn_val = manage.update_user_profile(session['email'],
+                                                     req['profile_image_url'], req['bio'],
+                                                     req['company'], req['location'],
+                                                     req['website'], req['include_email'])
             else:
                 rtn_val['status'] = False
                 rtn_val['message'] = "Request is missing necessary"

@@ -12,7 +12,7 @@ class InstagramData(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     whiteboard_data_id = Column(Integer, ForeignKey(WhiteboardData.id), nullable=False)
     raw_content_url = Column(String(300), nullable=False)
-    instagram_url = Column(String(300), nullable=False)
+    content_url = Column(String(300), nullable=False)
     orig_width = Column(Integer, nullable=False)
     orig_height = Column(Integer, nullable=False)
 
