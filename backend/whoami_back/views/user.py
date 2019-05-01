@@ -41,7 +41,7 @@ def user_profile():
                                                      req['website'], req['include_email'])
             else:
                 rtn_val['status'] = False
-                rtn_val['message'] = "Request is missing necessary"
+                rtn_val['message'] = "Request is missing necessary data"
     else:
         rtn_val['status'] = False
         rtn_val['message'] = "Could not find the user email in the session cookie"

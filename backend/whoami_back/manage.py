@@ -44,7 +44,7 @@ def get_user_profile(email, internal_use=False):
             if user_profile.profile_image_url != '':
                 rtn_val['profile']['profile_image_url'] = user_profile.profile_image_url
             if user_profile.include_email == True:
-                rtn_Val['profile']['email'] = user_profile.email
+                rtn_val['profile']['email'] = user_profile.email
 
     return rtn_val
 
