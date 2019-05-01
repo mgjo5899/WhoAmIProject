@@ -5,6 +5,12 @@ const SERVER_HOSTNAME = 'http://localhost';
 const SERVER_PORT = 8000;
 export const SERVER = `${SERVER_HOSTNAME}:${SERVER_PORT}`;
 export const SECRET_KEY = "gnsalswjddma"; // 훈민정음
+export const DEFAULT_WIDTH = 1000;
+export const DEFAULT_HEIGHT = 500;
+export const DEFAULT_SUBTRACTING_VALUE = 200;
+export const DEFAULT_PROFILE_SIZE_VALUE = 200;
+
+
 
 const SOCIAL_MEDIAS = [
     {
