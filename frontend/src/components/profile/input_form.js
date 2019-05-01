@@ -41,7 +41,7 @@ const InputForm = ({ auth, readOnly, profile }) => {
                 <input type="email" className="form-control" id="email" readOnly value={auth.user.email} />
             </div>
             <div className="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="show-email" name="email-checked" className="custom-control-input" checked />
+                <input type="radio" id="show-email" name="email-checked" className="custom-control-input" defaultChecked />
                 <label className="custom-control-label" htmlFor="show-email">Show email</label>
             </div>
             <div className="custom-control custom-radio custom-control-inline">
