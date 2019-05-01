@@ -1,33 +1,18 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Drag } from './drag_and_drop';
 import Axios from 'axios';
-import { SERVER } from '../../config';
+import { SERVER, DEFAULT_WIDTH, DEFAULT_HEIGHT } from '../../config';
 import InfiniteScroll from 'react-infinite-scroller';
 import { WhiteBoard } from './whiteboard';
 
-const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, activeIndex, contentsIndex, deleteImage, element, showImages, flag }) => {
+const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage, element, showImages, flag }) => {
 
     const [changed, setChanged] = useState([]);
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
 
     const handleClose = image => {
-        // if it is closing profile element, then just filter it out
-        if (image.medium === 'whoami' && image.type === 'profile') {
-            // if the profile element is already in there, put it into delete data
-            // find index of the data to judge
-            const existingIndex = data.existing.findIndex(img => img.id === image.id);
-            // if there is an index, then remove selected
-            if (existingIndex !== -1) {
-                setData({ existing: data.existing.filter(img => img.id !== data.existing[existingIndex].id) });
-            } else {
-                // filter out of selected
-                deleteImage(image);
-            }
-        } else {
-            // just make it regular
-            deleteImage(image);
-        }
+        deleteImage(image);
     }
 
     useEffect(() => {
@@ -36,7 +21,7 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
 
     useEffect(() => {
         if (activeIndex === contentsIndex.spread) {
-            setHeight(defaultHeight);
+            setHeight(DEFAULT_HEIGHT);
             // create set for putting deleted data id
             const deleteIdSet = new Set();
             data.delete.forEach(img => {
@@ -55,7 +40,6 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
         // iterate through every array, get maximum and return 200 added
         images.forEach(image => {
             maxHeight = Math.max(maxHeight, image.props['data-y'] + 300);
-            console.log(maxHeight)
         });
         return maxHeight;
     }
@@ -66,16 +50,18 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
 
     const addData = async () => {
         try {
-            await Axios.post(SERVER + '/whiteboard/user_data', {
+            console.log(data);
+            console.log((await Axios.post(SERVER + '/whiteboard/user_data', {
                 new_contents: data.new.map(elem => {
+                    console.log(elem)
                     return {
                         type: elem.type,
                         medium: elem.medium,
                         pos_x: changed[elem.id] ? changed[elem.id].posX : elem.posX,
                         pos_y: changed[elem.id] ? changed[elem.id].posY : elem.posY,
-                        [elem.specific]: {
+                        specifics: {
                             raw_content_url: elem.src,
-                            [elem.elementSourceUrl]: elem.sourceUrl,
+                            content_url: elem.content_url,
                             orig_width: elem.orig_width,
                             orig_height: elem.orig_height,
                             curr_width: changed[elem.id] ? changed[elem.id].width : 200,
@@ -83,7 +69,7 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
                         }
                     };
                 })
-            });
+            })).data);
         } catch (error) {
             console.log(error);
         }
@@ -95,6 +81,7 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
         data.existing.forEach(elem => {
             existingIdSet.add(elem.id);
         });
+        console.log(changed)
         try {
             await Axios.put(SERVER + '/whiteboard/user_data', {
                 updated_contents: images.filter(image => existingIdSet.has(image.props.id) && changed[image.props.id]).map(image => ({
@@ -102,8 +89,10 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
                     medium: image.props.medium,
                     pos_x: changed[image.props.id].posX,
                     pos_y: changed[image.props.id].posY,
-                    curr_width: changed[image.props.id].width,
-                    curr_height: changed[image.props.id].height
+                    specifics: {
+                        curr_width: changed[image.props.id].width,
+                        curr_height: changed[image.props.id].height
+                    }
                 })
                 )
             });
@@ -144,7 +133,7 @@ const Spread = ({ next, previous, data, setData, defaultWidth, defaultHeight, ac
                 // loader={<div className="loader" key={0}>Loading ...</div>}
                 threshold={0}
             >
-                <WhiteBoard {...{ defaultWidth, height, images }} />
+                <WhiteBoard {...{ DEFAULT_WIDTH, height, images }} />
             </InfiniteScroll>
             <hr />
             <div className="fixed-bottom card-footer bg-secondary d-flex justify-content-center" style={{ opacity: 0.9 }}>

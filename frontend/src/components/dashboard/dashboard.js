@@ -3,42 +3,56 @@ import { connect } from 'react-redux';
 import { Modal } from 'reactstrap';
 import { getExistingImages, isOwner } from '../../store/actions/data_actions';
 import { PlusButton, WhiteBoard } from './whiteboard';
+import { withRouter } from 'react-router';
+import { DEFAULT_WIDTH, DEFAULT_HEIGHT } from '../../config';
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defaultHeight, username, auth, showImages, getExistingImages }) => {
+const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, showImages, getExistingImages, history }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
     const [modal, setModal] = useState(false);
     const [currentImage, setCurrentImage] = useState({});
 
+
     useEffect(() => {
         if (activeIndex === contentsIndex.dashboard) {
             // when first loaded to dashboard, get existing data from server
-            setHeight(defaultHeight);
-            getExistingImages(auth, username);
+            setHeight(DEFAULT_HEIGHT);
+            getExistingImages(auth, username, history);
         }
     }, [activeIndex]);
 
     useEffect(() => {
-        if (data.existing) {
-            // setting images forming to right elements
-            setImages(showImages(data.existing, toggle, 0));
-            console.log(data.existing)
-        }
+        console.log(data);
+        // setting images forming to right elements
+        setImages(showImages(data.existing, toggle, 0));
         settingHeight();
     }, [data.existing]);
 
     const toggle = image => {
         if (modal) {
             setCurrentImage({});
-        } else {
-            setCurrentImage({ ...currentImage, image: image.specifics.raw_content_url, source: image.specifics.content_url });
+        }
+        else {
+            if (image.type === 'profile') {
+                toggleProfile(image);
+            } else {
+                toggleImage(image);
+            }
         }
         setModal(!modal);
     }
 
+    const toggleImage = image => {
+        setCurrentImage({ ...currentImage, image: image.specifics.raw_content_url, source: image.specifics.content_url });
+    }
+
+    const toggleProfile = image => {
+
+    }
+
     const settingHeight = () => {
-        let maxHeight = defaultHeight;
+        let maxHeight = DEFAULT_HEIGHT;
         data.existing.forEach(elem => {
             maxHeight = Math.max(maxHeight, elem.pos_y + elem.specifics.curr_height + 100);
         });
@@ -53,7 +67,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, defaultWidth, defau
                     <img src={currentImage.image} alt="" className="w-100 h-100" />
                 </div>
             </Modal>
-            <WhiteBoard {...{ defaultWidth, height, images }} />
+            <WhiteBoard {...{ DEFAULT_WIDTH, height, images }} />
         </Fragment>
     );
 }
@@ -66,4 +80,4 @@ const mapDispatchToProps = dispatch => ({
     getExistingImages: (auth, username, history) => dispatch(getExistingImages(auth, username, history)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Dashboard));

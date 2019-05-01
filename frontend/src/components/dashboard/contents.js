@@ -1,10 +1,10 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { SERVER } from '../../config';
+import { SERVER, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE } from '../../config';
 import Axios from 'axios';
 import Gallery from 'react-grid-gallery';
 import uuidv4 from 'uuid/v4';
 
-const Contents = ({ next, previous, element, contents, setContents, data, setData, activeIndex, contentsIndex, deleteImage, defaultWidth, defaultHeight }) => {
+const Contents = ({ next, previous, element, contents, setContents, data, setData, activeIndex, contentsIndex, deleteImage }) => {
 
     const [markedImage, setMarkedImage] = useState(false);
     const [spinner, setSpinner] = useState(false);
@@ -27,22 +27,20 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
             setContents(
                 data.images.map(image => ({
                     id: image.id,
-                    src: image.src,
-                    thumbnail: image.src,
-                    thumbnailWidth: image.orig_width,
-                    thumbnailHeight: image.orig_height,
-                    posX: image.pos_x !== undefined ? image.pos_x : Math.floor(Math.random() * (defaultWidth - 200)),
-                    posY: image.pos_y !== undefined ? image.pos_y : Math.floor(Math.random() * (defaultHeight - 200)),
+                    src: image.specifics.raw_content_url,
+                    thumbnail: image.specifics.raw_content_url,
+                    thumbnailWidth: image.specifics.orig_width,
+                    thumbnailHeight: image.specifics.orig_height,
+                    posX: image.pos_x !== undefined ? image.pos_x : Math.floor(Math.random() * (DEFAULT_WIDTH - DEFAULT_SUBTRACTING_VALUE)),
+                    posY: image.pos_y !== undefined ? image.pos_y : Math.floor(Math.random() * (DEFAULT_HEIGHT - DEFAULT_SUBTRACTING_VALUE)),
                     isSelected: false,
                     medium: image.medium,
-                    sourceUrl: image.sourceUrl,
+                    content_url: image.specifics.content_url,
                     type: image.type,
-                    specific: element.specific,
-                    orig_width: image.orig_width,
-                    orig_height: image.orig_height,
-                    curr_width: image.curr_width,
-                    curr_height: image.curr_height,
-                    elementSourceUrl: element.sourceUrl
+                    orig_width: image.specifics.orig_width,
+                    orig_height: image.specifics.orig_height,
+                    curr_width: image.specifics.curr_width,
+                    curr_height: image.specifics.curr_height,
                 }))
             );
             // give signal to contents
@@ -88,7 +86,7 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
             console.log(userData)
             if (!userData.status) throw new Error(userData.message);
             // fetching contents
-            const contentsData = userData[element.contents];
+            const contentsData = userData.contents;
             setData({
                 ...data,
                 images: (
@@ -96,16 +94,17 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
                         {
                             id: content.id || uuidv4(),
                             medium: element.medium,
-                            src: content.raw_content_url,
-                            orig_width: content.orig_width,
-                            orig_height: content.orig_height,
                             type: content.type,
-                            sourceUrl: content[element.sourceUrl],
                             pos_x: content.pos_x,
                             pos_y: content.pos_y,
-                            curr_width: content.curr_width,
-                            curr_height: content.curr_height
-                            // caption: data.caption.text
+                            specifics: {
+                                orig_width: content.orig_width,
+                                orig_height: content.orig_height,
+                                raw_content_url: content.raw_content_url,
+                                content_url: content.content_url,
+                                curr_width: content.curr_width,
+                                curr_height: content.curr_height
+                            }
                         }
                     ))
                 )

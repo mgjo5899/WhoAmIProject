@@ -12,15 +12,13 @@ const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex
     const [element, setElement] = useState(null);
     const [contents, setContents] = useState([]);
 
+
     const contentsIndex = {
         dashboard: 0,
         connect_to: 1,
         contents: 2,
         spread: 3
     }
-
-    const [defaultWidth, defaultHeight] = [1000, 500];
-
     const deleteImage = img => {
         // handle the case when it is not previously selected medium
         const selectedMedium = img.isSelected !== undefined;
@@ -65,7 +63,7 @@ const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex
 
     // list of components to use programmatically
     const items = [
-        <Dashboard {...props} defaultWidth={defaultWidth} defaultHeight={defaultHeight} resetData={resetData} username={match.params.username} showImages={showImages} />,
+        <Dashboard {...props} resetData={resetData} username={match.params.username} showImages={showImages} />,
         <ConnectTo {...props} setElement={setElement} />,
         <Contents
             {...props}
@@ -73,13 +71,9 @@ const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex
             contents={contents}
             setContents={setContents}
             deleteImage={deleteImage}
-            defaultWidth={defaultWidth}
-            defaultHeight={defaultHeight}
         />,
         <Spread
             {...props}
-            defaultWidth={defaultWidth}
-            defaultHeight={defaultHeight}
             deleteImage={deleteImage}
             element={element}
             showImages={showImages}
@@ -112,6 +106,7 @@ const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex
 }
 
 const mapStateToProps = state => ({
+    auth: state.auth,
     data: state.data,
     activeIndex: state.carousel.dashboardActiveIndex
 })

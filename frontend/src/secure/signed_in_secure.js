@@ -1,5 +1,5 @@
-const SignedInSecure = (props, link) => {
-    !props.auth.user.email && props.history.push(link);
+const signedInSecure = ({ auth, history }, link) => {
+    !auth.user.email && history.push(link);
 }
 
-export default SignedInSecure;
+export default signedInSecure;
