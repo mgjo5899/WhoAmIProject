@@ -134,7 +134,6 @@ def get_user_instagram_data():
                 rtn_val['contents'] = refined_contents
                 rtn_val['email'] = session['email']
 
-    print(rtn_val)
     return jsonify(rtn_val)
 
 @instagram.route('/instagram/get_access_token', methods=['GET'])
