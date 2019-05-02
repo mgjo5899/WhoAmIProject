@@ -10,7 +10,7 @@ const activeIndexFlagMap = {
     },
     PROFILE: {
         indexType: 'profileActiveIndex',
-        indexSize: 2
+        indexSize: 4
     }
 }
 
@@ -21,7 +21,7 @@ const moveIndex = (state, action, flag) => {
     const activeIndex = state[indexType];
     return {
         ...state,
-        [indexType]: (activeIndex + operator) % activeIndexFlagMap[activeIndexFlag].indexSize
+        [indexType]: (((activeIndex + operator) % activeIndexFlagMap[activeIndexFlag].indexSize) + activeIndexFlagMap[activeIndexFlag].indexSize) % activeIndexFlagMap[activeIndexFlag].indexSize
     }
 }
 
