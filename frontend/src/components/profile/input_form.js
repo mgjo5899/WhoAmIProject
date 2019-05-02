@@ -1,16 +1,21 @@
 import React, { Fragment, useEffect } from 'react';
 
-const InputForm = ({ auth, readOnly, profile }) => {
+const InputForm = ({ auth, readOnly, profile, next }) => {
 
     useEffect(() => {
         if (readOnly) {
-            ['show-email', 'hide-email', 'email'].forEach(email => {
+            ['show-email', 'hide-email', 'email', 'upload-button'].forEach(email => {
                 document.getElementById(email).parentElement.style.display = 'none';
             })
             for (const key in profile) {
                 const element = document.getElementById(key);
-                console.log(element)
-                if (element) {
+                console.log(key, element)
+                if (key === 'profile_image_url') {
+                    const profileElement = document.getElementById('profile-image');
+                    profileElement.parentElement.style.display = 'block';
+                    profileElement.parentElement.src = profile[key];
+                    document.getElementById('upload-button').style.display = 'none';
+                } else if (element) {
                     element.parentElement.style.display = 'none';
                     if (profile[key]) {
                         element.parentElement.style.display = 'block';
@@ -23,11 +28,19 @@ const InputForm = ({ auth, readOnly, profile }) => {
     }, []);
 
     useEffect(() => {
-        console.log(profile);
+        console.log(profile)
     }, [profile])
 
     return (
         <Fragment>
+            <div className="form-group">
+                {
+                    profile.profile_image_url && (
+                        <img id="profile-image" src={profile.profile_image_url} alt="" className="img-thumbnail m-2 d-block mx-auto" style={{ width: 200, height: 'auto' }} />
+                    )
+                }
+                <button type="button" id="upload-button" className="btn btn-primary" onClick={next}>Upload photo</button>
+            </div>
             <div className="form-group">
                 <label htmlFor="bio">Bio</label>
                 <textarea className="form-control" id="bio" placeholder="Bio" />

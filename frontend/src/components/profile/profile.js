@@ -3,30 +3,36 @@ import Navbar from '../layout/navbar';
 import { connect } from 'react-redux';
 import { CarouselItem, Carousel } from 'reactstrap';
 import Form from './form';
-import Spread from '../dashboard/spread';
 import { next, previous } from '../../store/actions/carousel_actions';
 import { showImages, getExistingImages, setData } from '../../store/actions/data_actions';
 import { setExistingProfileData, setProfile } from '../../store/actions/profile_action';
 import uuidv4 from 'uuid/v4';
 import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE, DEFAULT_PROFILE_SIZE_VALUE } from '../../config';
 import signedInSecure from '../../secure/signed_in_secure';
+import { ConnectTo, Spread } from '../dashboard';
+import ProfileContents from './profile_contents';
 
 const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, getExistingImages, history, setExistingProfileData, setProfile }) => {
 
     const [loaded, setLoaded] = useState(false);
+    // const [profileLoaded, setProfileLoaded] = useState(false);
     const [backup, setBackup] = useState(null);
+    const [element, setElement] = useState(null);
+    const [profileUrlBackup, setProfileUrlBackup] = useState(null);
 
     const deleteProfile = profile => {
         const existingIndex = data.existing.findIndex(elem => elem.id === profile.id) !== -1;
-        console.log(existingIndex)
         if (existingIndex) {
-            console.log(profile)
             setData({ delete: [...data.delete, profile] });
         } else {
             setData({ new: data.new.filter(elem => elem.id !== profile.id) });
         }
         setData({ selected: data.selected.filter(selectedData => selectedData.id !== profile.id) });
     }
+
+    useEffect(() => {
+        console.log(data.selected)
+    }, [data.selected])
 
     useEffect(() => {
         signedInSecure({ auth, history }, '/');
@@ -38,23 +44,19 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
             selected: [...data.selected],
             new: [...data.new]
         });
+        setProfileUrlBackup({ profile_image_url: profile.profile_image_url });
     }
 
     useEffect(() => {
-        switch (activeIndex) {
-            case contentsIndex.profile:
-                setLoaded(false);
-                getProfileSelectedBackUp();
-                (async () => {
-                    await setExistingProfileData();
-                    await getExistingImages(auth, auth.user.username, history);
-                    setLoaded(true);
-                })();
-                break;
-            case contentsIndex.spread:
-                break;
-            default:
-                break;
+        console.log(activeIndex)
+        if (activeIndex === contentsIndex.profile) {
+            setLoaded(false);
+            getProfileSelectedBackUp();
+            (async () => {
+                await setExistingProfileData();
+                await getExistingImages(auth, auth.user.username, history);
+                setLoaded(true);
+            })();
         }
     }, [activeIndex]);
 
@@ -64,6 +66,7 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
             // when data exists, execute the command, giving conditions to useEffect
             if (backup.selected.length > 0) {
                 setData(backup);
+                setProfile(profileUrlBackup);
             } else {
                 const existingProfileData = data.existing.find(existingData => existingData.type === 'profile');
                 console.log(existingProfileData)
@@ -91,7 +94,9 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
 
     const contentsIndex = {
         profile: 0,
-        spread: 1,
+        connect_to: 1,
+        contents: 2,
+        spread: 3
     }
 
     // list of components to use programmatically
@@ -101,7 +106,28 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
                 profile,
                 setProfile,
                 auth,
-                next
+                next,
+                previous
+            }}
+        />,
+        <ConnectTo
+            {...{
+                next,
+                previous,
+                setElement,
+                activeIndex,
+                contentsIndex
+            }}
+        />,
+        <ProfileContents
+            {...{
+                profile,
+                setProfile,
+                next,
+                previous,
+                element,
+                activeIndex,
+                contentsIndex,
             }}
         />,
         <Spread
@@ -109,7 +135,7 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
                 profile,
                 showImages,
                 next: () => history.push('/'),
-                previous,
+                previous: () => { previous(); previous(); previous(); },
                 data,
                 activeIndex,
                 contentsIndex,

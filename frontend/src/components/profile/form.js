@@ -4,7 +4,7 @@ import { SERVER } from '../../config';
 import { Modal, ModalBody, ModalFooter } from 'reactstrap';
 import InputForm from './input_form';
 
-const Form = ({ profile, setProfile, auth, next }) => {
+const Form = ({ profile, setProfile, auth, next, previous }) => {
 
     const [modal, setModal] = useState(false);
     const [message, setMessage] = useState('');
@@ -60,9 +60,9 @@ const Form = ({ profile, setProfile, auth, next }) => {
                 </ModalFooter>
             </Modal>
             <form id="profile-form" className="w-50 mx-auto" onChange={handleChange}>
-                <InputForm auth={auth} />
+                <InputForm auth={auth} next={next} profile={profile} />
                 <button type="submit" className="btn btn-primary m-2" onClick={handleSave}>Save</button>
-                <button type="button" className="btn btn-primary m-2" onClick={next}>Spread profile</button>
+                <button type="button" className="btn btn-primary m-2" onClick={previous}>Spread profile</button>
             </form>
         </Fragment>
     );
