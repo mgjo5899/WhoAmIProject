@@ -35,6 +35,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
     const toggle = image => {
         if (modal) {
             setCurrentImage({});
+            setModalContent(null);
             // setModalContent(null);
         }
         else {
@@ -60,18 +61,14 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
     }, [currentImage]);
 
     const toggleProfile = async image => {
-        console.log(image)
-        const userProfile = {};
-        for (const key in profile) {
-            userProfile[key] = image.specifics[key] ? image.specifics[key] : '';
-        }
         setModalContent(
             <div className="card">
                 <div className="card-header">
                     Profile
                 </div>
                 <div className="card-body">
-                    <InputForm auth={auth} readOnly={true} profile={userProfile} />
+                    <InputForm auth={auth} readOnly={true} profile={image.specifics} />
+                    <button className="btn btn-danger" onClick={() => setModal(modal => !modal)}>Close</button>
                 </div>
             </div>
         )
