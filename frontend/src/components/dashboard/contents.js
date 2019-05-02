@@ -21,36 +21,34 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
 
     // call when image loading changes
     useEffect(() => {
-        if (data.images && data.images.length > 0 && element) {
-            // make the form for making gallery
-            // setting contents which would display on the screen
-            setContents(
-                data.images.map(image => ({
-                    id: image.id,
-                    src: image.specifics.raw_content_url,
-                    thumbnail: image.specifics.raw_content_url,
-                    thumbnailWidth: image.specifics.orig_width,
-                    thumbnailHeight: image.specifics.orig_height,
-                    posX: image.pos_x !== undefined ? image.pos_x : Math.floor(Math.random() * (DEFAULT_WIDTH - DEFAULT_SUBTRACTING_VALUE)),
-                    posY: image.pos_y !== undefined ? image.pos_y : Math.floor(Math.random() * (DEFAULT_HEIGHT - DEFAULT_SUBTRACTING_VALUE)),
-                    isSelected: false,
-                    medium: image.medium,
-                    type: image.type,
-                    specifics: {
-                        orig_width: image.specifics.orig_width,
-                        orig_height: image.specifics.orig_height,
-                        curr_width: image.specifics.curr_width,
-                        curr_height: image.specifics.curr_height,
-                        content_url: image.specifics.content_url,
-                        raw_content_url: image.specifics.raw_content_url
-                    }
-                }))
-            );
-            // give signal to contents
-            setMarkedImage(false);
-            // turn off spinner
-            setSpinner(false);
-        }
+        // make the form for making gallery
+        // setting contents which would display on the screen
+        setContents(
+            data.images.map(image => ({
+                id: image.id,
+                src: image.specifics.raw_content_url,
+                thumbnail: image.specifics.raw_content_url,
+                thumbnailWidth: image.specifics.orig_width,
+                thumbnailHeight: image.specifics.orig_height,
+                posX: image.pos_x !== undefined ? image.pos_x : Math.floor(Math.random() * (DEFAULT_WIDTH - DEFAULT_SUBTRACTING_VALUE)),
+                posY: image.pos_y !== undefined ? image.pos_y : Math.floor(Math.random() * (DEFAULT_HEIGHT - DEFAULT_SUBTRACTING_VALUE)),
+                isSelected: false,
+                medium: image.medium,
+                type: image.type,
+                specifics: {
+                    orig_width: image.specifics.orig_width,
+                    orig_height: image.specifics.orig_height,
+                    curr_width: image.specifics.curr_width,
+                    curr_height: image.specifics.curr_height,
+                    content_url: image.specifics.content_url,
+                    raw_content_url: image.specifics.raw_content_url
+                }
+            }))
+        );
+        // give signal to contents
+        setMarkedImage(false);
+        // turn off spinner
+        setSpinner(false);
     }, [data.images]);
 
     useEffect(() => {
@@ -75,7 +73,6 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
         );
         // selected marking from contents
         setData({
-            ...data,
             selected: contents.filter(content => content.isSelected)
         });
         setMarkedImage(true);
@@ -91,7 +88,6 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
             // fetching contents
             const contentsData = userData.contents;
             setData({
-                ...data,
                 images: (
                     contentsData.map(content => (
                         {

@@ -61,6 +61,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
     }, [currentImage]);
 
     const toggleProfile = async image => {
+        console.log(image)
         setModalContent(
             <div className="card">
                 <div className="card-header">
