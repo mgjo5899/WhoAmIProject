@@ -4,12 +4,16 @@ const InputForm = ({ auth, readOnly, profile }) => {
 
     useEffect(() => {
         if (readOnly) {
+            ['show-email', 'hide-email', 'email'].forEach(email => {
+                document.getElementById(email).parentElement.style.display = 'none';
+            })
             for (const key in profile) {
                 const element = document.getElementById(key);
+                console.log(element)
                 if (element) {
-                    if (!profile[key]) {
-                        element.parentElement.style.display = 'none';
-                    } else {
+                    element.parentElement.style.display = 'none';
+                    if (profile[key]) {
+                        element.parentElement.style.display = 'block';
                         element.value = profile[key];
                         element.readOnly = true;
                     }

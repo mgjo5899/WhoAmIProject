@@ -48,8 +48,8 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
                 (async () => {
                     await setExistingProfileData();
                     await getExistingImages(auth, auth.user.username, history);
+                    setLoaded(true);
                 })();
-                setLoaded(true);
                 break;
             case contentsIndex.spread:
                 break;
@@ -59,7 +59,7 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
     }, [activeIndex]);
 
     useEffect(() => {
-        console.log(loaded)
+        console.log(loaded, data)
         if (loaded) {
             // when data exists, execute the command, giving conditions to useEffect
             if (backup.selected.length > 0) {

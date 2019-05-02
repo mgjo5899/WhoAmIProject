@@ -35,7 +35,6 @@ const Form = ({ profile, setProfile, auth, next }) => {
     const handleChange = e => {
         e.persist();
         if (e.target.id === 'show-email') {
-            console.log('printhere')
             setProfile({
                 include_email: true
             });
@@ -48,7 +47,6 @@ const Form = ({ profile, setProfile, auth, next }) => {
                 [e.target.id]: e.target.value
             });
         }
-        console.log(profile)
     }
 
     return (
