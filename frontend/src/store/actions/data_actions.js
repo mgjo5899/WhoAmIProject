@@ -62,7 +62,7 @@ export const showImages = (imageData, clickFunc, flag) => {
                         )
                         : (
                             <div className="card">
-                                <h1 style={{ width: 'auto', height: 'auto' }}>Profile</h1>
+                                <h1 style={{ width: 'auto', height: 'auto', userSelect: 'none' }}>Profile</h1>
                             </div>
                         )
                 }
