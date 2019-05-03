@@ -31,13 +31,13 @@ const InputForm = ({ auth, readOnly, profile, next, setProfile }) => {
         <Fragment>
             <div className="form-group">
                 <div className="d-flex justify-content-center">
-                    <div className="d-inline-flex position-relative">
+                    <div className="position-relative">
                         <img
                             id="profile-image"
                             src={profile.profile_image_url ? profile.profile_image_url : AnonymousUser}
                             alt=""
                             className="img-thumbnail mx-auto rounded-circle"
-                            style={{ width: DEFAULT_PROFILE_SIZE_VALUE, height: DEFAULT_PROFILE_SIZE_VALUE }}
+                            style={{ width: DEFAULT_PROFILE_SIZE_VALUE, height: 'auto' }}
                             onClick={!readOnly ? next : undefined}
                         />
                         {
