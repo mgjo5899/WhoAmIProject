@@ -42,32 +42,32 @@ const InputForm = ({ auth, readOnly, profile, next }) => {
                 <button type="button" id="upload-button" className="btn btn-primary" onClick={next}>Upload photo</button>
             </div>
             <div className="form-group">
-                <label htmlFor="bio">Bio</label>
-                <textarea className="form-control" id="bio" placeholder="Bio" />
+                <h5 htmlFor="bio">Bio</h5>
+                {readOnly ? <p id="bio">{profile.bio}</p> : <input type="text" className="form-control" id="bio" placeholder="Bio" />}
             </div>
             <div className="form-group">
-                <label htmlFor="company">Company</label>
-                <input type="text" className="form-control" id="company" placeholder="Company" />
+                <h5 htmlFor="company">Company</h5>
+                {readOnly ? <p id="company">{profile.company}</p> : <input type="text" className="form-control" id="company" placeholder="Company" />}
             </div>
             <div className="form-group">
-                <label htmlFor="location">Location</label>
-                <input type="text" className="form-control" id="location" placeholder="Location" />
+                <h5 htmlFor="location">Location</h5>
+                {readOnly ? <p id="location">{profile.location}</p> : <input type="text" className="form-control" id="location" placeholder="Location" />}
             </div>
             <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input type="email" className="form-control" id="email" readOnly value={auth.user.email} />
+                <h5 htmlFor="email">Email</h5>
+                {readOnly ? <p id="email">{profile.email}</p> : <input type="text" className="form-control" id="email" readOnly value={auth.user.email} />}
             </div>
             <div className="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="show-email" name="email-checked" className="custom-control-input" defaultChecked />
+                <input type="radio" id="show-email" name="email-checked" className="custom-control-input" defaultChecked={profile.include_email ? true : undefined} />
                 <label className="custom-control-label" htmlFor="show-email">Show email</label>
             </div>
             <div className="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="hide-email" name="email-checked" className="custom-control-input" />
+                <input type="radio" id="hide-email" name="email-checked" className="custom-control-input" defaultChecked={!profile.include_email ? true : undefined} />
                 <label className="custom-control-label" htmlFor="hide-email">Hide email</label>
             </div>
             <div className="form-group">
-                <label htmlFor="website">Website</label>
-                <input type="text" className="form-control" id="website" placeholder="Website" />
+                <h5 htmlFor="website">Website</h5>
+                {readOnly ? <p id="website">{profile.website}</p> : <input type="text" className="form-control" id="website" placeholder="Website" />}
             </div>
         </Fragment>
     );
