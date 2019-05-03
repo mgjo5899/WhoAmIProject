@@ -60,7 +60,7 @@ const Form = ({ profile, setProfile, auth, next, previous }) => {
                 </ModalFooter>
             </Modal>
             <form id="profile-form" className="w-50 mx-auto" onChange={handleChange}>
-                <InputForm auth={auth} next={next} profile={profile} />
+                <InputForm auth={auth} next={next} profile={profile} setProfile={setProfile} />
                 <button type="submit" className="btn btn-primary m-2" onClick={handleSave}>Save</button>
                 <button type="button" className="btn btn-primary m-2" onClick={previous}>Spread profile</button>
             </form>

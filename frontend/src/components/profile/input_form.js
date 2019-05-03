@@ -1,21 +1,17 @@
 import React, { Fragment, useEffect } from 'react';
+import AnonymousUser from '../../images/anonymous/anonymous_user.png';
+import { DEFAULT_PROFILE_SIZE_VALUE } from '../../config';
 
-const InputForm = ({ auth, readOnly, profile, next }) => {
+const InputForm = ({ auth, readOnly, profile, next, setProfile }) => {
 
     useEffect(() => {
         if (readOnly) {
-            ['show-email', 'hide-email', 'email', 'upload-button'].forEach(email => {
+            ['show-email', 'hide-email', 'email'].forEach(email => {
                 document.getElementById(email).parentElement.style.display = 'none';
             })
             for (const key in profile) {
                 const element = document.getElementById(key);
-                console.log(key, element)
-                if (key === 'profile_image_url') {
-                    const profileElement = document.getElementById('profile-image');
-                    profileElement.parentElement.style.display = 'block';
-                    profileElement.parentElement.src = profile[key];
-                    document.getElementById('upload-button').style.display = 'none';
-                } else if (element) {
+                if (element) {
                     element.parentElement.style.display = 'none';
                     if (profile[key]) {
                         element.parentElement.style.display = 'block';
@@ -34,12 +30,26 @@ const InputForm = ({ auth, readOnly, profile, next }) => {
     return (
         <Fragment>
             <div className="form-group">
-                {
-                    profile.profile_image_url && (
-                        <img id="profile-image" src={profile.profile_image_url} alt="" className="img-thumbnail m-2 d-block mx-auto" style={{ width: 200, height: 'auto' }} />
-                    )
-                }
-                <button type="button" id="upload-button" className="btn btn-primary" onClick={next}>Upload photo</button>
+                <div className="d-flex justify-content-center">
+                    <div className="d-inline-flex position-relative">
+                        <img
+                            id="profile-image"
+                            src={profile.profile_image_url ? profile.profile_image_url : AnonymousUser}
+                            alt=""
+                            className="img-thumbnail mx-auto rounded-circle"
+                            style={{ width: DEFAULT_PROFILE_SIZE_VALUE, height: DEFAULT_PROFILE_SIZE_VALUE }}
+                            onClick={!readOnly ? next : undefined}
+                        />
+                        {
+                            profile.profile_image_url && (
+                                <button type="button" onClick={() => setProfile({ profile_image_url: '' })} className="close position-absolute" style={{ top: '2%', right: '2%' }} aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            )
+                        }
+                    </div>
+                </div>
+                {/* <button type="button" id="upload-button" className="btn btn-primary" onClick={next}>Upload photo</button> */}
             </div>
             <div className="form-group">
                 <h5 htmlFor="bio">Bio</h5>
