@@ -78,9 +78,9 @@ export const showImages = (imageData, clickFunc, flag) => {
 
 export const isOwner = (auth, username) => (auth.user.username === username)
 
-export const getExistingImages = (auth, username, history) => dispatch => {
+export const getExistingImages = (auth, username, history) => async dispatch => {
     try {
-        return isOwner(auth, username) ? dispatch(getOwnerExistingImages()) : dispatch(getUserExistingImages(username));
+        return isOwner(auth, username) ? await dispatch(getOwnerExistingImages()) : await dispatch(getUserExistingImages(username));
     } catch (error) {
         history.push('/error_page');
         console.log(error);
