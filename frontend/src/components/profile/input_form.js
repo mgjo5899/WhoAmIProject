@@ -67,7 +67,7 @@ const InputForm = ({ auth, readOnly, profile, next }) => {
             </div>
             <div className="form-group">
                 <h5 htmlFor="website">Website</h5>
-                {readOnly ? <p id="website">{profile.website}</p> : <input type="text" className="form-control" id="website" placeholder="Website" />}
+                {readOnly ? <button className="btn btn-link m-0 p-0" id="website" onClick={() => window.open(profile.website)}>{profile.website}</button> : <input type="text" className="form-control" id="website" placeholder="Website" />}
             </div>
         </Fragment>
     );
