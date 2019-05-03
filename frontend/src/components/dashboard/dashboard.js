@@ -64,12 +64,8 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
         console.log(image)
         setModalContent(
             <div className="card">
-                <div className="card-header">
-                    Profile
-                </div>
                 <div className="card-body">
                     <InputForm auth={auth} readOnly={true} profile={image.specifics} />
-                    <button className="btn btn-danger" onClick={() => setModal(modal => !modal)}>Close</button>
                 </div>
             </div>
         )
