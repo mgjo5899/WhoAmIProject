@@ -41,7 +41,7 @@ const InputForm = ({ auth, readOnly, profile, next, setProfile }) => {
                             onClick={!readOnly ? next : undefined}
                         />
                         {
-                            profile.profile_image_url && (
+                            profile.profile_image_url && !readOnly && (
                                 <button type="button" onClick={() => setProfile({ profile_image_url: '' })} className="close position-absolute" style={{ top: '2%', right: '2%' }} aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
