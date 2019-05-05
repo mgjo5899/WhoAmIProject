@@ -1,6 +1,6 @@
 import React from 'react';
 import Axios from 'axios';
-import { SOCIAL_MEDIA_CONFIG, SECRET_KEY, SERVER } from '../../config';
+import { SECRET_KEY, SERVER, DEFAULT_PROFILE_FONT_SIZE, DEFAULT_PROFILE_SIZE_VALUE } from '../../config';
 
 export const resetData = () => ({
     type: 'RESET_DATA'
@@ -19,7 +19,6 @@ export const setData = data => ({
  * @param {int} flag - 0 ==> dashboard 1 ==> image spread 2 ==> profile spread
  */
 export const showImages = (imageData, clickFunc, flag) => {
-    console.log(imageData)
     return imageData.map((image, index) => {
 
         let className = 'card position-absolute rounded';
@@ -29,6 +28,7 @@ export const showImages = (imageData, clickFunc, flag) => {
         if ([1, 2].includes(flag)) {
             className += ' draggable resize-drag';
         }
+
         return (
             <div
                 id={image.id}
@@ -37,15 +37,12 @@ export const showImages = (imageData, clickFunc, flag) => {
                 orig_height={image.specifics.orig_height}
                 className={className}
                 key={index}
+                type={image.type}
                 style={{
                     width: image.specifics.curr_width || 200,
                     height: 'auto',
                     WebkitTransform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
                     transform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
-                    background: SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium) ?
-                        SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium).backgroundBorderColor :
-                        '#000',
-                    padding: 3
                 }}
                 data-x={image.posX || image.pos_x}
                 data-y={image.posY || image.pos_y}
@@ -61,9 +58,9 @@ export const showImages = (imageData, clickFunc, flag) => {
                             />
                         )
                         : (
-                            <div className="card">
-                                <h1 style={{ width: 'auto', height: 'auto', userSelect: 'none' }}>Profile</h1>
-                            </div>
+                            <span id="profile" className="card" style={{ fontSize: DEFAULT_PROFILE_FONT_SIZE * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
+                                profile
+                            </span>
                         )
                 }
                 {correctFlag && (
