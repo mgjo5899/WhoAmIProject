@@ -23,6 +23,8 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
             // when first loaded to dashboard, get existing data from server
             setHeight(DEFAULT_HEIGHT);
             getExistingImages(auth, username, history);
+        } else if (activeIndex === contentsIndex.contents) {
+            setImages([]);
         }
     }, [activeIndex]);
 
