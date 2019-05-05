@@ -32,6 +32,8 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
             setImages(showImages(imagesToShow, handleClose, flag));
             // set height of whiteboard based on the selected images
             setHeight(getHeight());
+        } else {
+            setImages([]);
         }
     }, [activeIndex, data.selected]);
 

@@ -1,4 +1,5 @@
 import interact from 'interactjs';
+import { DEFAULT_PROFILE_SIZE_VALUE, DEFAULT_PROFILE_FONT_SIZE } from '../../config';
 
 // target elements with the "draggable" class
 export const Drag = setChanged => {
@@ -64,8 +65,14 @@ export const Drag = setChanged => {
                 y = (parseFloat(target.getAttribute('data-y')) || 0);
 
             // update the element's style
+
             target.style.width = event.rect.width + 'px';
             // target.style.height = event.rect.height + 'px';
+
+            if (target.getAttribute('type') === 'profile') {
+                const element = document.getElementById('profile');
+                element.style.fontSize = (DEFAULT_PROFILE_FONT_SIZE * parseFloat(target.style.width) / DEFAULT_PROFILE_SIZE_VALUE) + 'px';
+            }
 
             // translate when resizing from top or left edges
             x += event.deltaRect.left;

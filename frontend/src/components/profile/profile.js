@@ -7,7 +7,7 @@ import { next, previous } from '../../store/actions/carousel_actions';
 import { showImages, getExistingImages, setData } from '../../store/actions/data_actions';
 import { setExistingProfileData, setProfile } from '../../store/actions/profile_action';
 import uuidv4 from 'uuid/v4';
-import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE, DEFAULT_PROFILE_SIZE_VALUE } from '../../config';
+import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE } from '../../config';
 import signedInSecure from '../../secure/signed_in_secure';
 import { ConnectTo, Spread } from '../dashboard';
 import ProfileContents from './profile_contents';
@@ -39,6 +39,7 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
     }, []);
 
     const getProfileSelectedBackUp = () => {
+        console.log(backup)
         setBackup({
             delete: [...data.delete],
             selected: [...data.selected],
@@ -77,10 +78,10 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
                     medium: 'whoami',
                     type: 'profile',
                     specifics: {
-                        orig_width: DEFAULT_PROFILE_SIZE_VALUE,
-                        orig_height: DEFAULT_PROFILE_SIZE_VALUE,
-                        curr_width: existingProfileData ? existingProfileData.specifics.curr_width : DEFAULT_PROFILE_SIZE_VALUE,
-                        curr_height: existingProfileData ? existingProfileData.specifics.curr_height : DEFAULT_PROFILE_SIZE_VALUE,
+                        orig_width: 150,
+                        orig_height: 150,
+                        curr_width: existingProfileData ? existingProfileData.specifics.curr_width : 150,
+                        curr_height: existingProfileData ? existingProfileData.specifics.curr_height : 150,
                     },
                     selected: true
                 };
@@ -135,7 +136,7 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
                 profile,
                 showImages,
                 next: () => history.push('/'),
-                previous: () => { previous(); previous(); previous(); },
+                previous: next,
                 data,
                 activeIndex,
                 contentsIndex,
