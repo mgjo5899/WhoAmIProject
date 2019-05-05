@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Axios from 'axios';
-import { SECRET_KEY, SERVER, DEFAULT_PROFILE_FONT_SIZE, DEFAULT_PROFILE_SIZE_VALUE } from '../../config';
+import { SECRET_KEY, SERVER, DEFAULT_PROFILE_FONT_SIZE, DEFAULT_PROFILE_SIZE_VALUE, SOCIAL_MEDIA_CONFIG } from '../../config';
 
 export const resetData = () => ({
     type: 'RESET_DATA'
@@ -19,6 +19,7 @@ export const setData = data => ({
  * @param {int} flag - 0 ==> dashboard 1 ==> image spread 2 ==> profile spread
  */
 export const showImages = (imageData, clickFunc, flag) => {
+    console.log(SOCIAL_MEDIA_CONFIG)
     return imageData.map((image, index) => {
 
         let className = 'card position-absolute rounded';
@@ -51,11 +52,14 @@ export const showImages = (imageData, clickFunc, flag) => {
                 {
                     image.type !== 'profile'
                         ? (
-                            <img
-                                className="w-100 h-100"
-                                src={image.src || image.specifics.raw_content_url}
-                                alt=""
-                            />
+                            <Fragment>
+                                <img
+                                    className="w-100 h-100"
+                                    src={image.src || image.specifics.raw_content_url}
+                                    alt=""
+                                />
+                                <img className="position-absolute" alt="" src={SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium).logo} style={{ width: '10%', top: '2%', left: '2%', opacity: 0.7 }} />
+                            </Fragment>
                         )
                         : (
                             <span id="profile" className="card" style={{ fontSize: DEFAULT_PROFILE_FONT_SIZE * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
