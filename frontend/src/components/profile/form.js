@@ -56,13 +56,15 @@ const Form = ({ profile, setProfile, auth, next, previous }) => {
                     <h5>{message}</h5>
                 </ModalBody>
                 <ModalFooter>
-                    <button className="btn btn-primary" onClick={toggle}>Confirm</button>
+                    <button className="btn btn-primary" onClick={toggle}>confirm</button>
                 </ModalFooter>
             </Modal>
             <form id="profile-form" className="w-50 mx-auto" onChange={handleChange}>
                 <InputForm auth={auth} next={next} profile={profile} setProfile={setProfile} />
-                <button type="submit" className="btn btn-primary m-2" onClick={handleSave}>Save</button>
-                <button type="button" className="btn btn-primary m-2" onClick={previous}>Spread profile</button>
+                <div className="d-flex justify-content-center">
+                    <button type="submit" className="btn btn-primary m-2" onClick={handleSave}>save</button>
+                    <button type="button" className="btn btn-primary m-2" onClick={previous}>publish</button>
+                </div>
             </form>
         </Fragment>
     );

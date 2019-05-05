@@ -28,7 +28,6 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
                 deleteIdSet.add(img.id);
             });
             const imagesToShow = [...data.selected, ...data.existing.filter(img => img.medium !== element.medium).filter(img => !deleteIdSet.has(img.id))];
-            console.log(imagesToShow)
             setImages(showImages(imagesToShow, handleClose, flag));
             // set height of whiteboard based on the selected images
             setHeight(getHeight());
