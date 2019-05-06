@@ -14,6 +14,9 @@ export const setExistingProfileData = () => {
     return async dispatch => {
         const { profile } = (await Axios.get(SERVER + '/user/profile')).data;
         console.log(profile)
-        dispatch(setProfile({ ...profile, include_email: profile.email ? true : false }));
+        
+        if (profile) {
+            dispatch(setProfile({ ...profile, include_email: profile.email ? true : false }));
+        }
     }
 }
