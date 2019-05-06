@@ -14,9 +14,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
     const [height, setHeight] = useState(0);
     const [modal, setModal] = useState(false);
     const [currentImage, setCurrentImage] = useState({});
-
     const [modalContent, setModalContent] = useState(null);
-
 
     useEffect(() => {
         if (activeIndex === contentsIndex.dashboard) {
@@ -84,7 +82,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
     return (
         <Fragment>
             <PlusButton isOwner={isOwner(auth, username)} next={next} />
-            <Modal isOpen={modal} centered={true} toggle={toggle} className="d-flex">
+            <Modal isOpen={modal} centered={true} toggle={toggle} contentClassName="border-0">
                 {modalContent}
             </Modal>
             <WhiteBoard {...{ DEFAULT_WIDTH, height, images }} />
