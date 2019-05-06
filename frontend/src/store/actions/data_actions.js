@@ -58,7 +58,7 @@ export const showImages = (imageData, clickFunc, flag) => {
                                     src={image.src || image.specifics.raw_content_url}
                                     alt=""
                                 />
-                                <img className="position-absolute" alt="" src={SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium).logo} style={{ width: '10%', top: '2%', left: '2%', opacity: 0.7 }} />
+                                <img className="position-absolute" alt="" src={SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium).logo} style={{ width: 20, top: '2%', left: '2%', opacity: 0.7 }} />
                             </Fragment>
                         )
                         : (
