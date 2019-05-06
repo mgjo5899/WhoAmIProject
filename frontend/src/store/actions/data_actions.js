@@ -62,9 +62,12 @@ export const showImages = (imageData, clickFunc, flag) => {
                             </Fragment>
                         )
                         : (
-                            <span id="profile" className="card" style={{ fontSize: DEFAULT_PROFILE_FONT_SIZE * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
-                                profile
-                            </span>
+                            <Fragment>
+                                <span id="profile" className="mx-auto" style={{ fontSize: DEFAULT_PROFILE_FONT_SIZE * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
+                                    profile
+                                </span>
+                                <span className="position-absolute" style={{ fontSize: 10, width: 50, top: '2%', left: '2%', opacity: 0.7 }}>whoami</span>
+                            </Fragment>
                         )
                 }
                 {correctFlag && (
