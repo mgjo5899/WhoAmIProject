@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { resetData, setData, showImages } from '../../store/actions/data_actions';
 import { next, previous } from '../../store/actions/carousel_actions';
 
-const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex }) => {
+const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex, history }) => {
 
     // this component contains many children components, which requires multiple states to use
     const [element, setElement] = useState(null);
@@ -79,6 +79,7 @@ const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex
             showImages={showImages}
             setData={setData}
             flag={1}
+            next={() => history.push('/')}
         />
     ];
 
