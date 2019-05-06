@@ -1,34 +1,28 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import AnonymousUser from '../../images/anonymous/anonymous_user.png';
 import { DEFAULT_PROFILE_SIZE_VALUE } from '../../config';
+import { UncontrolledTooltip } from 'reactstrap';
 
 const InputForm = ({ auth, readOnly, profile, next, setProfile }) => {
 
     useEffect(() => {
         if (readOnly) {
-            ['show-email', 'hide-email', 'email'].forEach(email => {
-                document.getElementById(email).parentElement.style.display = 'none';
-            })
+            const formChildren = document.getElementById('input-form').children;
+            for (let i = 1; i < formChildren.length; i++) {
+                formChildren[i].style.display = 'none';
+            }
             for (const key in profile) {
                 const element = document.getElementById(key);
                 if (element) {
-                    element.parentElement.style.display = 'none';
-                    if (profile[key]) {
-                        element.parentElement.style.display = 'block';
-                        element.value = profile[key];
-                        element.readOnly = true;
-                    }
+                    element.parentElement.style.display = 'block';
+                    element.value = profile[key];
+                    element.readOnly = true;
                 }
             }
         }
     }, []);
-
-    useEffect(() => {
-        console.log(profile)
-    }, [profile])
-
     return (
-        <Fragment>
+        <div id="input-form">
             <div className="form-group">
                 <div className="d-flex justify-content-center">
                     <div className="position-relative">
@@ -40,6 +34,13 @@ const InputForm = ({ auth, readOnly, profile, next, setProfile }) => {
                             style={{ width: DEFAULT_PROFILE_SIZE_VALUE, height: 'auto' }}
                             onClick={!readOnly ? next : undefined}
                         />
+                        {
+                            !readOnly && (
+                                <UncontrolledTooltip placement="right" target="profile-image">
+                                    Click to select profile image
+                                </UncontrolledTooltip>
+                            )
+                        }
                         {
                             profile.profile_image_url && !readOnly && (
                                 <button type="button" onClick={() => setProfile({ profile_image_url: '' })} className="close position-absolute" style={{ top: '2%', right: '2%' }} aria-label="Close">
@@ -79,7 +80,7 @@ const InputForm = ({ auth, readOnly, profile, next, setProfile }) => {
                 <h5 htmlFor="website">Website</h5>
                 {readOnly ? <button className="btn btn-link m-0 p-0" id="website" onClick={() => window.open(profile.website)}>{profile.website}</button> : <input type="text" className="form-control" id="website" placeholder="Website" />}
             </div>
-        </Fragment>
+        </div>
     );
 }
 
