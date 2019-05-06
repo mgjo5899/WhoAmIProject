@@ -98,6 +98,7 @@ const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex
                     next={next}
                     previous={previous}
                     interval={false}
+                    keyboard={false}
                 >
                     {slides}
                 </Carousel>

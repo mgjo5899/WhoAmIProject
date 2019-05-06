@@ -163,6 +163,7 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
                     next={next}
                     previous={previous}
                     interval={false}
+                    keyboard={false}
                 >
                     {slides}
                 </Carousel>
