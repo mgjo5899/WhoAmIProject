@@ -68,13 +68,15 @@ const InputForm = ({ auth, readOnly, profile, next, setProfile }) => {
                 <h5 htmlFor="email">Email</h5>
                 {readOnly ? <p id="email">{profile.email}</p> : <input type="text" className="form-control" id="email" readOnly value={auth.user.email} />}
             </div>
-            <div className="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="show-email" name="email-checked" className="custom-control-input" defaultChecked={profile.include_email ? true : undefined} />
-                <label className="custom-control-label" htmlFor="show-email">Show email</label>
-            </div>
-            <div className="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="hide-email" name="email-checked" className="custom-control-input" defaultChecked={!profile.include_email ? true : undefined} />
-                <label className="custom-control-label" htmlFor="hide-email">Hide email</label>
+            <div className="mb-2">
+                <div className="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="show-email" name="email-checked" className="custom-control-input" defaultChecked={profile.include_email ? true : undefined} />
+                    <label className="custom-control-label" htmlFor="show-email">Show email</label>
+                </div>
+                <div className="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="hide-email" name="email-checked" className="custom-control-input" defaultChecked={!profile.include_email ? true : undefined} />
+                    <label className="custom-control-label" htmlFor="hide-email">Hide email</label>
+                </div>
             </div>
             <div className="form-group">
                 <h5 htmlFor="website">Website</h5>
