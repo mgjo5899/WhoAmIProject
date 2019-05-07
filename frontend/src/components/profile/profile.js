@@ -31,15 +31,10 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
     }
 
     useEffect(() => {
-        console.log(data.selected)
-    }, [data.selected])
-
-    useEffect(() => {
         signedInSecure({ auth, history }, '/');
     }, []);
 
     const getProfileSelectedBackUp = () => {
-        console.log(backup)
         setBackup({
             delete: [...data.delete],
             selected: [...data.selected],
@@ -49,7 +44,6 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
     }
 
     useEffect(() => {
-        console.log(activeIndex)
         if (activeIndex === contentsIndex.profile) {
             setLoaded(false);
             getProfileSelectedBackUp();
@@ -62,7 +56,6 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
     }, [activeIndex]);
 
     useEffect(() => {
-        console.log(loaded, data)
         if (loaded) {
             // when data exists, execute the command, giving conditions to useEffect
             if (backup.selected.length > 0) {
@@ -70,7 +63,6 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
                 setProfile(profileUrlBackup);
             } else {
                 const existingProfileData = data.existing.find(existingData => existingData.type === 'profile');
-                console.log(existingProfileData)
                 const profileElement = {
                     id: existingProfileData ? existingProfileData.id : uuidv4(),
                     posX: existingProfileData ? existingProfileData.pos_x : Math.floor(Math.random() * (DEFAULT_WIDTH - DEFAULT_SUBTRACTING_VALUE)),

@@ -65,9 +65,7 @@ const ProfileContents = ({ activeIndex, contentsIndex, element, previous, profil
     }
 
     const markExistingImages = () => {
-        console.log(profile);
         const content = contents.find(content => content.src === profile.profile_image_url);
-        console.log(content)
         // check the url using previous set if it should be marked or not
         if (content) {
             content.isSelected = true;
