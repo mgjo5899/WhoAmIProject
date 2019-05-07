@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Modal } from 'reactstrap';
 import { getExistingImages, isOwner } from '../../store/actions/data_actions';
 import { setExistingProfileData } from '../../store/actions/profile_action';
-import { PlusButton, WhiteBoard } from './whiteboard';
+import { WhiteBoard } from './whiteboard';
 import { withRouter } from 'react-router';
 import { DEFAULT_WIDTH, DEFAULT_HEIGHT, SERVER } from '../../config';
 import InputForm from '../profile/input_form';
@@ -149,8 +149,14 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
             {
                 flag === 0 && (
                     <div className="d-flex justify-content-end">
-                        <button className="btn btn-outline-primary btn-sm mr-2" onClick={() => setFlag(1)}>edit</button>
-                        <PlusButton isOwner={isOwner(auth, username)} next={next} />
+                        {
+                            isOwner(auth, username) && (
+                                <Fragment>
+                                    <button className="btn btn-outline-primary btn-sm mx-2" onClick={() => setFlag(1)}>edit</button>
+                                    <button className="btn btn-outline-primary btn-sm mx-2" onClick={next}>add</button>
+                                </Fragment>
+                            )
+                        }
                     </div>
                 )
             }
