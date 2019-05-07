@@ -19,12 +19,11 @@ export const setData = data => ({
  * @param {int} flag - 0 ==> dashboard 1 ==> image spread 2 ==> profile spread
  */
 export const showImages = (imageData, clickFunc, flag) => {
-    console.log(SOCIAL_MEDIA_CONFIG)
     return imageData.map((image, index) => {
 
-        let className = 'card position-absolute rounded';
+        let className = 'position-absolute rounded';
 
-        const correctFlag = (flag === 1 && image.medium !== 'whoami') || (flag === 2 && image.type === 'profile');
+        // const correctFlag = (flag === 1 && image.medium !== 'whoami') || (flag === 2 && image.type === 'profile');
 
         if ([1, 2].includes(flag)) {
             className += ' draggable resize-drag';
@@ -62,15 +61,15 @@ export const showImages = (imageData, clickFunc, flag) => {
                             </Fragment>
                         )
                         : (
-                            <Fragment>
+                            <div className="card">
                                 <span id="profile" className="mx-auto" style={{ fontSize: DEFAULT_PROFILE_FONT_SIZE * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
                                     profile
                                 </span>
-                                <span className="position-absolute" style={{ fontSize: 10, width: 50, top: '2%', left: '2%', opacity: 0.7 }}>whoami</span>
-                            </Fragment>
+                                <span className="position-absolute" style={{ fontSize: 10, width: 50, top: '2%', left: '2%', opacity: 0.7, userSelect: 'none' }}>whoami</span>
+                            </div>
                         )
                 }
-                {correctFlag && (
+                {flag !== 0 && (
                     <button type="button" onClick={() => clickFunc(image)} className="close position-absolute" style={{ top: '2%', right: '2%' }} aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -93,7 +92,6 @@ export const getExistingImages = (auth, username, history) => async dispatch => 
 
 const getOwnerExistingImages = () => async dispatch => {
     const data = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
-    console.log(data)
     const { status, whiteboard_data, message } = data;
     if (!status) throw new Error(message);
     dispatch(resetData());
