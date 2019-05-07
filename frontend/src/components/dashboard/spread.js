@@ -16,12 +16,9 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
     }
 
     useEffect(() => {
-        Drag(setChanged);
-    }, []);
-
-    useEffect(() => {
         if (activeIndex === contentsIndex.spread) {
             setHeight(DEFAULT_HEIGHT);
+            Drag(setChanged);
             // create set for putting deleted data id
             const deleteIdSet = new Set();
             data.delete.forEach(img => {
@@ -30,23 +27,14 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
             const imagesToShow = [...data.existing.filter(img => img.medium !== element.medium).filter(img => !deleteIdSet.has(img.id)), ...data.selected];
             setImages(showImages(imagesToShow, handleClose, flag));
             // set height of whiteboard based on the selected images
-            setHeight(getHeight());
+            // setHeight(getHeight());
         } else {
             setImages([]);
         }
     }, [activeIndex, data.selected]);
 
-    const getHeight = () => {
-        let maxHeight = height;
-        // iterate through every array, get maximum and return 200 added
-        images.forEach(image => {
-            maxHeight = Math.max(maxHeight, image.props['data-y'] + 300);
-        });
-        return maxHeight;
-    }
-
     const handleLoadMore = () => {
-        setHeight(height + 300);
+        setHeight(height + 100);
     }
 
     const addData = async () => {

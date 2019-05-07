@@ -6,6 +6,7 @@ const WhiteBoard = ({ images, defaultWidth, height }) => {
         <div id="spread-sheet" className="card p-2 mt-3" style={{ defaultWidth, height }}>
             {images}
         </div>
+
     );
 }
 

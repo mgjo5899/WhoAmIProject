@@ -5,31 +5,47 @@ import { getExistingImages, isOwner } from '../../store/actions/data_actions';
 import { setExistingProfileData } from '../../store/actions/profile_action';
 import { PlusButton, WhiteBoard } from './whiteboard';
 import { withRouter } from 'react-router';
-import { DEFAULT_WIDTH, DEFAULT_HEIGHT } from '../../config';
+import { DEFAULT_WIDTH, DEFAULT_HEIGHT, SERVER } from '../../config';
 import InputForm from '../profile/input_form';
+import Axios from 'axios';
+import { Drag } from './drag_and_drop';
+import InfiniteScroll from 'react-infinite-scroller';
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, showImages, getExistingImages, history, profile }) => {
+
+const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, showImages, getExistingImages, history }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
     const [modal, setModal] = useState(false);
     const [currentImage, setCurrentImage] = useState({});
     const [modalContent, setModalContent] = useState(null);
+    const [flag, setFlag] = useState(0);
+    const [changed, setChanged] = useState([]);
+    const [deleted, setDeleted] = useState([]);
 
     useEffect(() => {
         if (activeIndex === contentsIndex.dashboard) {
             // when first loaded to dashboard, get existing data from server
             setHeight(DEFAULT_HEIGHT);
+            setChanged([]);
+            setDeleted([]);
+            Drag(setChanged);
             getExistingImages(auth, username, history);
         } else if (activeIndex === contentsIndex.contents) {
             setImages([]);
         }
-    }, [activeIndex]);
+    }, [activeIndex, flag]);
 
     useEffect(() => {
-        // setting images forming to right elements
-        setImages(showImages(data.existing, toggle, 0));
-        settingHeight();
+        if (data.existing.length > 0) {
+            const mapFunc = {
+                0: toggle,
+                1: editDelete
+            }
+            // setting images forming to right elements
+            setImages(showImages(data.existing, mapFunc[flag], flag));
+            settingHeight();
+        }
     }, [data.existing]);
 
     const toggle = image => {
@@ -61,7 +77,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
     }, [currentImage]);
 
     const toggleProfile = async image => {
-        console.log(image)
         setModalContent(
             <div className="card">
                 <div className="card-body">
@@ -72,20 +87,97 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
     }
 
     const settingHeight = () => {
-        let maxHeight = DEFAULT_HEIGHT;
+        let maxHeight = 0;
         data.existing.forEach(elem => {
             maxHeight = Math.max(maxHeight, elem.pos_y + elem.specifics.curr_height + 100);
         });
         setHeight(maxHeight);
     }
 
+    const changeData = async () => {
+        // put all existing data except delete data
+        try {
+            await Axios.put(SERVER + '/whiteboard/user_data', {
+                updated_contents: images.filter(image => changed[image.props.id]).map(image => ({
+                    id: image.props.id,
+                    medium: image.props.medium,
+                    pos_x: changed[image.props.id].posX,
+                    pos_y: changed[image.props.id].posY,
+                    specifics: {
+                        curr_width: changed[image.props.id].width,
+                        curr_height: changed[image.props.id].height
+                    }
+                }))
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const deleteData = async () => {
+        try {
+            await Axios.delete(SERVER + '/whiteboard/user_data', {
+                data: {
+                    deleted_contents: deleted.map(elem => elem.id)
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const editDelete = image => {
+        setDeleted(deleted => [
+            ...deleted,
+            image
+        ]);
+        setImages(images => images.filter(img => img.props.id !== image.id));
+
+    }
+
+    const handleSave = async () => {
+        await Promise.all([changeData(), deleteData()]);
+        setFlag(0);
+    }
+
+    const handleLoadMore = () => {
+        setHeight(height + 100);
+    }
+
     return (
         <Fragment>
-            <PlusButton isOwner={isOwner(auth, username)} next={next} />
+            {
+                flag === 0 && (
+                    <div className="d-flex justify-content-end">
+                        <button className="btn btn-outline-primary btn-sm mr-2" onClick={() => setFlag(1)}>edit</button>
+                        <PlusButton isOwner={isOwner(auth, username)} next={next} />
+                    </div>
+                )
+            }
             <Modal isOpen={modal} centered={true} toggle={toggle} contentClassName="border-0">
                 {modalContent}
             </Modal>
-            <WhiteBoard {...{ DEFAULT_WIDTH, height, images }} />
+            {
+                flag === 1 ? (
+                    <Fragment>
+                        <InfiniteScroll
+                            pageStart={0}
+                            loadMore={handleLoadMore}
+                            hasMore={true}
+                            threshold={100}
+                        >
+                            <WhiteBoard {...{ DEFAULT_WIDTH, height, images }} />
+                        </InfiniteScroll>
+                        <div className="fixed-bottom card-footer bg-secondary d-flex justify-content-center" style={{ opacity: 0.9 }}>
+                            <button className="btn btn-danger mx-auto" onClick={() => { setFlag(0); setImages([]); }}>Cancel</button>
+                            <button className="btn btn-primary mx-auto" onClick={handleSave}>Publish</button>
+                        </div>
+                    </Fragment>
+                ) : (
+                        <WhiteBoard {...{ DEFAULT_WIDTH, height, images }} />
+                    )
+            }
+
         </Fragment>
     );
 }
