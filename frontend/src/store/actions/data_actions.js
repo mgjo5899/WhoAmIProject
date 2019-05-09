@@ -42,7 +42,7 @@ export const showImages = (imageData, clickFunc, flag) => {
                     width: image.specifics.curr_width || 200,
                     height: 'auto',
                     WebkitTransform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
-                    transform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
+                    transform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`
                 }}
                 data-x={image.posX || image.pos_x}
                 data-y={image.posY || image.pos_y}
