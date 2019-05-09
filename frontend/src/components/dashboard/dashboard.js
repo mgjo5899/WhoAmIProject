@@ -2,14 +2,14 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'reactstrap';
 import { getExistingImages, isOwner } from '../../store/actions/data_actions';
-import { setExistingProfileData } from '../../store/actions/profile_action';
+import { setExistingProfileData } from '../../store/actions/profile_actions';
 import { WhiteBoard } from './whiteboard';
 import { withRouter } from 'react-router';
 import { DEFAULT_WIDTH, DEFAULT_HEIGHT, SERVER } from '../../config';
 import InputForm from '../profile/input_form';
 import Axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroller';
-import { resetChanged, setChanged } from '../../store/actions/change_actions';
+import { resetChanged, setChanged } from '../../store/actions/changed_actions';
 
 
 const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, showImages, getExistingImages, history, changed, resetChanged }) => {
@@ -28,7 +28,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
             setHeight(DEFAULT_HEIGHT);
             resetChanged();
             setDeleted([]);
-            // Drag(setChanged);
             getExistingImages(auth, username, history);
         } else if (activeIndex === contentsIndex.contents) {
             setImages([]);
@@ -95,6 +94,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
 
     const changeData = async () => {
         // put all existing data except delete data
+        console.log(changed);
         try {
             await Axios.put(SERVER + '/whiteboard/user_data', {
                 updated_contents: images.filter(image => changed[image.props.id]).map(image => ({

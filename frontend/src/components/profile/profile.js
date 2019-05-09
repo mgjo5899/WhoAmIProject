@@ -5,7 +5,7 @@ import { CarouselItem, Carousel } from 'reactstrap';
 import Form from './form';
 import { next, previous } from '../../store/actions/carousel_actions';
 import { showImages, getExistingImages, setData } from '../../store/actions/data_actions';
-import { setExistingProfileData, setProfile } from '../../store/actions/profile_action';
+import { setExistingProfileData, setProfile } from '../../store/actions/profile_actions';
 import uuidv4 from 'uuid/v4';
 import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE } from '../../config';
 import signedInSecure from '../../secure/signed_in_secure';

@@ -12,7 +12,6 @@ const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex
     const [element, setElement] = useState(null);
     const [contents, setContents] = useState([]);
 
-
     const contentsIndex = {
         dashboard: 0,
         connect_to: 1,

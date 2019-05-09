@@ -77,11 +77,13 @@ export const Drag = setChanged => {
             x += event.deltaRect.left;
             y += event.deltaRect.top;
 
+            console.log(event.deltaRect.left, event.deltaRect.top, event.deltaRect.right, event.rect.width)
+
             target.style.webkitTransform = target.style.transform =
                 'translate(' + x + 'px,' + y + 'px)';
             target.setAttribute('data-x', x);
             target.setAttribute('data-y', y);
-            // setChanged(changed => changePosAndSize(changed, event, x, y));
+            setChanged(changed => changePosAndSize(changed, event, x, y));
         });
 }
 

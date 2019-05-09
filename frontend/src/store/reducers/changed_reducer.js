@@ -1,6 +1,4 @@
-const initState = {
-    changed: []
-}
+const initState = {}
 
 const changeReducer = (state = initState, action) => {
     switch (action.type) {
@@ -9,8 +7,13 @@ const changeReducer = (state = initState, action) => {
         case 'SET_CHANGED':
             return {
                 ...state,
-                changed: [...state.changed]
-            };
+                ...action.changed
+            }
+        case 'SET_CHANGED_CALLBACK':
+            return {
+                ...state,
+                ...action.changed(state)
+            }
         default:
             return state;
     }

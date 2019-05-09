@@ -11,7 +11,7 @@ import ResetPasswordComponent from './components/signing/password/reset_password
 import MainPage from './components/home/main_page';
 import Profile from './components/profile/profile';
 import { Drag } from './components/dashboard/drag_and_drop';
-import { setChanged } from './store/actions/change_actions';
+import { setChanged } from './store/actions/changed_actions';
 
 class App extends Component {
 
