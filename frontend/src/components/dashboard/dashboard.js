@@ -8,11 +8,11 @@ import { withRouter } from 'react-router';
 import { DEFAULT_WIDTH, DEFAULT_HEIGHT, SERVER } from '../../config';
 import InputForm from '../profile/input_form';
 import Axios from 'axios';
-import { Drag } from './drag_and_drop';
 import InfiniteScroll from 'react-infinite-scroller';
+import { resetChanged, setChanged } from '../../store/actions/change_actions';
 
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, showImages, getExistingImages, history }) => {
+const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, showImages, getExistingImages, history, changed, resetChanged }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
@@ -20,16 +20,15 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
     const [currentImage, setCurrentImage] = useState({});
     const [modalContent, setModalContent] = useState(null);
     const [flag, setFlag] = useState(0);
-    const [changed, setChanged] = useState([]);
     const [deleted, setDeleted] = useState([]);
 
     useEffect(() => {
         if (activeIndex === contentsIndex.dashboard) {
             // when first loaded to dashboard, get existing data from server
             setHeight(DEFAULT_HEIGHT);
-            setChanged([]);
+            resetChanged();
             setDeleted([]);
-            Drag(setChanged);
+            // Drag(setChanged);
             getExistingImages(auth, username, history);
         } else if (activeIndex === contentsIndex.contents) {
             setImages([]);
@@ -190,12 +189,15 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
 
 const mapStateToProps = state => ({
     auth: state.auth,
-    profile: state.profile
+    profile: state.profile,
+    changed: state.changed
 })
 
 const mapDispatchToProps = dispatch => ({
     getExistingImages: (auth, username, history) => dispatch(getExistingImages(auth, username, history)),
-    setExistingProfileData: document => dispatch(setExistingProfileData(document))
+    setExistingProfileData: document => dispatch(setExistingProfileData(document)),
+    setChanged: changed => dispatch(setChanged(changed)),
+    resetChanged: () => dispatch(resetChanged())
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Dashboard));

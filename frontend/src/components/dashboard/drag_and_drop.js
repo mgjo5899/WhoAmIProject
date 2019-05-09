@@ -2,6 +2,7 @@ import interact from 'interactjs';
 import { DEFAULT_PROFILE_SIZE_VALUE, DEFAULT_PROFILE_FONT_SIZE } from '../../config';
 
 // target elements with the "draggable" class
+
 export const Drag = setChanged => {
 
     const dragMoveListener = event => {
@@ -22,7 +23,7 @@ export const Drag = setChanged => {
 
     }
     // this is used later in the resizing and gesture demos
-    window.dragMoveListener = dragMoveListener;
+    // window.dragMoveListener = dragMoveListener;
 
     interact('.draggable.resize-drag')
         .draggable({
@@ -59,13 +60,12 @@ export const Drag = setChanged => {
 
             inertia: true,
         })
-        .on('resizemove', function (event) {
+        .on('resizemove', event => {
             let target = event.target,
                 x = (parseFloat(target.getAttribute('data-x')) || 0),
                 y = (parseFloat(target.getAttribute('data-y')) || 0);
 
             // update the element's style
-
             target.style.width = event.rect.width + 'px';
             // target.style.height = event.rect.height + 'px';
 
@@ -73,18 +73,15 @@ export const Drag = setChanged => {
                 const element = document.getElementById('profile');
                 element.style.fontSize = (DEFAULT_PROFILE_FONT_SIZE * parseFloat(target.style.width) / DEFAULT_PROFILE_SIZE_VALUE) + 'px';
             }
-
             // translate when resizing from top or left edges
             x += event.deltaRect.left;
             y += event.deltaRect.top;
 
             target.style.webkitTransform = target.style.transform =
                 'translate(' + x + 'px,' + y + 'px)';
-
             target.setAttribute('data-x', x);
             target.setAttribute('data-y', y);
-
-            setChanged(changed => changePosAndSize(changed, event, x, y));
+            // setChanged(changed => changePosAndSize(changed, event, x, y));
         });
 }
 

@@ -10,6 +10,8 @@ import ErrorPage from './components/error/error_page';
 import ResetPasswordComponent from './components/signing/password/reset_password_component';
 import MainPage from './components/home/main_page';
 import Profile from './components/profile/profile';
+import { Drag } from './components/dashboard/drag_and_drop';
+import { setChanged } from './store/actions/change_actions';
 
 class App extends Component {
 
@@ -26,6 +28,7 @@ class App extends Component {
       }).catch(err => {
         console.log(err);
       });
+    Drag(this.props.setChanged);
   }
 
   render() {
@@ -48,7 +51,8 @@ class App extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    storeUser: user => dispatch(storeUser(user))
+    storeUser: user => dispatch(storeUser(user)),
+    setChanged: changed => dispatch(setChanged(changed))
   }
 }
 

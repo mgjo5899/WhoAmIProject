@@ -1,13 +1,12 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Drag } from './drag_and_drop';
 import Axios from 'axios';
 import { SERVER, DEFAULT_WIDTH, DEFAULT_HEIGHT } from '../../config';
 import InfiniteScroll from 'react-infinite-scroller';
 import { WhiteBoard } from './whiteboard';
+import { connect } from 'react-redux';
 
-const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage, element, showImages, flag }) => {
+const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage, element, showImages, flag, changed }) => {
 
-    const [changed, setChanged] = useState([]);
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
 
@@ -18,7 +17,6 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
     useEffect(() => {
         if (activeIndex === contentsIndex.spread) {
             setHeight(DEFAULT_HEIGHT);
-            Drag(setChanged);
             // create set for putting deleted data id
             const deleteIdSet = new Set();
             data.delete.forEach(img => {
@@ -128,4 +126,8 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
     );
 }
 
-export default Spread;
+const mapStateToProps = state => ({
+    changed: state.changed
+});
+
+export default connect(mapStateToProps)(Spread);
