@@ -3,6 +3,8 @@ import { DEFAULT_PROFILE_SIZE_VALUE, DEFAULT_PROFILE_FONT_SIZE } from '../../con
 
 // target elements with the "draggable" class
 
+// const validCondition = (num1, num2) => !isNaN(num1) && !isNaN(num2) && num1 !== 0 && num2 !== 0
+
 export const Drag = setChanged => {
 
     const dragMoveListener = event => {
@@ -66,6 +68,8 @@ export const Drag = setChanged => {
                 y = (parseFloat(target.getAttribute('data-y')) || 0);
 
             // update the element's style
+            // const widthDiff = event.rect.width - target.offsetWidth;
+            // const heightDiff = target.offsetHeight - event.rect.height;
             target.style.width = event.rect.width + 'px';
             // target.style.height = event.rect.height + 'px';
 
@@ -73,11 +77,34 @@ export const Drag = setChanged => {
                 const element = document.getElementById('profile');
                 element.style.fontSize = (DEFAULT_PROFILE_FONT_SIZE * parseFloat(target.style.width) / DEFAULT_PROFILE_SIZE_VALUE) + 'px';
             }
-            // translate when resizing from top or left edges
-            x += event.deltaRect.left;
-            y += event.deltaRect.top;
 
-            console.log(event.deltaRect.left, event.deltaRect.top, event.deltaRect.right, event.rect.width)
+
+            // let xVal = 0, yVal = 0;
+            // if (validCondition(event.deltaRect.left, event.deltaRect.top)) {
+            //     console.log('here')
+            //     xVal = event.deltaRect.left;
+            //     yVal = target.offsetHeight / target.offsetWidth * event.deltaRect.left;
+            // } else if (validCondition(event.deltaRect.left, event.deltaRect.bottom)) {
+            //     xVal = event.deltaRect.left;
+            // } else if (validCondition(event.deltaRect.right, event.deltaRect.top)) {
+            //     yVal = -event.deltaRect.right;
+            // } else if (validCondition(event.deltaRect.left, 1)) {
+            //     xVal = event.deltaRect.left;
+            // } else if (validCondition(event.deltaRect.top, 1)) {
+            //     xVal = target.offsetWidth / target.offsetHeight * event.deltaRect.top;
+            //     yVal = event.deltaRect.top;
+            // }
+            // translate when resizing from top or left edges
+            // x += event.deltaRect.left;
+            // if (event.deltaRect.top !== 0) {
+            //     y += event.deltaRect.height / event.deltaRect.width * event.deltaRect.left;
+            // }
+            x += event.deltaRect.left;
+            // y += event.deltaRect.top;
+            // y += yVal;
+            console.log(event.deltaRect.left, event.deltaRect.top, event.deltaRect.right, event.deltaRect.bottom)
+
+            // console.log(event.deltaRect.left, event.deltaRect.top, event.deltaRect.right, event.rect.width)
 
             target.style.webkitTransform = target.style.transform =
                 'translate(' + x + 'px,' + y + 'px)';
