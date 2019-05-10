@@ -5,9 +5,8 @@ import { getExistingImages, isOwner } from '../../store/actions/data_actions';
 import { setExistingProfileData } from '../../store/actions/profile_actions';
 import { WhiteBoard } from './whiteboard';
 import { withRouter } from 'react-router';
-import { DEFAULT_WIDTH, DEFAULT_HEIGHT, SERVER } from '../../config';
+import { DEFAULT_WIDTH, DEFAULT_HEIGHT } from '../../config';
 import InputForm from '../profile/input_form';
-import Axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroller';
 import { resetChanged, setChanged } from '../../store/actions/changed_actions';
 
