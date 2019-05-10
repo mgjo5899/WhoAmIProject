@@ -116,20 +116,12 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
 
     return (
         <Fragment>
-            {
-                flag === 0 && (
-                    <div className="d-flex justify-content-end">
-                        {
-                            isOwner(auth, username) && (
-                                <Fragment>
-                                    <button className="btn btn-outline-primary btn-sm mx-2" onClick={() => setFlag(1)}>edit</button>
-                                    <button className="btn btn-outline-primary btn-sm mx-2" onClick={next}>add</button>
-                                </Fragment>
-                            )
-                        }
-                    </div>
-                )
-            }
+            <div className="d-flex justify-content-end">
+                <div className={'d-block' + ((!isOwner(auth, username) || flag === 1) ? ' invisible' : '')}>
+                    <button className="btn btn-outline-primary btn-sm mx-2" onClick={() => setFlag(1)}>edit</button>
+                    <button className="btn btn-outline-primary btn-sm mx-2" onClick={next}>add</button>
+                </div>
+            </div>
             <Modal isOpen={modal} centered={true} toggle={toggle} contentClassName="border-0">
                 {modalContent}
             </Modal>
