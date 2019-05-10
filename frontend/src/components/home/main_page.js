@@ -3,7 +3,7 @@ import { Carousel, CarouselItem } from 'reactstrap';
 import { Dashboard, ConnectTo, Contents, Spread } from '../dashboard';
 import Navbar from '../layout/navbar';
 import { connect } from 'react-redux';
-import { resetData, setData, showImages } from '../../store/actions/data_actions';
+import { resetData, setData, showImages, updateData, deleteData } from '../../store/actions/data_actions';
 import { next, previous } from '../../store/actions/carousel_actions';
 
 const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex, history }) => {
@@ -62,7 +62,16 @@ const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex
 
     // list of components to use programmatically
     const items = [
-        <Dashboard {...props} resetData={resetData} username={match.params.username} showImages={showImages} />,
+        <Dashboard
+            {...{
+                ...props,
+                resetData,
+                username: match.params.username,
+                showImages,
+                updateData,
+                deleteData
+            }}
+        />,
         <ConnectTo {...props} setElement={setElement} />,
         <Contents
             {...props}
@@ -72,13 +81,17 @@ const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex
             deleteImage={deleteImage}
         />,
         <Spread
-            {...props}
-            deleteImage={deleteImage}
-            element={element}
-            showImages={showImages}
-            setData={setData}
-            flag={1}
-            next={() => history.push('/')}
+            {...{
+                ...props,
+                deleteImage,
+                element,
+                showImages,
+                setData,
+                flag: 1,
+                next: () => history.push('/'),
+                updateData,
+                deleteData
+            }}
         />
     ];
 

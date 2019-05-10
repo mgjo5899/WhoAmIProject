@@ -111,3 +111,35 @@ const getUserExistingImages = username => async dispatch => {
         existing: whiteboard_data
     }));
 }
+
+export const deleteData = async deleted => {
+    try {
+        await Axios.delete(SERVER + '/whiteboard/user_data', {
+            data: {
+                deleted_contents: deleted.map(elem => elem.id)
+            }
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const updateData = async (changed, images) => {
+    // put all existing data except delete data
+    try {
+        await Axios.put(SERVER + '/whiteboard/user_data', {
+            updated_contents: images.map(image => ({
+                id: image.props.id,
+                medium: image.props.medium,
+                pos_x: changed[image.props.id].posX,
+                pos_y: changed[image.props.id].posY,
+                specifics: {
+                    curr_width: changed[image.props.id].width,
+                    curr_height: changed[image.props.id].height
+                }
+            }))
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}

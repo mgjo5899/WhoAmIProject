@@ -5,7 +5,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { WhiteBoard } from './whiteboard';
 import { connect } from 'react-redux';
 
-const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage, element, showImages, flag, changed }) => {
+const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage, element, showImages, flag, changed, updateData, deleteData }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
@@ -64,42 +64,14 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
         data.existing.forEach(elem => {
             existingIdSet.add(elem.id);
         });
-        try {
-            await Axios.put(SERVER + '/whiteboard/user_data', {
-                updated_contents: images.filter(image => existingIdSet.has(image.props.id) && changed[image.props.id]).map(image => ({
-                    id: image.props.id,
-                    medium: image.props.medium,
-                    pos_x: changed[image.props.id].posX,
-                    pos_y: changed[image.props.id].posY,
-                    specifics: {
-                        curr_width: changed[image.props.id].width,
-                        curr_height: changed[image.props.id].height
-                    }
-                })
-                )
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    const deleteData = async () => {
-        try {
-            await Axios.delete(SERVER + '/whiteboard/user_data', {
-                data: {
-                    deleted_contents: data.delete.map(elem => elem.id)
-                }
-            });
-        } catch (error) {
-            console.log(error);
-        }
+        await updateData(changed, images.filter(image => existingIdSet.has(image.props.id) && changed[image.props.id]));
     }
 
     const handleNext = async () => {
         try {
             await addData();
             await changeData();
-            await deleteData();
+            await deleteData(data.delete);
             next();
         } catch (error) {
             console.log(error);

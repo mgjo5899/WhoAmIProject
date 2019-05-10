@@ -12,7 +12,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { resetChanged, setChanged } from '../../store/actions/changed_actions';
 
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, showImages, getExistingImages, history, changed, resetChanged }) => {
+const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, showImages, getExistingImages, history, changed, resetChanged, updateData, deleteData }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
@@ -94,35 +94,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
 
     const changeData = async () => {
         // put all existing data except delete data
-        console.log(changed);
-        try {
-            await Axios.put(SERVER + '/whiteboard/user_data', {
-                updated_contents: images.filter(image => changed[image.props.id]).map(image => ({
-                    id: image.props.id,
-                    medium: image.props.medium,
-                    pos_x: changed[image.props.id].posX,
-                    pos_y: changed[image.props.id].posY,
-                    specifics: {
-                        curr_width: changed[image.props.id].width,
-                        curr_height: changed[image.props.id].height
-                    }
-                }))
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    const deleteData = async () => {
-        try {
-            await Axios.delete(SERVER + '/whiteboard/user_data', {
-                data: {
-                    deleted_contents: deleted.map(elem => elem.id)
-                }
-            });
-        } catch (error) {
-            console.log(error);
-        }
+        await updateData(changed, images.filter(image => changed[image.props.id]));
     }
 
     const editDelete = image => {
@@ -135,7 +107,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
     }
 
     const handleSave = async () => {
-        await Promise.all([changeData(), deleteData()]);
+        await Promise.all([changeData(), deleteData(deleted)]);
         setFlag(0);
     }
 
