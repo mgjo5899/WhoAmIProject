@@ -547,6 +547,99 @@ This API returns whiteboard contents data related to the given user.
 
 ## User Data
 
+## Follower [/user/followers]
+
+### Get the followers [GET]
+
+(Credential in session required) This API gets followers of the given user.
+
++ Response 200 (application/json)
+
+        {
+            "status": true,
+            "followers": [
+                "some@gmail.com",
+                "user@gmail.com",
+                "that@gmail.com",
+                "iknow@gmail.com"
+            ]
+        }
+
+### Remove a follower [DELETE]
+
+(Credential in session required) This API removes the given follower.
+
++ Request Body (application/json)
+    
+        {
+            "follower_email": "follower_email@gmail.com"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "status": true,
+            "message": "Successfully removed the given follower",
+            "follower": "follower_email@gmail.com",
+            "followed_user": "followed_user_email@gmail.com"
+        }
+
+## Following user [/user/following_users]
+
+### Get the following users [GET]
+
+(Credential in session required) This API gets following users of the given user.
+
++ Response 200 (application/json)
+
+        {
+            "status": true,
+            "following_users": [
+                "some@gmail.com",
+                "user@gmail.com",
+                "that@gmail.com",
+                "iknow@gmail.com"
+            ]
+        }
+
+### Follow a user [POST]
+
+(Credential in session required) This API lets the given user to follow another user.
+
++ Request Body (application/json)
+    
+        {
+            "followed_user_email": "followed_user_email@gmail.com"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "status": true,
+            "message": "Successfully added a follower",
+            "follower": "follower_email@gmail.com",
+            "followed_user": "followed_user_email@gmail.com"
+        }
+
+### Unfollow a user [DELETE]
+
+(Credential in session required) This API lets the given user to unfollow another user.
+
++ Request Body (application/json)
+    
+        {
+            "followed_user_email": "followed_user_email@gmail.com"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "status": true,
+            "message": "Successfully removed the given follower",
+            "follower": "follower_email@gmail.com",
+            "followed_user": "followed_user_email@gmail.com"
+        }
+
 ## Authorized Social Media [/user/authorized_media]
 
 ### Get authorized social media [GET]

@@ -8,10 +8,105 @@ from whoami_back.models.facebook_data import FacebookData
 from whoami_back.models.whiteboard_data import WhiteboardData
 from whoami_back.models.user_profile import UserProfile
 from whoami_back.models.user_profile_data import UserProfileData
+from whoami_back.models.follow import Follow
 from whoami_back.models.base import db
 from whoami_back.config import HASH_METHOD
 from whoami_back.utils import get_pw_hash, check_pw_hash
 
+
+def get_following_users(follower_email):
+    follower = get_user(email=follower_email)
+    rtn_val = {}
+
+    if follower['status'] == False:
+        rtn_val = follower
+    else:
+        following_users = db.query(Follow).filter(Follow.follower_email == follower_email).all()
+        rtn_val['status'] = True
+        rtn_val['following_users'] = []
+
+        for following_user in following_users:
+            rtn_val['following_users'].append(following_user.followed_user_email)
+
+    return rtn_val
+
+def get_followers(followed_user_email):
+    followed_user = get_user(email=followed_user_email)
+    rtn_val = {}
+
+    if followed_user['status'] == False:
+        rtn_val = followed_user
+    else:
+        followers = db.query(Follow).filter(Follow.followed_user_email == \
+                                            followed_user_email).all()
+        rtn_val['status'] = True
+        rtn_val['followers'] = []
+
+        for follower in followers:
+            rtn_val['followers'].append(follower.follower_email)
+
+    return rtn_val
+
+def remove_follower(follower_email, followed_user_email):
+    follower = get_user(email=follower_email)
+    followed_user = get_user(email=followed_user_email)
+    rtn_val = {}
+
+    if follower['status'] == False or followed_user['status'] == False:
+        rtn_val['status'] = False
+        rtn_val['message'] = "Either the follower, the followed user, or both do not exist"
+    else:
+        follower = db.query(Follow).filter(\
+                          and_(Follow.follower_email == follower_email, \
+                               Follow.followed_user_email == followed_user_email)).first()
+        if follower == None:
+            rtn_val['status'] = False
+            rtn_val['message'] = "Could not find the given following relationship with \
+                                  the given information"
+        else:
+            db.delete(follower)
+            db.commit()
+            rtn_val['status'] = True
+            rtn_val['message'] = "Successfully removed the given follower"
+            rtn_val['follower'] = follower_email
+            rtn_val['followed_user'] = followed_user_email
+
+    return rtn_val
+
+# TODO: When the privacy comes in act, we should check whether the followed user is public,
+#       If it's not public account, then there needs to be a pending request phase of the follow 
+#       system.
+def add_follower(follower_email, followed_user_email):
+    follower = get_user(email=follower_email)
+    followed_user = get_user(email=followed_user_email)
+    rtn_val = {}
+
+    if follower['status'] == False or followed_user['status'] == False:
+        rtn_val['status'] = False
+        rtn_val['message'] = "Either the follower, the followed user, or both do not exist"
+    elif follower_email == followed_user_email:
+        rtn_val['status'] = False
+        rtn_val['message'] = "A user cannot follow himself/ herself"
+    else:
+        existing_follower = db.query(Follow).filter(\
+                                 and_(Follow.follower_email == follower_email, \
+                                      Follow.followed_user_email == followed_user_email)).first()
+
+        if existing_follower == None:
+            new_follower = Follow(followed_user_email=followed_user_email, \
+                                  follower_email=follower_email)
+            db.add(new_follower)
+            db.commit()
+            
+            rtn_val['status'] = True
+            rtn_val['message'] = "Successfully added a follower"
+            rtn_val['follower_email'] = follower_email
+            rtn_val['followed_user_email'] = followed_user_email
+        else:
+            rtn_val['status'] = False
+            rtn_val['message'] = "The given following relationship already exists."
+
+    return rtn_val
 
 def get_user_profile(email, internal_use=False):
     user = get_user(email=email)

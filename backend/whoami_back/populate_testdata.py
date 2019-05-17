@@ -20,3 +20,6 @@ for name in users:
     print('')
 
 utils.db_close()
+
+# TODO: Create functions for testing out each of the following listed item:
+#           1. Follower relationship

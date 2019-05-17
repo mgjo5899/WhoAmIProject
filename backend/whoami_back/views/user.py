@@ -8,6 +8,52 @@ import whoami_back.utils as utils
 user = Blueprint('user', __name__)
 
 
+@user.route('/user/followers', methods=['GET', 'DELETE'])
+def user_follower():
+    rtn_val = {}
+    req = utils.get_req_data()
+
+    if 'email' in session:
+        if request.method == 'GET':
+            rtn_val = manage.get_followers(session['email'])
+        elif request.method == 'DELETE':
+            if 'follower_email' in req:
+                rtn_val = manage.remove_follower(req['follower_email'], session['email'])
+            else:
+                rtn_val['status'] = False
+                rtn_val['message'] = "Request is missing necessary data"
+    else:
+        rtn_val['status'] = False
+        rtn_val['message'] = "Could not find the user email in the session cookie"
+
+    return jsonify(rtn_val)
+
+@user.route('/user/following_users', methods=['GET', 'POST', 'DELETE'])
+def user_following_users():
+    rtn_val = {}
+    req = utils.get_req_data()
+
+    if 'email' in session:
+        if request.method == 'GET':
+            rtn_val = manage.get_following_users(session['email'])
+        elif request.method == 'POST':    # Follow
+            if 'followed_user_email' in req:
+                rtn_val = manage.add_follower(session['email'], req['followed_user_email'])
+            else:
+                rtn_val['status'] = False
+                rtn_val['message'] = "Request is missing necessary data"
+        elif request.method == 'DELETE':  # Unfollow
+            if 'followed_user_email' in req:
+                rtn_val = manage.remove_follower(session['email'], req['followed_user_email'])
+            else:
+                rtn_val['status'] = False
+                rtn_val['message'] = "Request is missing necessary data"
+    else:
+        rtn_val['status'] = False
+        rtn_val['message'] = "Could not find the user email in the session cookie"
+
+    return jsonify(rtn_val)
+
 @user.route('/user/authorized_media', methods=['GET'])
 def get_authorized_media():
     rtn_val = {}
