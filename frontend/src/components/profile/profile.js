@@ -148,18 +148,18 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
 
     return (
         <Fragment>
-            <Navbar />
-            <div className="container">
-                <Carousel
-                    activeIndex={activeIndex}
-                    next={next}
-                    previous={previous}
-                    interval={false}
-                    keyboard={false}
-                >
-                    {slides}
-                </Carousel>
-            </div>
+            {/* <Navbar /> */}
+            {/* <div className="container"> */}
+            <Carousel
+                activeIndex={activeIndex}
+                next={next}
+                previous={previous}
+                interval={false}
+                keyboard={false}
+            >
+                {slides}
+            </Carousel>
+            {/* </div> */}
         </Fragment>
     );
 }

@@ -14,14 +14,17 @@ const SignOut = ({ auth, signOut, history }) => {
                     {auth.user.username}
                 </DropdownToggle>
                 <DropdownMenu right>
+                    <DropdownItem onClick={() => history.push('/setting')}>
+                        Setting
+                    </DropdownItem>
                     <ChangePassword />
                     <DropdownItem onClick={() => history.push('/profile')}>
                         Edit Profile
                     </DropdownItem>
                     <DropdownItem divider />
-                    <DropdownItem>
-                        Not Yet
-                        </DropdownItem>
+                    <DropdownItem onClick={() => history.push('/follow')}>
+                        Following/Followers
+                    </DropdownItem>
                 </DropdownMenu>
             </UncontrolledDropdown>
             <NavItem>
