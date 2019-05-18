@@ -6,25 +6,26 @@ import ChangePassword from '../signing/password/change_password';
 
 const Setting = () => {
 
-    const [currentTab, setCurrentTab] = useState('profile');
+    const [currentTab, setCurrentTab] = useState('nav-profile');
     const [navList, setNavList] = useState(null);
     const [componentRender, setComponentRender] = useState(null);
 
-    useEffect(() => {
-        const idMap = {
-            profile: {
-                name: 'Profile',
-                component: <Profile />
-            },
-            follow: {
-                name: 'Followers / Following',
-                component: <Follow />
-            },
-            'change-password': {
-                name: 'Change password',
-                component: <ChangePassword />
-            }
+    const idMap = {
+        'nav-profile': {
+            name: 'Profile',
+            component: <Profile />
+        },
+        'nav-follow': {
+            name: 'Follow',
+            component: <Follow />
+        },
+        'nav-change-password': {
+            name: 'Change password',
+            component: <ChangePassword />
         }
+    }
+
+    useEffect(() => {
         setNavList([]);
         for (const id in idMap) {
             setNavList(navList =>
@@ -37,13 +38,17 @@ const Setting = () => {
     return (
         <Fragment>
             <Navbar />
-            <div className="side-bar float-left mx-3 border-right p-3">
-                <div className="nav flex-column nav-pills" onClick={e => setCurrentTab(e.target.id)}>
-                    {navList}
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="side-bar col-sm-2 mx-2 border-right p-2">
+                        <div className="nav flex-column nav-pills" onClick={e => e.target.id && setCurrentTab(e.target.id)}>
+                            {navList}
+                        </div>
+                    </div>
+                    <div className="col-sm-8">
+                        {componentRender}
+                    </div>
                 </div>
-            </div>
-            <div className="container">
-                {componentRender}
             </div>
         </Fragment>
     );

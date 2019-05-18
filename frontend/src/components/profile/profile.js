@@ -1,10 +1,10 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import Navbar from '../layout/navbar';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { CarouselItem, Carousel } from 'reactstrap';
 import Form from './form';
 import { next, previous } from '../../store/actions/carousel_actions';
-import { showImages, getExistingImages, setData } from '../../store/actions/data_actions';
+import { showImages, getExistingImages, setData, updateData, deleteData } from '../../store/actions/data_actions';
 import { setExistingProfileData, setProfile } from '../../store/actions/profile_actions';
 import uuidv4 from 'uuid/v4';
 import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE } from '../../config';
@@ -135,7 +135,9 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
                 element: { medium: 'whoami' },
                 setData,
                 deleteImage: deleteProfile,
-                flag: 2
+                flag: 2,
+                updateData,
+                deleteData
             }}
         />
     ];
@@ -180,4 +182,4 @@ const mapDispatchToProps = dispatch => ({
     setProfile: profile => dispatch(setProfile(profile))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Profile));
