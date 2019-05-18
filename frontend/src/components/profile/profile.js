@@ -8,7 +8,6 @@ import { showImages, getExistingImages, setData, updateData, deleteData } from '
 import { setExistingProfileData, setProfile } from '../../store/actions/profile_actions';
 import uuidv4 from 'uuid/v4';
 import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE } from '../../config';
-import signedInSecure from '../../secure/signed_in_secure';
 import { ConnectTo, Spread } from '../dashboard';
 import ProfileContents from './profile_contents';
 
@@ -28,10 +27,6 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
         }
         setData({ selected: data.selected.filter(selectedData => selectedData.id !== profile.id) });
     }
-
-    useEffect(() => {
-        signedInSecure({ auth, history }, '/');
-    }, []);
 
     const getProfileSelectedBackUp = () => {
         setBackup({
@@ -124,7 +119,6 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
         />,
         <Spread
             {...{
-                profile,
                 showImages,
                 next: () => history.push('/'),
                 previous: next,
@@ -149,8 +143,6 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
 
     return (
         <Fragment>
-            {/* <Navbar /> */}
-            {/* <div className="container"> */}
             <Carousel
                 activeIndex={activeIndex}
                 next={next}
@@ -160,7 +152,6 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
             >
                 {slides}
             </Carousel>
-            {/* </div> */}
         </Fragment>
     );
 }

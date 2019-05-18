@@ -16,7 +16,7 @@ export const setData = data => ({
  * 
  * @param {list} imageData - image data to show up
  * @param {function} clickFunc - operate function when click
- * @param {int} flag - 0 ==> dashboard 1 ==> image spread 2 ==> profile spread
+ * @param {int} flag - 0 ==> dashboard 1 ==> image spread 2 ==> profile spread 3 ==> follow spread
  */
 export const showImages = (imageData, clickFunc, flag) => {
     return imageData.map((image, index) => {
@@ -25,7 +25,7 @@ export const showImages = (imageData, clickFunc, flag) => {
 
         // const correctFlag = (flag === 1 && image.medium !== 'whoami') || (flag === 2 && image.type === 'profile');
 
-        if ([1, 2].includes(flag)) {
+        if ([1, 2, 3].includes(flag)) {
             className += ' draggable resize-drag';
         }
 
@@ -49,7 +49,7 @@ export const showImages = (imageData, clickFunc, flag) => {
                 onClick={flag === 0 ? (() => clickFunc(image)) : undefined}
             >
                 {
-                    image.type !== 'profile'
+                    image.medium !== 'whoami'
                         ? (
                             <Fragment>
                                 <img
@@ -62,8 +62,8 @@ export const showImages = (imageData, clickFunc, flag) => {
                         )
                         : (
                             <div className="card">
-                                <span id="profile" className="mx-auto" style={{ fontSize: DEFAULT_PROFILE_FONT_SIZE * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
-                                    profile
+                                <span id={image.type} className="mx-auto" style={{ fontSize: DEFAULT_PROFILE_FONT_SIZE * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
+                                    {image.type}
                                 </span>
                                 <span className="position-absolute" style={{ fontSize: 10, width: 50, top: '2%', left: '2%', opacity: 0.7, userSelect: 'none' }}>whoami</span>
                             </div>

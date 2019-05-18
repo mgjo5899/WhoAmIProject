@@ -69,8 +69,8 @@ export const Drag = setChanged => {
             target.style.width = event.rect.width + 'px';
             // target.style.height = event.rect.height + 'px';
 
-            if (target.getAttribute('type') === 'profile') {
-                const element = document.getElementById('profile');
+            if (target.getAttribute('type') === 'profile' || target.getAttribute('type') === 'follow') {
+                const element = document.getElementById('profile') || document.getElementById('follow');
                 element.style.fontSize = (DEFAULT_PROFILE_FONT_SIZE * parseFloat(target.style.width) / DEFAULT_PROFILE_SIZE_VALUE) + 'px';
             }
             x += event.deltaRect.left;
