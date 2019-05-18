@@ -28,9 +28,17 @@ const Setting = () => {
     useEffect(() => {
         setNavList([]);
         for (const id in idMap) {
-            setNavList(navList =>
-                [...navList, <button id={id} key={id} className={"btn btn-lg btn-link nav-link m-2" + (id === currentTab ? ' active' : '')}>{idMap[id].name}</button>]
-            );
+            setNavList(navList => [
+                ...navList,
+                <button
+                    id={id}
+                    key={id}
+                    className={"btn btn-lg btn-link nav-link m-2" + (id === currentTab ? ' active' : '')}
+                    onClick={idMap[id].onClick}
+                >
+                    {idMap[id].name}
+                </button>
+            ]);
         }
         setComponentRender(idMap[currentTab].component);
     }, [currentTab]);
@@ -45,7 +53,7 @@ const Setting = () => {
                             {navList}
                         </div>
                     </div>
-                    <div className="col-sm-8">
+                    <div className="col-sm-9">
                         {componentRender}
                     </div>
                 </div>

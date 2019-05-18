@@ -15,7 +15,6 @@ import ProfileContents from './profile_contents';
 const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, getExistingImages, history, setExistingProfileData, setProfile }) => {
 
     const [loaded, setLoaded] = useState(false);
-    // const [profileLoaded, setProfileLoaded] = useState(false);
     const [backup, setBackup] = useState(null);
     const [element, setElement] = useState(null);
     const [profileUrlBackup, setProfileUrlBackup] = useState(null);

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { DropdownItem, Modal, ModalBody, ModalFooter, Button } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter, Button } from 'reactstrap';
 import Axios from 'axios';
 import { SERVER } from '../../../config';
 import { connect } from 'react-redux';
@@ -41,9 +41,7 @@ class ChangePassword extends Component {
     render() {
         return (
             <Fragment>
-                <DropdownItem onClick={this.handleChangePassword}>
-                    Change Password
-                </DropdownItem>
+                <button className="btn btn-primary" onClick={this.handleChangePassword}>Change Password</button>
                 <Modal isOpen={this.state.modal} toggle={this.toggle}>
                     <ModalBody>
                         <div className={`spinner-border mx-auto ${this.state.spinner ? 'd-block' : 'd-none'}`} role="status">
