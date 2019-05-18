@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import { Button, NavItem, UncontrolledDropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'reactstrap';
 import { connect } from 'react-redux';
 import { signOut } from '../../store/actions/auth_actions';
-import ChangePassword from './password/change_password';
 import { withRouter } from 'react-router-dom';
 
 const SignOut = ({ auth, signOut, history }) => {
@@ -16,14 +15,6 @@ const SignOut = ({ auth, signOut, history }) => {
                 <DropdownMenu right>
                     <DropdownItem onClick={() => history.push('/setting')}>
                         Setting
-                    </DropdownItem>
-                    <ChangePassword />
-                    <DropdownItem onClick={() => history.push('/profile')}>
-                        Edit Profile
-                    </DropdownItem>
-                    <DropdownItem divider />
-                    <DropdownItem onClick={() => history.push('/follow')}>
-                        Following/Followers
                     </DropdownItem>
                 </DropdownMenu>
             </UncontrolledDropdown>
