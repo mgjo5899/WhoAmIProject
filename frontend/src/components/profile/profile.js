@@ -1,22 +1,46 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { CarouselItem, Carousel } from 'reactstrap';
 import Form from './form';
-import { next, previous } from '../../store/actions/carousel_actions';
-import { showImages, getExistingImages, setData, updateData, deleteData } from '../../store/actions/data_actions';
-import { setExistingProfileData, setProfile } from '../../store/actions/profile_actions';
 import uuidv4 from 'uuid/v4';
-import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE } from '../../config';
+import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE, SERVER } from '../../config';
 import { ConnectTo, Spread } from '../dashboard';
 import ProfileContents from './profile_contents';
+import Axios from 'axios';
 
-const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, getExistingImages, history, setExistingProfileData, setProfile }) => {
+const Profile = ({ auth, history, showImages, updateData, deleteData }) => {
 
     const [loaded, setLoaded] = useState(false);
     const [backup, setBackup] = useState(null);
     const [element, setElement] = useState(null);
     const [profileUrlBackup, setProfileUrlBackup] = useState(null);
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    const [profile, setProfile] = useState({
+        profile_image_url: '',
+        bio: '',
+        company: '',
+        location: '',
+        website: '',
+        include_email: true
+    });
+
+    const resetData = () => ({
+        new: [],
+        images: [],
+        existing: [],
+        delete: [],
+        selected: []
+    });
+
+    const [data, setData] = useState(resetData());
+
+    const setExistingProfileData = async () => {
+        const { profile } = (await Axios.get(SERVER + '/user/profile')).data;
+
+        if (profile) {
+            setProfile({ ...profile, include_email: profile.email ? true : false });
+        }
+    }
 
     const deleteProfile = profile => {
         const existingIndex = data.existing.findIndex(elem => elem.id === profile.id) !== -1;
@@ -37,17 +61,41 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
         setProfileUrlBackup({ profile_image_url: profile.profile_image_url });
     }
 
+    const next = () => {
+        setActiveIndex((activeIndex + 1) % 4);
+    }
+
+    const previous = () => {
+        setActiveIndex(((activeIndex - 1) + 4) % 4);
+    }
+
     useEffect(() => {
         if (activeIndex === contentsIndex.profile) {
             setLoaded(false);
+            resetData();
             getProfileSelectedBackUp();
             (async () => {
                 await setExistingProfileData();
-                await getExistingImages(auth, auth.user.username, history);
+                await getOwnerExistingImages();
                 setLoaded(true);
             })();
         }
     }, [activeIndex]);
+
+    useEffect(() => {
+        console.log(data)
+    }, [data]);
+
+    const getOwnerExistingImages = async () => {
+        const data = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
+        const { status, whiteboard_data, message } = data;
+        if (!status) throw new Error(message);
+        resetData();
+        setData(data => ({
+            ...data,
+            existing: whiteboard_data
+        }));
+    }
 
     useEffect(() => {
         if (loaded) {
@@ -156,20 +204,4 @@ const Profile = ({ profile, auth, activeIndex, next, previous, data, setData, ge
     );
 }
 
-const mapStateToProps = state => ({
-    auth: state.auth,
-    activeIndex: state.carousel.profileActiveIndex,
-    data: state.data,
-    profile: state.profile
-})
-
-const mapDispatchToProps = dispatch => ({
-    next: () => dispatch(next('PROFILE')),
-    previous: () => dispatch(previous('PROFILE')),
-    getExistingImages: (auth, username, history) => dispatch(getExistingImages(auth, username, history)),
-    setData: data => dispatch(setData(data)),
-    setExistingProfileData: () => dispatch(setExistingProfileData()),
-    setProfile: profile => dispatch(setProfile(profile))
-})
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Profile));
+export default Profile;

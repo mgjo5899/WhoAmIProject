@@ -1,15 +1,6 @@
 import React, { Fragment } from 'react';
 import Axios from 'axios';
-import { SECRET_KEY, SERVER, DEFAULT_PROFILE_FONT_SIZE, DEFAULT_PROFILE_SIZE_VALUE, SOCIAL_MEDIA_CONFIG } from '../../config';
-
-export const resetData = () => ({
-    type: 'RESET_DATA'
-})
-
-export const setData = data => ({
-    type: 'SET_DATA',
-    data
-})
+import { SERVER, DEFAULT_PROFILE_FONT_SIZE, DEFAULT_PROFILE_SIZE_VALUE, SOCIAL_MEDIA_CONFIG } from '../../config';
 
 // showing the images to the end users
 /**
@@ -77,39 +68,6 @@ export const showImages = (imageData, clickFunc, flag) => {
             </div>
         )
     })
-}
-
-export const isOwner = (auth, username) => (auth.user.username === username)
-
-export const getExistingImages = (auth, username, history) => async dispatch => {
-    try {
-        return isOwner(auth, username) ? await dispatch(getOwnerExistingImages()) : await dispatch(getUserExistingImages(username));
-    } catch (error) {
-        history.push('/error_page');
-        console.log(error);
-    }
-}
-
-const getOwnerExistingImages = () => async dispatch => {
-    const data = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
-    const { status, whiteboard_data, message } = data;
-    if (!status) throw new Error(message);
-    dispatch(resetData());
-    dispatch(setData({
-        existing: whiteboard_data
-    }));
-}
-
-const getUserExistingImages = username => async dispatch => {
-    const { status, whiteboard_data, message } = (await Axios.post(SERVER + '/whiteboard/published_data', {
-        username,
-        secret_key: SECRET_KEY
-    })).data;
-    if (!status) throw new Error(message);
-    dispatch(resetData());
-    dispatch(setData({
-        existing: whiteboard_data
-    }));
 }
 
 export const deleteData = async deleted => {

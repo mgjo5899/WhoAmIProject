@@ -28,11 +28,15 @@ class App extends Component {
   render() {
     return this.state.loaded && (
       <div className="App">
-        <Routing />
+        <Routing auth={this.props.auth} />
       </div>
     )
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -41,4 +45,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

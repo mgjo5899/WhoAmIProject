@@ -3,9 +3,10 @@ import FollowingFollowers from './following_followers';
 import { CarouselItem, Carousel } from 'reactstrap';
 import { Spread } from '../dashboard';
 import uuidv4 from 'uuid/v4';
-import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE } from '../../config';
+import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE, SERVER } from '../../config';
+import Axios from 'axios';
 
-const Follow = ({ data, setData, updateData, deleteData, showImages, getExistingImages, auth, history }) => {
+const Follow = ({ updateData, deleteData, showImages }) => {
 
     const [backup, setBackup] = useState({
         delete: [],
@@ -14,12 +15,22 @@ const Follow = ({ data, setData, updateData, deleteData, showImages, getExisting
     });
     const [activeIndex, setActiveIndex] = useState(0);
 
+    const resetData = () => ({
+        new: [],
+        images: [],
+        existing: [],
+        delete: [],
+        selected: []
+    });
+
+    const [data, setData] = useState(resetData());
+
     const next = () => {
         setActiveIndex((activeIndex + 1) % 2);
     }
 
     const previous = () => {
-        setActiveIndex((((activeIndex - 1) % 2) + 2) % 2);
+        setActiveIndex(((activeIndex - 1) + 2) % 2);
     }
 
     const deleteFollow = follow => {
@@ -42,14 +53,20 @@ const Follow = ({ data, setData, updateData, deleteData, showImages, getExisting
 
     useEffect(() => {
         if (activeIndex === contentsIndex.following_followers) {
+            resetData();
             selectedBackup();
-            getExistingImages(auth, auth.user.username, history);
+            getOwnerExistingImages();
         }
     }, [activeIndex]);
 
     useEffect(() => {
+        console.log(data)
+    }, [data]);
+
+    useEffect(() => {
         // when data exists, execute the command, giving conditions to useEffect
         if (backup.selected.length > 0) {
+            console.log('here')
             setData(backup);
         } else {
             const existingFollowData = data.existing.find(existingData => existingData.type === 'follow');
@@ -67,6 +84,7 @@ const Follow = ({ data, setData, updateData, deleteData, showImages, getExisting
                 },
                 selected: true
             };
+            console.log(followElement);
             if (!existingFollowData) {
                 setData({ new: [...data.new, followElement] });
             }
@@ -77,6 +95,17 @@ const Follow = ({ data, setData, updateData, deleteData, showImages, getExisting
     const contentsIndex = {
         following_followers: 0,
         spread: 1
+    }
+
+    const getOwnerExistingImages = async () => {
+        const data = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
+        const { status, whiteboard_data, message } = data;
+        if (!status) throw new Error(message);
+        resetData();
+        setData(data => ({
+            ...data,
+            existing: whiteboard_data
+        }));
     }
 
     // list of components to use programmatically

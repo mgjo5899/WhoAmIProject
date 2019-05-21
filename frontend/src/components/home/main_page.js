@@ -2,15 +2,31 @@ import React, { useState, Fragment } from 'react';
 import { Carousel, CarouselItem } from 'reactstrap';
 import { Dashboard, ConnectTo, Contents, Spread } from '../dashboard';
 import Navbar from '../layout/navbar';
-import { connect } from 'react-redux';
-import { resetData, setData, showImages, updateData, deleteData } from '../../store/actions/data_actions';
-import { next, previous } from '../../store/actions/carousel_actions';
+import { showImages, updateData, deleteData } from '../../store/actions/data_actions';
 
-const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex, history }) => {
+const MainPage = ({ match, history }) => {
 
     // this component contains many children components, which requires multiple states to use
     const [element, setElement] = useState(null);
     const [contents, setContents] = useState([]);
+
+    const resetData = () => ({
+        new: [],
+        images: [],
+        existing: [],
+        delete: [],
+        selected: []
+    });
+    const [data, setData] = useState(resetData());
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    const next = () => {
+        setActiveIndex((activeIndex + 1) % 4);
+    }
+
+    const previous = () => {
+        setActiveIndex(((activeIndex - 1) + 4) % 4);
+    }
 
     const contentsIndex = {
         dashboard: 0,
@@ -27,26 +43,26 @@ const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex
         const existingIndex = data.existing.findIndex(elem => elem.id === img.id) !== -1;
         if (!selectedMedium) {
             // if the image is not from the selected medium, and if the user clicks delete button, then add the image to delete data
-            setData({ delete: [...data.delete, img] });
+            setData(data => ({ ...data, delete: [...data.delete, img] }));
         } else if (img.isSelected) {
             // selected
             // check if it is in existing one, if it is, then erase from delete, if it is not, then add the object to add state
             if (existingIndex) {
-                setData({ delete: data.delete.filter(elem => elem.id !== img.id) });
+                setData(data => ({ ...data, delete: data.delete.filter(elem => elem.id !== img.id) }));
             } else {
-                setData({ new: [...data.new, img] });
+                setData(data => ({ ...data, new: [...data.new, img] }));
             }
         } else {
             // unselect
             // check existing one, if it exists, then add into delete, if it is not, then erase from add
             if (existingIndex) {
-                setData({ delete: [...data.delete, img] });
+                setData(data => ({ ...data, delete: [...data.delete, img] }));
             } else {
-                setData({ new: data.new.filter(elem => elem.id !== img.id) });
+                setData(data => ({ ...data, new: data.new.filter(elem => elem.id !== img.id) }));
             }
         }
         // update to data and contents
-        setData({ selected: contents.filter(content => content.isSelected) });
+        setData(data => ({ ...data, selected: contents.filter(content => content.isSelected) }));
         setContents(contents);
     }
 
@@ -119,17 +135,4 @@ const MainPage = ({ match, resetData, data, setData, next, previous, activeIndex
     );
 }
 
-const mapStateToProps = state => ({
-    auth: state.auth,
-    data: state.data,
-    activeIndex: state.carousel.dashboardActiveIndex
-})
-
-const mapDispatchToProps = dispatch => ({
-    resetData: () => dispatch(resetData()),
-    setData: data => dispatch(setData(data)),
-    next: () => dispatch(next('DASHBOARD')),
-    previous: () => dispatch(previous('DASHBOARD'))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
+export default MainPage;

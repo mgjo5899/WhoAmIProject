@@ -9,7 +9,7 @@ import Home from './components/home/home';
 import Follow from './components/follow/follow';
 import Setting from './components/setting/setting';
 
-const Routing = () => {
+const Routing = ({ auth }) => {
     return (
         <BrowserRouter>
             <Switch>

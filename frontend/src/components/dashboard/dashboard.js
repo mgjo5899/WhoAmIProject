@@ -1,17 +1,17 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'reactstrap';
-import { getExistingImages, isOwner } from '../../store/actions/data_actions';
-import { setExistingProfileData } from '../../store/actions/profile_actions';
+import { setExistingProfileData, resetData } from '../../store/actions/profile_actions';
 import { WhiteBoard } from './whiteboard';
 import { withRouter } from 'react-router';
-import { DEFAULT_WIDTH, DEFAULT_HEIGHT } from '../../config';
+import { DEFAULT_WIDTH, DEFAULT_HEIGHT, SERVER, SECRET_KEY } from '../../config';
 import InputForm from '../profile/input_form';
 import InfiniteScroll from 'react-infinite-scroller';
 import { resetChanged, setChanged } from '../../store/actions/changed_actions';
+import Axios from 'axios';
 
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, showImages, getExistingImages, history, changed, resetChanged, updateData, deleteData }) => {
+const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, auth, showImages, history, changed, resetChanged, updateData, deleteData }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
@@ -114,6 +114,43 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
         setHeight(height + 100);
     }
 
+    const getExistingImages = async (auth, username) => {
+        try {
+            return isOwner(auth, username) ? await getOwnerExistingImages() : await getUserExistingImages(username);
+        } catch (error) {
+            history.push('/error_page');
+            console.log(error);
+        }
+    }
+
+    const isOwner = (auth, username) => (auth.user.username === username);
+
+    const getOwnerExistingImages = async () => {
+        const data = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
+        const { status, whiteboard_data, message } = data;
+        if (!status) throw new Error(message);
+        resetData();
+        setData(data => ({
+            ...data,
+            existing: whiteboard_data
+        }));
+    }
+
+    const getUserExistingImages = username => async dispatch => {
+        const { status, whiteboard_data, message } = (await Axios.post(SERVER + '/whiteboard/published_data', {
+            username,
+            secret_key: SECRET_KEY
+        })).data;
+        if (!status) throw new Error(message);
+        resetData();
+        setData(data => ({
+            ...data,
+            existing: whiteboard_data
+        }));
+    }
+
+
+
     return (
         <Fragment>
             <div className="d-flex justify-content-end">
@@ -152,12 +189,10 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, auth, sho
 
 const mapStateToProps = state => ({
     auth: state.auth,
-    profile: state.profile,
     changed: state.changed
 })
 
 const mapDispatchToProps = dispatch => ({
-    getExistingImages: (auth, username, history) => dispatch(getExistingImages(auth, username, history)),
     setExistingProfileData: document => dispatch(setExistingProfileData(document)),
     setChanged: changed => dispatch(setChanged(changed)),
     resetChanged: () => dispatch(resetChanged())
