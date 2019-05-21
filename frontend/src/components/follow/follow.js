@@ -36,11 +36,11 @@ const Follow = ({ updateData, deleteData, showImages }) => {
     const deleteFollow = follow => {
         const existingIndex = data.existing.findIndex(elem => elem.id === follow.id) !== -1;
         if (existingIndex) {
-            setData({ delete: [...data.delete, follow] });
+            setData(data => ({ ...data, delete: [...data.delete, follow] }));
         } else {
-            setData({ new: data.new.filter(elem => elem.id !== follow.id) });
+            setData(data => ({ ...data, new: data.new.filter(elem => elem.id !== follow.id) }));
         }
-        setData({ selected: data.selected.filter(selectedData => selectedData.id !== follow.id) });
+        setData(data => ({ ...data, selected: data.selected.filter(selectedData => selectedData.id !== follow.id) }));
     }
 
     const selectedBackup = () => {
@@ -86,9 +86,9 @@ const Follow = ({ updateData, deleteData, showImages }) => {
             };
             console.log(followElement);
             if (!existingFollowData) {
-                setData({ new: [...data.new, followElement] });
+                setData(data => ({ ...data, new: [...data.new, followElement] }));
             }
-            setData({ selected: [...data.selected, followElement] });
+            setData(data => ({ ...data, selected: [...data.selected, followElement] }));
         }
     }, [data.existing]);
 

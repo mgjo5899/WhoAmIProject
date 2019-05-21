@@ -45,11 +45,11 @@ const Profile = ({ auth, history, showImages, updateData, deleteData }) => {
     const deleteProfile = profile => {
         const existingIndex = data.existing.findIndex(elem => elem.id === profile.id) !== -1;
         if (existingIndex) {
-            setData({ delete: [...data.delete, profile] });
+            setData(data => ({ ...data, delete: [...data.delete, profile] }));
         } else {
-            setData({ new: data.new.filter(elem => elem.id !== profile.id) });
+            setData(data => ({ ...data, new: data.new.filter(elem => elem.id !== profile.id) }));
         }
-        setData({ selected: data.selected.filter(selectedData => selectedData.id !== profile.id) });
+        setData(data => ({ ...data, selected: data.selected.filter(selectedData => selectedData.id !== profile.id) }));
     }
 
     const getProfileSelectedBackUp = () => {
@@ -72,7 +72,7 @@ const Profile = ({ auth, history, showImages, updateData, deleteData }) => {
     useEffect(() => {
         if (activeIndex === contentsIndex.profile) {
             setLoaded(false);
-            resetData();
+            setData(resetData());
             getProfileSelectedBackUp();
             (async () => {
                 await setExistingProfileData();
@@ -81,10 +81,6 @@ const Profile = ({ auth, history, showImages, updateData, deleteData }) => {
             })();
         }
     }, [activeIndex]);
-
-    useEffect(() => {
-        console.log(data)
-    }, [data]);
 
     const getOwnerExistingImages = async () => {
         const data = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
@@ -100,7 +96,7 @@ const Profile = ({ auth, history, showImages, updateData, deleteData }) => {
     useEffect(() => {
         if (loaded) {
             // when data exists, execute the command, giving conditions to useEffect
-            if (backup.selected.length > 0) {
+            if (backup && backup.selected.length > 0) {
                 setData(backup);
                 setProfile(profileUrlBackup);
             } else {
@@ -120,9 +116,9 @@ const Profile = ({ auth, history, showImages, updateData, deleteData }) => {
                     selected: true
                 };
                 if (!existingProfileData) {
-                    setData({ new: [...data.new, profileElement] });
+                    setData(data => ({ ...data, new: [...data.new, profileElement] }));
                 }
-                setData({ selected: [...data.selected, profileElement] });
+                setData(data => ({ ...data, selected: [...data.selected, profileElement] }));
             }
         }
     }, [loaded]);
