@@ -73,6 +73,7 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
         );
         // selected marking from contents
         setData({
+            ...data,
             selected: contents.filter(content => content.isSelected)
         });
         setMarkedImage(true);
@@ -87,6 +88,7 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
             // fetching contents
             const contentsData = userData.contents;
             setData({
+                ...data,
                 images: (
                     contentsData.map(content => (
                         {

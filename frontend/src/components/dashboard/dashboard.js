@@ -128,24 +128,24 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
         const data = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
         const { status, whiteboard_data, message } = data;
         if (!status) throw new Error(message);
-        resetData();
-        setData(data => ({
+        setData({
+            ...resetData(),
             ...data,
             existing: whiteboard_data
-        }));
+        });
     }
 
-    const getUserExistingImages = username => async dispatch => {
+    const getUserExistingImages = async username => {
         const { status, whiteboard_data, message } = (await Axios.post(SERVER + '/whiteboard/published_data', {
             username,
             secret_key: SECRET_KEY
         })).data;
         if (!status) throw new Error(message);
-        resetData();
-        setData(data => ({
+        setData({
+            ...resetData(),
             ...data,
             existing: whiteboard_data
-        }));
+        });
     }
 
     return (

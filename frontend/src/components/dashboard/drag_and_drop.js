@@ -75,7 +75,8 @@ export const Drag = setChanged => {
             }
             x += event.deltaRect.left;
             if (!event.edges.bottom && (event.edges.top || event.edges.right)) {
-                event.edges.right ? y -= event.deltaRect.right : y += event.deltaRect.left;
+                const ratio = target.offsetHeight / target.offsetWidth;
+                event.edges.right ? y -= event.deltaRect.right * ratio : y += event.deltaRect.left * ratio;
             }
             // console.log(event.deltaRect.left, event.deltaRect.top, event.deltaRect.right, event.rect.width)
 
