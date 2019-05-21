@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'reactstrap';
-import { setExistingProfileData, resetData } from '../../store/actions/profile_actions';
 import { WhiteBoard } from './whiteboard';
 import { withRouter } from 'react-router';
 import { DEFAULT_WIDTH, DEFAULT_HEIGHT, SERVER, SECRET_KEY } from '../../config';
@@ -11,7 +10,7 @@ import { resetChanged, setChanged } from '../../store/actions/changed_actions';
 import Axios from 'axios';
 
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, auth, showImages, history, changed, resetChanged, updateData, deleteData }) => {
+const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, auth, showImages, history, changed, resetChanged, updateData, deleteData, resetData }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
@@ -149,8 +148,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
         }));
     }
 
-
-
     return (
         <Fragment>
             <div className="d-flex justify-content-end">
@@ -182,7 +179,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
                         <WhiteBoard {...{ DEFAULT_WIDTH, height, images }} />
                     )
             }
-
         </Fragment>
     );
 }
@@ -193,7 +189,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    setExistingProfileData: document => dispatch(setExistingProfileData(document)),
     setChanged: changed => dispatch(setChanged(changed)),
     resetChanged: () => dispatch(resetChanged())
 })
