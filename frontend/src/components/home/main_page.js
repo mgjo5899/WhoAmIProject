@@ -2,7 +2,6 @@ import React, { useState, Fragment } from 'react';
 import { Carousel, CarouselItem } from 'reactstrap';
 import { Dashboard, ConnectTo, Contents, Spread } from '../dashboard';
 import Navbar from '../layout/navbar';
-import { showImages, updateData, deleteData } from '../../store/actions/data_actions';
 
 const MainPage = ({ match, history }) => {
 
@@ -82,10 +81,7 @@ const MainPage = ({ match, history }) => {
             {...{
                 ...props,
                 resetData,
-                username: match.params.username,
-                showImages,
-                updateData,
-                deleteData
+                username: match.params.username
             }}
         />,
         <ConnectTo {...props} setElement={setElement} />,
@@ -101,12 +97,9 @@ const MainPage = ({ match, history }) => {
                 ...props,
                 deleteImage,
                 element,
-                showImages,
                 setData,
                 flag: 1,
-                next: () => history.push('/'),
-                updateData,
-                deleteData
+                next: () => history.push('/')
             }}
         />
     ];
