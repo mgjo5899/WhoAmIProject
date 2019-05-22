@@ -31,8 +31,8 @@ const InputForm = ({ auth, readOnly, profile, next, setProfile }) => {
                             src={profile.profile_image_url ? profile.profile_image_url : AnonymousUser}
                             alt=""
                             className="img-thumbnail mx-auto rounded-circle"
-                            style={{ width: DEFAULT_PROFILE_SIZE_VALUE, height: 'auto' }}
                             onClick={!readOnly ? next : undefined}
+                            style={{ width: DEFAULT_PROFILE_SIZE_VALUE, height: DEFAULT_PROFILE_SIZE_VALUE, objectFit: 'cover' }}
                         />
                         {
                             !readOnly && (
@@ -43,7 +43,7 @@ const InputForm = ({ auth, readOnly, profile, next, setProfile }) => {
                         }
                         {
                             profile.profile_image_url && !readOnly && (
-                                <button type="button" onClick={() => setProfile({ profile_image_url: '' })} className="close position-absolute" style={{ top: '2%', right: '2%' }} aria-label="Close">
+                                <button type="button" onClick={() => setProfile({ ...profile, profile_image_url: '' })} className="close position-absolute" style={{ top: '2%', right: '2%' }} aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             )

@@ -96,7 +96,7 @@ const ProfileContents = ({ activeIndex, contentsIndex, element, previous, profil
     const handleDone = () => {
         const selected = contents.find(content => content.isSelected);
         const url = selected ? selected.src : '';
-        setProfile({ profile_image_url: url });
+        setProfile({ ...profile, profile_image_url: url });
         previous();
         previous();
     }

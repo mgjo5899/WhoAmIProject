@@ -36,14 +36,17 @@ const Form = ({ profile, setProfile, auth, next, previous }) => {
         e.persist();
         if (e.target.id === 'show-email') {
             setProfile({
+                ...profile,
                 include_email: true
             });
         } else if (e.target.id === 'hide-email') {
             setProfile({
+                ...profile,
                 include_email: false
             });
         } else {
             setProfile({
+                ...profile,
                 [e.target.id]: e.target.value
             });
         }

@@ -6,6 +6,7 @@ import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE, SERVER } from
 import { ConnectTo, Spread } from '../dashboard';
 import ProfileContents from './profile_contents';
 import Axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
 const Profile = ({ auth, history, showImages, updateData, deleteData }) => {
 
@@ -35,10 +36,9 @@ const Profile = ({ auth, history, showImages, updateData, deleteData }) => {
     const [data, setData] = useState(resetData());
 
     const setExistingProfileData = async () => {
-        const { profile } = (await Axios.get(SERVER + '/user/profile')).data;
-
-        if (profile) {
-            setProfile({ ...profile, include_email: profile.email ? true : false });
+        const { profile: profileData } = (await Axios.get(SERVER + '/user/profile')).data;
+        if (profileData) {
+            setProfile({ ...profile, ...profileData, include_email: profileData.email ? true : false });
         }
     }
 
@@ -62,11 +62,11 @@ const Profile = ({ auth, history, showImages, updateData, deleteData }) => {
     }
 
     const next = () => {
-        setActiveIndex((activeIndex + 1) % 4);
+        setActiveIndex(activeIndex => (activeIndex + 1) % 4);
     }
 
     const previous = () => {
-        setActiveIndex(((activeIndex - 1) + 4) % 4);
+        setActiveIndex(activeIndex => ((activeIndex - 1) + 4) % 4);
     }
 
     useEffect(() => {
@@ -97,8 +97,8 @@ const Profile = ({ auth, history, showImages, updateData, deleteData }) => {
         if (loaded) {
             // when data exists, execute the command, giving conditions to useEffect
             if (backup && backup.selected.length > 0) {
-                setData(backup);
-                setProfile(profileUrlBackup);
+                setData(data => ({ ...data, ...backup }));
+                setProfile({ ...profile, ...profileUrlBackup });
             } else {
                 const existingProfileData = data.existing.find(existingData => existingData.type === 'profile');
                 const profileElement = {
@@ -117,8 +117,8 @@ const Profile = ({ auth, history, showImages, updateData, deleteData }) => {
                 };
                 if (!existingProfileData) {
                     setData(data => ({ ...data, new: [...data.new, profileElement] }));
+                    setData(data => ({ ...data, selected: [...data.selected, profileElement] }));
                 }
-                setData(data => ({ ...data, selected: [...data.selected, profileElement] }));
             }
         }
     }, [loaded]);
@@ -200,4 +200,4 @@ const Profile = ({ auth, history, showImages, updateData, deleteData }) => {
     );
 }
 
-export default Profile;
+export default withRouter(Profile);
