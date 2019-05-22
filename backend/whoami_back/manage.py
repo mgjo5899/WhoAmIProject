@@ -223,7 +223,7 @@ def add_whoami_content(email, new_content):
             rtn_val['id'] = whiteboard_data_id
     else:
         rtn_val['status'] = False
-        rtn_Val['message'] = "Unknown content type"
+        rtn_val['message'] = "Unknown content type"
 
     rtn_val['medium'] = medium
     rtn_val['email'] = email
