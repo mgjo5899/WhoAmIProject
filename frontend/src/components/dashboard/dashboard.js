@@ -8,9 +8,10 @@ import InputForm from '../profile/input_form';
 import InfiniteScroll from 'react-infinite-scroller';
 import { resetChanged, setChanged } from '../../store/actions/changed_actions';
 import Axios from 'axios';
+import { showImages, updateData, deleteData } from '../../store/actions/data_actions';
 
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, auth, showImages, history, changed, resetChanged, updateData, deleteData, resetData }) => {
+const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, auth, history, changed, resetChanged, resetData }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
@@ -19,18 +20,38 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
     const [modalContent, setModalContent] = useState(null);
     const [flag, setFlag] = useState(0);
     const [deleted, setDeleted] = useState([]);
+    const [isFollowing, setIsFollowing] = useState(false);
 
     useEffect(() => {
         if (activeIndex === contentsIndex.dashboard) {
             // when first loaded to dashboard, get existing data from server
+            console.log('here')
             setHeight(DEFAULT_HEIGHT);
             resetChanged();
             setDeleted([]);
-            getExistingImages(auth, username, history);
+            (async () => {
+                await getExistingImages(auth, username, history);
+                await getFollowingData();
+            })();
+            // getExistingImages(auth, username, history);
+            // getFollowingData();
         } else if (activeIndex === contentsIndex.contents) {
             setImages([]);
         }
     }, [activeIndex, flag]);
+
+    const getFollowingData = async () => {
+        try {
+            console.log(username)
+            // get all following data, and find if the username is included in this data
+            const { status, following_users, message } = (await Axios.get(SERVER + '/user/following_users')).data;
+            if (!status) throw new Error(message);
+            // if we find the index of following user, set isFollowing true, else false 
+            following_users.findIndex(user => user === username) !== -1 ? setIsFollowing(true) : setIsFollowing(false);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     useEffect(() => {
         if (data.existing.length > 0) {
@@ -148,10 +169,48 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
         });
     }
 
+    const handleFollow = async () => {
+        console.log(auth);
+        // if it is not authorized, then move to the home page
+        if (!auth.user.email) {
+            history.push('/');
+        } else {
+            // if it is authorized separate the case, follow or unfollow
+
+            // if currently following, delete following
+            try {
+                if (isFollowing) {
+                    const { status, message } = (await Axios.delete(SERVER + '/user/following_users', {
+                        data: {
+                            followed_username: username
+                        }
+                    })).data;
+                    // if status is false, throw error to print to console output
+                    if (!status) throw new Error(message);
+                } else {
+                    // if it is currently not following, follow the user
+                    const { status, message } = (await Axios.post(SERVER + '/user/following_users', {
+                        followed_username: username
+                    })).data;
+                    // if status is false, throw error to print to console output
+                    if (!status) throw new Error(message);
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+    }
+
     return (
         <Fragment>
             <div className="d-flex justify-content-end">
-                <div className={'d-block' + ((!isOwner(auth, username) || flag === 1) ? ' invisible' : '')}>
+                <div className={(isOwner(auth, username) ? 'invisible' : undefined)}>
+                    <button className="btn btn-outline-primary btn-sm mx-2" onClick={handleFollow}>
+                        {!isFollowing ? 'follow' : 'unfollow'}
+                    </button>
+                </div>
+                <div className={((!isOwner(auth, username) || flag === 1) ? 'd-none' : undefined)}>
                     <button className="btn btn-outline-primary btn-sm mx-2" onClick={() => setFlag(1)}>edit</button>
                     <button className="btn btn-outline-primary btn-sm mx-2" onClick={next}>add</button>
                 </div>

@@ -4,8 +4,9 @@ import { SERVER, DEFAULT_WIDTH, DEFAULT_HEIGHT } from '../../config';
 import InfiniteScroll from 'react-infinite-scroller';
 import { WhiteBoard } from './whiteboard';
 import { connect } from 'react-redux';
+import { showImages, updateData, deleteData } from '../../store/actions/data_actions';
 
-const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage, element, showImages, flag, changed, updateData, deleteData }) => {
+const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage, element, flag, changed }) => {
 
     const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
@@ -22,8 +23,7 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
             data.delete.forEach(img => {
                 deleteIdSet.add(img.id);
             });
-            console.log(data)
-            const imagesToShow = [...data.existing.filter(img => img.medium !== element.medium).filter(img => !deleteIdSet.has(img.id)), ...data.selected];
+            const imagesToShow = [...data.existing.filter(img => (img.medium === 'whoami') || img.medium !== element.medium).filter(img => !deleteIdSet.has(img.id)), ...data.selected];
             setImages(showImages(imagesToShow, handleClose, flag));
             // set height of whiteboard based on the selected images
             // setHeight(getHeight());
@@ -37,6 +37,7 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
     }
 
     const addData = async () => {
+        console.log(data)
         try {
             (await Axios.post(SERVER + '/whiteboard/user_data', {
                 new_contents: data.new.map(elem => ({
