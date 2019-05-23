@@ -6,9 +6,12 @@ import { WhiteBoard } from './whiteboard';
 import { connect } from 'react-redux';
 import { showImages, updateData, deleteData } from '../../store/actions/data_actions';
 
-const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage, element, flag, changed }) => {
+const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage, element, flag, changed, images, setImages }) => {
 
-    const [images, setImages] = useState([]);
+    if (!images && !setImages) {
+        [images, setImages] = useState([]);
+    }
+
     const [height, setHeight] = useState(0);
 
     const handleClose = image => {
@@ -27,8 +30,6 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
             setImages(showImages(imagesToShow, handleClose, flag));
             // set height of whiteboard based on the selected images
             // setHeight(getHeight());
-        } else {
-            setImages([]);
         }
     }, [activeIndex, data.selected]);
 
@@ -37,7 +38,6 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
     }
 
     const addData = async () => {
-        console.log(data)
         try {
             (await Axios.post(SERVER + '/whiteboard/user_data', {
                 new_contents: data.new.map(elem => ({

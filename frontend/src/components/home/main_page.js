@@ -18,6 +18,7 @@ const MainPage = ({ match, history }) => {
     });
     const [data, setData] = useState(resetData());
     const [activeIndex, setActiveIndex] = useState(0);
+    const [images, setImages] = useState([]);
 
     const next = () => {
         setActiveIndex((activeIndex + 1) % 4);
@@ -81,7 +82,9 @@ const MainPage = ({ match, history }) => {
             {...{
                 ...props,
                 resetData,
-                username: match.params.username
+                username: match.params.username,
+                images,
+                setImages
             }}
         />,
         <ConnectTo {...props} setElement={setElement} />,
@@ -99,7 +102,8 @@ const MainPage = ({ match, history }) => {
                 element,
                 setData,
                 flag: 1,
-                next: () => history.push('/')
+                images,
+                setImages
             }}
         />
     ];

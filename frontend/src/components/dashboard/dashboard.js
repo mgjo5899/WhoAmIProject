@@ -11,9 +11,9 @@ import Axios from 'axios';
 import { showImages, updateData, deleteData } from '../../store/actions/data_actions';
 
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, auth, history, changed, resetChanged, resetData }) => {
+const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, auth, history, changed, resetChanged, resetData, images, setImages }) => {
 
-    const [images, setImages] = useState([]);
+    // const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
     const [modal, setModal] = useState(false);
     const [currentImage, setCurrentImage] = useState({});
@@ -25,7 +25,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
     useEffect(() => {
         if (activeIndex === contentsIndex.dashboard) {
             // when first loaded to dashboard, get existing data from server
-            console.log('here')
             setHeight(DEFAULT_HEIGHT);
             resetChanged();
             setDeleted([]);
@@ -182,7 +181,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
                 if (isFollowing) {
                     const { status, message } = (await Axios.delete(SERVER + '/user/following_users', {
                         data: {
-                            followed_username: username
+                            followed_user_username: username
                         }
                     })).data;
                     // if status is false, throw error to print to console output
@@ -190,7 +189,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
                 } else {
                     // if it is currently not following, follow the user
                     const { status, message } = (await Axios.post(SERVER + '/user/following_users', {
-                        followed_username: username
+                        followed_user_username: username
                     })).data;
                     // if status is false, throw error to print to console output
                     if (!status) throw new Error(message);

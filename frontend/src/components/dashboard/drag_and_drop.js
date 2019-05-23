@@ -1,5 +1,5 @@
 import interact from 'interactjs';
-import { DEFAULT_PROFILE_SIZE_VALUE, DEFAULT_PROFILE_FONT_SIZE } from '../../config';
+import { DEFAULT_PROFILE_SIZE_VALUE } from '../../config';
 
 // target elements with the "draggable" class
 
@@ -69,8 +69,13 @@ export const Drag = setChanged => {
             target.style.width = event.rect.width + 'px';
             // target.style.height = event.rect.height + 'px';
 
+            const fontSizeMap = {
+                profile: 50,
+                follow: 16
+            }
+
             if (target.getAttribute('medium') === 'whoami') {
-                target.children[0].firstChild.style.fontSize = (DEFAULT_PROFILE_FONT_SIZE * parseFloat(target.offsetWidth) / DEFAULT_PROFILE_SIZE_VALUE) + 'px';
+                target.children[0].firstChild.style.fontSize = (fontSizeMap[target.getAttribute('type')] * parseFloat(target.offsetWidth) / DEFAULT_PROFILE_SIZE_VALUE) + 'px';
             }
             x += event.deltaRect.left;
             if (!event.edges.bottom && (event.edges.top || event.edges.right)) {
