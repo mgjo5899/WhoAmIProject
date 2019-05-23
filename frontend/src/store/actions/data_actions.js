@@ -20,6 +20,37 @@ export const showImages = (imageData, clickFunc, flag) => {
             className += ' draggable resize-drag';
         }
 
+        const componentMap = {
+            profile: (
+                <span className="mx-auto" style={{ fontSize: DEFAULT_PROFILE_FONT_SIZE * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
+                    profile
+                </span>
+            ),
+            follow: (
+                <div style={{ fontSize: 16 * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
+                    <div className="float-left text-center" >
+                        <div className="followers">
+                            followers
+                        </div>
+                        <div className="followers-number">
+                            0
+                        </div>
+                    </div>
+                    <div className="float-right text-center" >
+                        <div className="following">
+                            following
+                        </div>
+                        <div className="following-number">
+                            0
+                        </div>
+                    </div>
+                </div>
+                // <span className="mx-auto" style={{ fontSize: DEFAULT_PROFILE_FONT_SIZE * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
+                //     follow
+                // </span>
+            )
+        }
+
         return (
             <div
                 id={image.id}
@@ -52,10 +83,8 @@ export const showImages = (imageData, clickFunc, flag) => {
                             </Fragment>
                         )
                         : (
-                            <div className="card">
-                                <span id={image.type} className="mx-auto" style={{ fontSize: DEFAULT_PROFILE_FONT_SIZE * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
-                                    {image.type}
-                                </span>
+                            <div className="card pt-3">
+                                {componentMap[image.type]}
                                 <span className="position-absolute" style={{ fontSize: 10, width: 50, top: '2%', left: '2%', opacity: 0.7, userSelect: 'none' }}>whoami</span>
                             </div>
                         )
