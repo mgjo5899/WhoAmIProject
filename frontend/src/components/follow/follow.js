@@ -72,7 +72,6 @@ const Follow = () => {
         if (loaded) {
             // when data exists, execute the command, giving conditions to useEffect
             if (backup.selected.length > 0) {
-                console.log('here')
                 setData(data => ({ ...data, ...backup }));
             } else {
                 const existingFollowData = data.existing.find(existingData => existingData.type === 'follow');
@@ -90,7 +89,6 @@ const Follow = () => {
                     },
                     selected: true
                 };
-                console.log(followElement);
                 if (!existingFollowData) {
                     setData(data => ({ ...data, new: [...data.new, followElement] }));
                     setData(data => ({ ...data, selected: [...data.selected, followElement] }));

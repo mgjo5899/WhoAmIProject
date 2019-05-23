@@ -8,7 +8,7 @@ import ProfileContents from './profile_contents';
 import Axios from 'axios';
 import { withRouter } from 'react-router-dom';
 
-const Profile = ({ auth, history, showImages, updateData, deleteData }) => {
+const Profile = ({ auth, showImages }) => {
 
     const [loaded, setLoaded] = useState(false);
     const [backup, setBackup] = useState(null);
@@ -164,7 +164,7 @@ const Profile = ({ auth, history, showImages, updateData, deleteData }) => {
         <Spread
             {...{
                 showImages,
-                next: () => history.push('/'),
+                next,
                 previous: next,
                 data,
                 activeIndex,
@@ -172,9 +172,7 @@ const Profile = ({ auth, history, showImages, updateData, deleteData }) => {
                 element: { medium: 'whoami' },
                 setData,
                 deleteImage: deleteProfile,
-                flag: 2,
-                updateData,
-                deleteData
+                flag: 2
             }}
         />
     ];
