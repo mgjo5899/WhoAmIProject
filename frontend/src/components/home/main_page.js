@@ -3,7 +3,7 @@ import { Carousel, CarouselItem } from 'reactstrap';
 import { Dashboard, ConnectTo, Contents, Spread } from '../dashboard';
 import Navbar from '../layout/navbar';
 
-const MainPage = ({ match, history }) => {
+const MainPage = ({ match }) => {
 
     // this component contains many children components, which requires multiple states to use
     const [element, setElement] = useState(null);

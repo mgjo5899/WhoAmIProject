@@ -21,6 +21,15 @@ const InputForm = ({ auth, readOnly, profile, next, setProfile }) => {
             }
         }
     }, []);
+
+    const handleWebsiteLink = () => {
+        let link = profile.website;
+        if (link.substr(0, 4) !== 'http') {
+            link = 'http://' + link;
+        }
+        window.open(link);
+    }
+
     return (
         <div id="input-form">
             <div className="form-group">
@@ -80,7 +89,7 @@ const InputForm = ({ auth, readOnly, profile, next, setProfile }) => {
             </div>
             <div className="form-group">
                 <h5 htmlFor="website">Website</h5>
-                {readOnly ? <button className="btn btn-link m-0 p-0" id="website" onClick={() => window.open(profile.website)}>{profile.website}</button> : <input type="text" className="form-control" id="website" placeholder="Website" />}
+                {readOnly ? <button className="btn btn-link m-0 p-0" id="website" onClick={handleWebsiteLink}>{profile.website}</button> : <input type="text" className="form-control" id="website" placeholder="Website" />}
             </div>
         </div>
     );

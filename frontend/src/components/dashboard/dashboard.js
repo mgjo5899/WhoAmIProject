@@ -41,7 +41,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
 
     const getFollowingData = async () => {
         try {
-            console.log(username)
             // get all following data, and find if the username is included in this data
             const { status, following_users, message } = (await Axios.get(SERVER + '/user/following_users')).data;
             if (!status) throw new Error(message);
