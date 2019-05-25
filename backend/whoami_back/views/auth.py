@@ -172,6 +172,7 @@ def signin():
 
             if rtn_val['status']:
                 session['email'] = email
+                session['username'] = rtn_val['user']['username']
                 session['password'] = rtn_val['user']['pw']
                 rtn_val['message'] = "User successfully signed in"
                 _ = rtn_val['user'].pop('pw')
