@@ -558,10 +558,10 @@ This API returns whiteboard contents data related to the given user.
         {
             "status": true,
             "followers": [
-                "some@gmail.com",
-                "user@gmail.com",
-                "that@gmail.com",
-                "iknow@gmail.com"
+                "some",
+                "user",
+                "that",
+                "iknow"
             ]
         }
 
@@ -572,7 +572,7 @@ This API returns whiteboard contents data related to the given user.
 + Request Body (application/json)
     
         {
-            "follower_email": "follower_email@gmail.com"
+            "follower_username": "some_follower_username"
         }
 
 + Response 200 (application/json)
@@ -580,8 +580,8 @@ This API returns whiteboard contents data related to the given user.
         {
             "status": true,
             "message": "Successfully removed the given follower",
-            "follower": "follower_email@gmail.com",
-            "followed_user": "followed_user_email@gmail.com"
+            "follower_username": "some_follower_username",
+            "followed_user_username": "my_username"
         }
 
 ## Following user [/user/following_users]
@@ -595,10 +595,10 @@ This API returns whiteboard contents data related to the given user.
         {
             "status": true,
             "following_users": [
-                "some@gmail.com",
-                "user@gmail.com",
-                "that@gmail.com",
-                "iknow@gmail.com"
+                "some",
+                "user",
+                "that",
+                "iknow"
             ]
         }
 
@@ -609,7 +609,7 @@ This API returns whiteboard contents data related to the given user.
 + Request Body (application/json)
     
         {
-            "followed_user_email": "followed_user_email@gmail.com"
+            "followed_user_username": "some_user_that_i_wanna_follow"
         }
 
 + Response 200 (application/json)
@@ -617,8 +617,8 @@ This API returns whiteboard contents data related to the given user.
         {
             "status": true,
             "message": "Successfully added a follower",
-            "follower": "follower_email@gmail.com",
-            "followed_user": "followed_user_email@gmail.com"
+            "follower_username": "my_username",
+            "followed_user_username": "some_user_that_i_wanna_follow"
         }
 
 ### Unfollow a user [DELETE]
@@ -628,7 +628,7 @@ This API returns whiteboard contents data related to the given user.
 + Request Body (application/json)
     
         {
-            "followed_user_email": "followed_user_email@gmail.com"
+            "followed_user_username": "some_user_i_wanna_unfollow"
         }
 
 + Response 200 (application/json)
@@ -636,8 +636,8 @@ This API returns whiteboard contents data related to the given user.
         {
             "status": true,
             "message": "Successfully removed the given follower",
-            "follower": "follower_email@gmail.com",
-            "followed_user": "followed_user_email@gmail.com"
+            "follower_username": "follower_email@gmail.com",
+            "followed_user_username": "some_user_i_wanna_unfollow"
         }
 
 ## Authorized Social Media [/user/authorized_media]

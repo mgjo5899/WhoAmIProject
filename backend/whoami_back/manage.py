@@ -14,132 +14,148 @@ from whoami_back.config import HASH_METHOD
 from whoami_back.utils import get_pw_hash, check_pw_hash
 
 
-def get_following_users(follower_email):
-    follower = get_user(email=follower_email)
+def get_following_users(follower_username):
+    follower = get_user(username=follower_username)
     rtn_val = {}
 
     if follower['status'] == False:
         rtn_val = follower
     else:
-        following_users = db.query(Follow).filter(Follow.follower_email == follower_email).all()
+        follower = follower['data']
+        following_users = db.query(Follow).filter(Follow.follower_username == \
+                                                  follower['username']).all()
         rtn_val['status'] = True
         rtn_val['following_users'] = []
 
         for following_user in following_users:
-            rtn_val['following_users'].append(following_user.followed_user_email)
+            rtn_val['following_users'].append(following_user.followed_user_username)
 
     return rtn_val
 
-def get_followers(followed_user_email):
-    followed_user = get_user(email=followed_user_email)
+def get_followers(followed_user_username):
+    followed_user = get_user(username=followed_user_username)
     rtn_val = {}
 
     if followed_user['status'] == False:
         rtn_val = followed_user
     else:
-        followers = db.query(Follow).filter(Follow.followed_user_email == \
-                                            followed_user_email).all()
+        followed_user = followed_user['data']
+        followers = db.query(Follow).filter(Follow.followed_user_username == \
+                                            followed_user['username']).all()
         rtn_val['status'] = True
         rtn_val['followers'] = []
 
         for follower in followers:
-            rtn_val['followers'].append(follower.follower_email)
+            rtn_val['followers'].append(follower.follower_username)
 
     return rtn_val
 
-def remove_follower(follower_email, followed_user_email):
-    follower = get_user(email=follower_email)
-    followed_user = get_user(email=followed_user_email)
+def remove_follower(follower_username, followed_user_username):
+    follower = get_user(username=follower_username)
+    followed_user = get_user(username=followed_user_username)
     rtn_val = {}
 
     if follower['status'] == False or followed_user['status'] == False:
         rtn_val['status'] = False
         rtn_val['message'] = "Either the follower, the followed user, or both do not exist"
     else:
-        follower = db.query(Follow).filter(\
-                          and_(Follow.follower_email == follower_email, \
-                               Follow.followed_user_email == followed_user_email)).first()
-        if follower == None:
+        follower = follower['data']
+        followed_user = followed_user['data']
+        follow_relationship = db.query(Follow).filter(\
+                       and_(Follow.follower_username == follower['username'], \
+                            Follow.followed_user_username == followed_user['username'])).first()
+        if follow_relationship == None:
             rtn_val['status'] = False
-            rtn_val['message'] = "Could not find the given following relationship with \
-                                  the given information"
+            rtn_val['message'] = "Could not find the given following relationship with" + \
+                                 " the given information"
         else:
-            db.delete(follower)
+            db.delete(follow_relationship)
             db.commit()
             rtn_val['status'] = True
             rtn_val['message'] = "Successfully removed the given follower"
-            rtn_val['follower'] = follower_email
-            rtn_val['followed_user'] = followed_user_email
+            rtn_val['follower_username'] = follower['username']
+            rtn_val['followed_user_username'] = followed_user['username']
 
     return rtn_val
 
 # TODO: When the privacy comes in act, we should check whether the followed user is public,
 #       If it's not public account, then there needs to be a pending request phase of the follow 
 #       system.
-def add_follower(follower_email, followed_user_email):
-    follower = get_user(email=follower_email)
-    followed_user = get_user(email=followed_user_email)
+def add_follower(follower_username, followed_user_username):
     rtn_val = {}
+    follower = get_user(username=follower_username)
+    followed_user = get_user(username=followed_user_username)
 
     if follower['status'] == False or followed_user['status'] == False:
         rtn_val['status'] = False
         rtn_val['message'] = "Either the follower, the followed user, or both do not exist"
-    elif follower_email == followed_user_email:
+    elif follower['data']['username'] == followed_user['data']['username']:
         rtn_val['status'] = False
         rtn_val['message'] = "A user cannot follow himself/ herself"
     else:
+        follower = follower['data']
+        followed_user = followed_user['data']
         existing_follower = db.query(Follow).filter(\
-                                 and_(Follow.follower_email == follower_email, \
-                                      Follow.followed_user_email == followed_user_email)).first()
+                     and_(Follow.follower_username == follower['username'], \
+                          Follow.followed_user_username == followed_user['username'])).first()
 
         if existing_follower == None:
-            new_follower = Follow(followed_user_email=followed_user_email, \
-                                  follower_email=follower_email)
+            new_follower = Follow(followed_user_username=followed_user['username'], \
+                                  follower_username=follower['username'])
             db.add(new_follower)
             db.commit()
             
             rtn_val['status'] = True
             rtn_val['message'] = "Successfully added a follower"
-            rtn_val['follower_email'] = follower_email
-            rtn_val['followed_user_email'] = followed_user_email
+            rtn_val['follower_username'] = follower_username
+            rtn_val['followed_user_username'] = followed_user_username
         else:
             rtn_val['status'] = False
             rtn_val['message'] = "The given following relationship already exists."
 
     return rtn_val
 
-def get_user_profile(email, internal_use=False):
-    user = get_user(email=email)
+def get_user_profile(email=None, username=None, internal_use=False):
+    user = None
     rtn_val = {}
 
-    if user['status'] == False:
-        rtn_val = user
+    if email == None and username == None:
+        rtn_val['status'] = False
+        rtn_val['message'] = "Missing necessary information"
     else:
-        user_profile = db.query(UserProfile).filter(UserProfile.email == email).first()
+        if email != None:
+            user = get_user(email=email)
+        else: # username != None
+            user = get_user(username=username)
 
-        if user_profile == None:
-            rtn_val['status'] = False
-            rtn_val['message'] = "Could not find a profile for the given user"
+        if user['status'] == False:
+            rtn_val = user
         else:
-            rtn_val['status'] = True
-            rtn_val['email'] = email
-            rtn_val['profile'] = {}
+            user_profile = db.query(UserProfile).filter(UserProfile.email == email).first()
 
-            if internal_use == True:
-                rtn_val['profile']['id'] = user_profile.id
+            if user_profile == None:
+                rtn_val['status'] = False
+                rtn_val['message'] = "Could not find a profile for the given user"
+            else:
+                rtn_val['status'] = True
+                rtn_val['email'] = email
+                rtn_val['profile'] = {}
 
-            if user_profile.bio != '':
-                rtn_val['profile']['bio'] = user_profile.bio
-            if user_profile.company != '':
-                rtn_val['profile']['company'] = user_profile.company
-            if user_profile.location != '':
-                rtn_val['profile']['location'] = user_profile.location
-            if user_profile.website != '':
-                rtn_val['profile']['website'] = user_profile.website
-            if user_profile.profile_image_url != '':
-                rtn_val['profile']['profile_image_url'] = user_profile.profile_image_url
-            if user_profile.include_email == True:
-                rtn_val['profile']['email'] = user_profile.email
+                if internal_use == True:
+                    rtn_val['profile']['id'] = user_profile.id
+
+                if user_profile.bio != '':
+                    rtn_val['profile']['bio'] = user_profile.bio
+                if user_profile.company != '':
+                    rtn_val['profile']['company'] = user_profile.company
+                if user_profile.location != '':
+                    rtn_val['profile']['location'] = user_profile.location
+                if user_profile.website != '':
+                    rtn_val['profile']['website'] = user_profile.website
+                if user_profile.profile_image_url != '':
+                    rtn_val['profile']['profile_image_url'] = user_profile.profile_image_url
+                if user_profile.include_email == True:
+                    rtn_val['profile']['email'] = user_profile.email
 
     return rtn_val
 
@@ -185,47 +201,85 @@ def update_user_profile(email, profile_image_url, bio, company, location, websit
 
     return rtn_val
 
-def add_whoami_content(email, new_content):
+def add_whiteboard_whoami_profile(email, new_content):
+    rtn_val = {}
+    #############################################################################
+    #############################################################################
+    # TODO: Discuss with Junwon to see where he's getting those user profile UX flow
+    user_profile = get_user_profile(email=email, internal_use=True)
+    specifics = new_content['specifics']
+
+    if user_profile['status'] == False:
+        rtn_val = user_profile
+    elif not ('curr_width' in specifics and 'curr_height' in specifics):
+        rtn_val['status'] = False
+        rtn_val['message'] = "Not enough information for a whoami content"
+    elif len(get_whiteboard_data(email=email, medium=medium['medium'])['whiteboard_data']) > 0:
+        rtn_val['status'] = False
+        rtn_val['message'] = "User profile data already exists as a whiteboard content"
+    else:
+        new_whiteboard_content = WhiteboardData(email=email, type=new_content['type'], \
+                                                medium=new_content['medium'], status=1, \
+                                                pos_x=new_content['pos_x'], \
+                                                pos_y=new_content['pos_y'])
+        db.add(new_whiteboard_content)
+        db.commit()
+
+        whiteboard_data_id = new_whiteboard_content.id
+
+        new_profile_data = UserProfileData(whiteboard_data_id=whiteboard_data_id, \
+                                           user_profile_id=user_profile['profile']['id'], \
+                                           curr_width=specifics['curr_width'], \
+                                           curr_height=specifics['curr_height'])
+        db.add(new_profile_data)
+        db.commit()
+
+        rtn_val['status'] = True
+        rtn_val['id'] = whiteboard_data_id
+
+    return rtn_val
+
+def add_whiteboard_whomai_follow(email, new_content):
     rtn_val = {}
     specifics = new_content['specifics']
-    medium = new_content['medium']
+
+    if not ('curr_width' in specifics and 'curr_height' in specifics):
+        rtn_val['status'] = False
+        rtn_val['message'] = "Not enough information for a whoami content"
+    else:
+        new_whiteboard_content = WhiteboardData(email=email, type=new_content['type'], \
+                                                medium=new_content['medium'], status=1, \
+                                                pos_x=new_content['pos_x'], \
+                                                pos_y=new_content['pos_y'])
+        db.add(new_whiteboard_content)
+        db.commit()
+
+        whiteboard_data_id = new_whiteboard_content.id
+
+        new_follow_data = UserFollowData(whiteboard_data_id=whiteboard_data_id, \
+                                         curr_width=specifics['curr_width'], \
+                                         curr_height=specifics['curr_height'])
+        db.add(new_follow_data)
+        db.commit()
+
+        rtn_val['status'] = True
+        rtn_val['id'] = whiteboard_data_id
+
+    return rtn_val
+
+def add_whiteboard_whoami(email, new_content):
+    rtn_val = {}
 
     # Keep adding types for whoami contents
     if new_content['type'] == 'profile':
-        user_profile = get_user_profile(email, internal_use=True)
-
-        if user_profile['status'] == False:
-            rtn_val = user_profile
-        elif not ('curr_width' in specifics and 'curr_height' in specifics):
-            rtn_val['status'] = False
-            rtn_val['message'] = "Not enough information for a whoami content"
-        elif len(get_whiteboard_data(email=email, medium=medium)['whiteboard_data']) > 0:
-            rtn_val['status'] = False
-            rtn_val['message'] = "User profile data already exists as a whiteboard content"
-        else:
-            new_whiteboard_content = WhiteboardData(email=email, type=new_content['type'], \
-                                                    medium=medium, status=1, \
-                                                    pos_x=new_content['pos_x'], \
-                                                    pos_y=new_content['pos_y'])
-            db.add(new_whiteboard_content)
-            db.commit()
-
-            whiteboard_data_id = new_whiteboard_content.id
-
-            new_profile_data = UserProfileData(whiteboard_data_id=whiteboard_data_id, \
-                                               user_profile_id=user_profile['profile']['id'], \
-                                               curr_width=specifics['curr_width'], \
-                                               curr_height=specifics['curr_height'])
-            db.add(new_profile_data)
-            db.commit()
-
-            rtn_val['status'] = True
-            rtn_val['id'] = whiteboard_data_id
+        rtn_val = add_whiteboard_whoami_profile(email, new_content)
+    elif new_content['type'] == 'follow':
+        rtn_val = add_whiteboard_whoami_follow(email, new_content)
     else:
         rtn_val['status'] = False
         rtn_val['message'] = "Unknown content type"
 
-    rtn_val['medium'] = medium
+    rtn_val['medium'] = new_content['medium']
     rtn_val['email'] = email
     rtn_val['type'] = new_content['type']
 
@@ -268,6 +322,152 @@ def get_medium_access_token(email, medium):
 
     return rtn_val
 
+def get_whiteboard_data_whoami_user_profile(user):
+    user_profile = None
+    user_email = user['email']
+    profile_data = db.query(WhiteboardData, UserProfileData, UserProfile)\
+                      .filter(and_(WhiteboardData.email == user_email, \
+                                   WhiteboardData.medium == 'whoami'))\
+                      .filter(UserProfile.email == user_email)\
+                      .filter(UserProfileData.whiteboard_data_id == WhiteboardData.id)\
+                      .first()
+
+    # profile_data[0] is WhiteboardData, profile_data[1] is UserProfileData
+    # and profile_data[2] is UserProfile.
+    if profile_data and len(profile_data) == 3:
+        user_profile = {}
+        user_profile['id'] = profile_data[0].id
+        user_profile['type'] = profile_data[0].type
+        user_profile['medium'] = profile_data[0].medium
+        user_profile['pos_x'] = profile_data[0].pos_x
+        user_profile['pos_y'] = profile_data[0].pos_y
+        user_profile['last_modified'] = profile_data[0].last_modified
+        user_profile['status'] = profile_data[0].status
+        user_profile['specifics'] = {}
+        user_profile['specifics']['curr_width'] = profile_data[1].curr_width
+        user_profile['specifics']['curr_height'] = profile_data[1].curr_height
+
+        if profile_data[2].profile_image_url != '':
+            user_profile['specifics']['profile_image_url'] = profile_data[2].profile_image_url
+        if profile_data[2].bio != '':
+            user_profile['specifics']['bio'] = profile_data[2].bio
+        if profile_data[2].company != '':
+            user_profile['specifics']['company'] = profile_data[2].company
+        if profile_data[2].location != '':
+            user_profile['specifics']['location'] = profile_data[2].location
+        if profile_data[2].website != '':
+            user_profile['specifics']['website'] = profile_data[2].website
+        if profile_data[2].include_email == True:
+            user_profile['specifics']['email'] = user_email
+
+    return user_profile
+
+def get_whiteboard_data_follow(user):
+    follow_relationship = None
+    user_email = user['email']
+
+    follow_data = db.query(WhiteboardData, UserFollowData)\
+                     .filter(and_(WhiteboardData.email == user_email, \
+                                  WhiteboardData.medium == 'whoami'))\
+                     .filter(UserFollowData.whiteboard_data_id == WhiteboardData.id)\
+                     .first()
+
+    if follow_data and len(follow_data) == 2:
+        follow_relationship = {}
+        follow_relationship['id'] = follow_data[0].id
+        follow_relationship['type'] = follow_data[0].type
+        follow_relationship['medium'] = follow_data[0].medium
+        follow_relationship['pos_x'] = follow_data[0].pos_x
+        follow_relationship['pos_y'] = follow_data[0].pos_y
+        follow_relationship['last_modified'] = follow_data[0].last_modified
+        follow_relationship['status'] = follow_data[0].status
+        follow_relationship['specifics'] = {}
+        followers = get_followers(user['username'])['followers']
+        following_users = get_following_users(user['username'])['following_users']
+        follow_relationship['specifics']['number_of_followers'] = len(followers)
+        follow_relationship['specifics']['number_of_following_users'] = len(following_users)
+
+    return follow_relationship
+
+def get_whiteboard_data_whoami(user):
+    whoami_contents = []
+
+    # User Profile
+    user_profile = get_whiteboard_data_whoami_user_profile(user)
+    if user_profile != None:
+        whoami_contents.append(user_profile)
+
+    # Follow Relationship
+    follow_relationship = get_whiteboard_data_follow(user)
+    if follow_relationship != None:
+        whoami_contents.append(follow_relationship)
+
+    return whoami_contents
+
+def get_whiteboard_data_instagram(user):
+    instagram_contents = []
+    user_email = user['email']
+    instagram_data = db.query(WhiteboardData, InstagramData)\
+                        .filter(and_(WhiteboardData.email == user_email,\
+                                     WhiteboardData.medium == 'instagram',\
+                                     WhiteboardData.status != 3))\
+                        .filter(InstagramData.whiteboard_data_id == WhiteboardData.id)\
+                        .all()
+
+    # content_data[0] is WhiteboardData
+    # content_data[1] is InstagramData
+    for content_data in instagram_data:
+        curr_insta_data = {}
+        curr_insta_data['id'] = content_data[0].id
+        curr_insta_data['type'] = content_data[0].type
+        curr_insta_data['medium'] = content_data[0].medium
+        curr_insta_data['pos_x'] = content_data[0].pos_x
+        curr_insta_data['pos_y'] = content_data[0].pos_y
+        curr_insta_data['last_modified'] = content_data[0].last_modified
+        curr_insta_data['status'] = content_data[0].status
+        curr_insta_data['specifics'] = {}
+        curr_insta_data['specifics']['raw_content_url'] = content_data[1].raw_content_url
+        curr_insta_data['specifics']['content_url'] = content_data[1].content_url
+        curr_insta_data['specifics']['orig_width'] = content_data[1].orig_width
+        curr_insta_data['specifics']['orig_height'] = content_data[1].orig_height
+        curr_insta_data['specifics']['curr_width'] = content_data[1].curr_width
+        curr_insta_data['specifics']['curr_height'] = content_data[1].curr_height
+        instagram_contents.append(curr_insta_data)
+
+    return instagram_contents
+
+def get_whiteboard_data_facebook(user):
+    facebook_contents = []
+    user_email = user['email']
+    facebook_data = db.query(WhiteboardData, FacebookData)\
+                             .filter(and_(WhiteboardData.email == user_email,\
+                                          WhiteboardData.medium == 'facebook',\
+                                          WhiteboardData.status != 3))\
+                             .filter(FacebookData.whiteboard_data_id == WhiteboardData.id)\
+                             .all()
+
+    # content_data[0] is WhiteboardData
+    # content_data[1] is FacebookData
+    for content_data in facebook_data:
+        curr_facebook_data = {}
+        curr_facebook_data['id'] = content_data[0].id
+        curr_facebook_data['type'] = content_data[0].type
+        curr_facebook_data['medium'] = content_data[0].medium
+        curr_facebook_data['pos_x'] = content_data[0].pos_x
+        curr_facebook_data['pos_y'] = content_data[0].pos_y
+        curr_facebook_data['last_modified'] = content_data[0].last_modified
+        curr_facebook_data['status'] = content_data[0].status
+        curr_facebook_data['specifics'] = {}
+        curr_facebook_data['specifics']['raw_content_url'] = content_data[1].raw_content_url
+        curr_facebook_data['specifics']['content_url'] = content_data[1].content_url
+        curr_facebook_data['specifics']['orig_width'] = content_data[1].orig_width
+        curr_facebook_data['specifics']['orig_height'] = content_data[1].orig_height
+        curr_facebook_data['specifics']['curr_width'] = content_data[1].curr_width
+        curr_facebook_data['specifics']['curr_height'] = content_data[1].curr_height
+        facebook_contents.append(curr_facebook_data)
+
+    return facebook_contents
+
 def get_whiteboard_data(username=None, email=None, medium=None):
     user = {}
 
@@ -283,125 +483,26 @@ def get_whiteboard_data(username=None, email=None, medium=None):
         return user
 
     authorized_media = []
-    user_email = user['data']['email']
+    user = user['data']
     rtn_val = {}
 
-    for curr in db.query(AuthorizedMedium).filter(AuthorizedMedium.email == user_email).all():
+    for curr in db.query(AuthorizedMedium).filter(AuthorizedMedium.email==user['email']).all():
         authorized_media.append(curr.medium)
 
     whiteboard_data = []
 
-    # Keep adding new type of social medium
+    # Keep adding social medium
     if medium == None or medium == 'whoami':
-        # Currently, this part is only used by whoami profile
-        profile_data = db.query(WhiteboardData, UserProfileData, UserProfile)\
-                          .filter(and_(WhiteboardData.email == user_email, \
-                                       WhiteboardData.medium == 'whoami'))\
-                          .filter(UserProfile.email == user_email)\
-                          .filter(UserProfileData.whiteboard_data_id == WhiteboardData.id)\
-                          .first()
-
-        if profile_data and profile_data[0] and profile_data[1] and profile_data[2]:
-            user_profile = {}
-
-            # Whiteboard data
-            user_profile['id'] = profile_data[0].id
-            user_profile['type'] = profile_data[0].type
-            user_profile['medium'] = profile_data[0].medium
-            user_profile['pos_x'] = profile_data[0].pos_x
-            user_profile['pos_y'] = profile_data[0].pos_y
-            user_profile['last_modified'] = profile_data[0].last_modified
-            user_profile['status'] = profile_data[0].status
-
-            user_profile['specifics'] = {}
-
-            # User profile data
-            user_profile['specifics']['curr_width'] = profile_data[1].curr_width
-            user_profile['specifics']['curr_height'] = profile_data[1].curr_height
-
-            # User profile
-            if profile_data[2].profile_image_url != '':
-                user_profile['specifics']['profile_image_url'] = profile_data[2].profile_image_url
-            if profile_data[2].bio != '':
-                user_profile['specifics']['bio'] = profile_data[2].bio
-            if profile_data[2].company != '':
-                user_profile['specifics']['company'] = profile_data[2].company
-            if profile_data[2].location != '':
-                user_profile['specifics']['location'] = profile_data[2].location
-            if profile_data[2].website != '':
-                user_profile['specifics']['website'] = profile_data[2].website
-            if profile_data[2].include_email == True:
-                user_profile['specifics']['email'] = user_email
-
-
-            whiteboard_data.append(user_profile)
+        whoami_contents = get_whiteboard_data_whoami(user)
+        whiteboard_data.extend(whoami_contents)
 
     if (medium == None or medium == 'instagram') and 'instagram' in authorized_media:
-        whiteboard_contents = db.query(WhiteboardData).filter(and_(\
-                                       WhiteboardData.email == user_email,\
-                                       WhiteboardData.medium == 'instagram',\
-                                       WhiteboardData.status != 3)).all()
-
-        for content in whiteboard_contents:
-            curr_insta_data = {}
-            curr_insta_data['id'] = content.id
-            curr_insta_data['type'] = content.type
-            curr_insta_data['medium'] = content.medium
-            curr_insta_data['pos_x'] = content.pos_x
-            curr_insta_data['pos_y'] = content.pos_y
-            curr_insta_data['last_modified'] = content.last_modified
-            curr_insta_data['status'] = content.status
-
-            insta_content = db.query(InstagramData).filter(InstagramData.whiteboard_data_id == \
-                                                           content.id).first()
-
-            if insta_content == None:
-                print("Something is wrong! There is a whiteboard data for \
-                        the following content but there's no Instagram data")
-                print('curr_insta_data:', curr_insta_data)
-            else:
-                curr_insta_data['specifics'] = {}
-                curr_insta_data['specifics']['raw_content_url'] = insta_content.raw_content_url
-                curr_insta_data['specifics']['content_url'] = insta_content.content_url
-                curr_insta_data['specifics']['orig_width'] = insta_content.orig_width
-                curr_insta_data['specifics']['orig_height'] = insta_content.orig_height
-                curr_insta_data['specifics']['curr_width'] = insta_content.curr_width
-                curr_insta_data['specifics']['curr_height'] = insta_content.curr_height
-                whiteboard_data.append(curr_insta_data)
+        instagram_contents = get_whiteboard_data_instagram(user)
+        whiteboard_data.extend(instagram_contents)
 
     if (medium == None or medium == 'facebook') and 'facebook' in authorized_media:
-        whiteboard_contents = db.query(WhiteboardData).filter(and_(\
-                                       WhiteboardData.email == user_email,\
-                                       WhiteboardData.medium == 'facebook',\
-                                       WhiteboardData.status != 3)).all()
-
-        for content in whiteboard_contents:
-            curr_facebook_data = {}
-            curr_facebook_data['id'] = content.id
-            curr_facebook_data['type'] = content.type
-            curr_facebook_data['medium'] = content.medium
-            curr_facebook_data['pos_x'] = content.pos_x
-            curr_facebook_data['pos_y'] = content.pos_y
-            curr_facebook_data['last_modified'] = content.last_modified
-            curr_facebook_data['status'] = content.status
-
-            facebook_content = db.query(FacebookData).filter(FacebookData.whiteboard_data_id == \
-                                                           content.id).first()
-
-            if facebook_content == None:
-                print("Something is wrong! There is a whiteboard data for \
-                        the following content but there's no Facebook data")
-                print('curr_facebook_data:', curr_facebook_data)
-            else:
-                curr_facebook_data['specifics'] = {}
-                curr_facebook_data['specifics']['raw_content_url'] = \
-                                                               facebook_content.raw_content_url
-                curr_facebook_data['specifics']['content_url'] = facebook_content.content_url
-                curr_facebook_data['specifics']['orig_width'] = facebook_content.orig_width
-                curr_facebook_data['specifics']['orig_height'] = facebook_content.orig_height
-                curr_facebook_data['specifics']['curr_width'] = facebook_content.curr_width
-                curr_facebook_data['specifics']['curr_height'] = facebook_content.curr_height
-                whiteboard_data.append(curr_facebook_data)
+        facebook_contents = get_whiteboard_data_facebook(user)
+        whiteboard_data.extend(facebook_contents)
 
     rtn_val['status'] = True
     rtn_val['whiteboard_data'] = whiteboard_data
@@ -427,7 +528,7 @@ def mark_content_unavailable(content_id):
 
     return rtn_val
 
-def add_facebook_content(email, new_content):
+def add_whiteboard_facebook(email, new_content):
     rtn_val = {}
     specifics = new_content['specifics']
     medium = new_content['medium']
@@ -476,7 +577,7 @@ def add_facebook_content(email, new_content):
 
     return rtn_val
 
-def add_instagram_content(email, new_content):
+def add_whiteboard_instagram(email, new_content):
     rtn_val = {}
     specifics = new_content['specifics']
     medium = new_content['medium']
@@ -525,7 +626,7 @@ def add_instagram_content(email, new_content):
 
     return rtn_val
 
-def update_whoami_content(email, update):
+def update_whiteboard_whoami(email, update):
     rtn_val = {'id':update['id'], 'email':email}
     medium = update['medium']
     specifics = update['specifics']
@@ -558,10 +659,16 @@ def update_whoami_content(email, update):
                 rtn_val['status'] = True
                 rtn_val['medium'] = medium
                 rtn_val['type'] = whiteboard_data.type
+        elif whiteboard_data.type == 'follow':
+            # TODO: SOMETHING
+            print("update follow content")
+        else:
+            rtn_val['status'] = False
+            rtn_val['message'] = "Unknown contrent type"
 
     return rtn_val
 
-def update_facebook_content(email, update):
+def update_whiteboard_facebook(email, update):
     rtn_val = {'id':update['id'], 'email':email}
     medium = update['medium']
     specifics = update['specifics']
@@ -598,7 +705,7 @@ def update_facebook_content(email, update):
 
     return rtn_val
 
-def update_instagram_content(email, update):
+def update_whiteboard_instagram(email, update):
     rtn_val = {'id':update['id'], 'email':email}
     medium = update['medium']
     specifics = update['specifics']
@@ -727,11 +834,11 @@ def update_whiteboard_content(email, update):
     else:
         # Keep adding social media here
         if update['medium'] == 'instagram':
-            rtn_val = update_instagram_content(email, update)
+            rtn_val = update_whiteboard_instagram(email, update)
         elif update['medium'] == 'facebook':
-            rtn_val = update_facebook_content(email, update)
+            rtn_val = update_whiteboard_facebook(email, update)
         elif update['medium'] == 'whoami':
-            rtn_val = update_whoami_content(email, update)
+            rtn_val = update_whiteboard_whoami(email, update)
         else:
             # Medium provided not found
             rtn_val['message'] = "Could not find the given medium"
@@ -749,11 +856,11 @@ def add_whiteboard_content(email, new_content):
     else:
         # Keep adding social media here
         if new_content['medium'] == 'instagram':
-            rtn_val = add_instagram_content(email, new_content)
+            rtn_val = add_whiteboard_instagram(email, new_content)
         elif new_content['medium'] == 'facebook':
-            rtn_val = add_facebook_content(email, new_content)
+            rtn_val = add_whiteboard_facebook(email, new_content)
         elif new_content['medium'] == 'whoami':
-            rtn_val = add_whoami_content(email, new_content)
+            rtn_val = add_whiteboard_whoami(email, new_content)
         else:
             # Medium provided not found
             rtn_val['message'] = "Could not find the given medium"
