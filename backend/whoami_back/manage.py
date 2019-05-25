@@ -9,6 +9,7 @@ from whoami_back.models.whiteboard_data import WhiteboardData
 from whoami_back.models.user_profile import UserProfile
 from whoami_back.models.user_profile_data import UserProfileData
 from whoami_back.models.follow import Follow
+from whoami_back.models.user_follow_data import UserFollowData
 from whoami_back.models.base import db
 from whoami_back.config import HASH_METHOD
 from whoami_back.utils import get_pw_hash, check_pw_hash
@@ -626,8 +627,67 @@ def add_whiteboard_instagram(email, new_content):
 
     return rtn_val
 
+def update_whiteboard_whoami_profile(email, update, whiteboard_data):
+    rtn_val = {}
+
+    profile_data = db.query(UserProfileData)\
+                      .filter(UserProfileData.whiteboard_data_id==update['id'])\
+                      .first()
+
+    if profile_data == None:
+        rtn_val['status'] = False
+        rtn_val['message'] = "There is no user profile data with the given id"
+    else:
+        profile_data.curr_width = specifics['curr_width']
+        profile_data.curr_height = specifics['curr_height']
+        whiteboard_data.pos_x = update['pos_x']
+        whiteboard_data.pos_y = update['pos_y']
+        whiteboard_data.last_modified = datetime.now()
+        db.commit()
+
+        rtn_val['status'] = True
+        rtn_val['medium'] = medium
+        rtn_val['type'] = whiteboard_data.type
+
+    return rtn_val
+
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+# HERE
+def update_whiteboard_whoami_follow(email, update, whiteboard_data):
+    rtn_val = {}
+
+    follow_data = db.query(UserFollowData)\
+                      .filter(UserFollowData.whiteboard_data_id==update['id'])\
+                      .first()
+
+    if profile_data == None:
+        rtn_val['status'] = False
+        rtn_val['message'] = "There is no user profile data with the given id"
+    else:
+        profile_data.curr_width = specifics['curr_width']
+        profile_data.curr_height = specifics['curr_height']
+        whiteboard_data.pos_x = update['pos_x']
+        whiteboard_data.pos_y = update['pos_y']
+        whiteboard_data.last_modified = datetime.now()
+        db.commit()
+
+        rtn_val['status'] = True
+        rtn_val['medium'] = medium
+        rtn_val['type'] = whiteboard_data.type
+
+    return rtn_val
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+# HERE
+
 def update_whiteboard_whoami(email, update):
     rtn_val = {'id':update['id'], 'email':email}
+
     medium = update['medium']
     specifics = update['specifics']
     whiteboard_data = db.query(WhiteboardData)\
@@ -642,29 +702,12 @@ def update_whiteboard_whoami(email, update):
     else:
         # Keep adding types for whoami contents
         if whiteboard_data.type == 'profile':
-            profile_data = db.query(UserProfileData)\
-                              .filter(UserProfileData.whiteboard_data_id==update['id'])\
-                              .first()
-            if profile_data == None:
-                rtn_val['status'] = False
-                rtn_val['message'] = "There is no user profile data with the given id"
-            else:
-                profile_data.curr_width = specifics['curr_width']
-                profile_data.curr_height = specifics['curr_height']
-                whiteboard_data.pos_x = update['pos_x']
-                whiteboard_data.pos_y = update['pos_y']
-                whiteboard_data.last_modified = datetime.now()
-                db.commit()
-
-                rtn_val['status'] = True
-                rtn_val['medium'] = medium
-                rtn_val['type'] = whiteboard_data.type
+            rtn_val.update(update_whiteboard_whoami_profile(email, update, whiteboard_data))
         elif whiteboard_data.type == 'follow':
-            # TODO: SOMETHING
-            print("update follow content")
+            rtn_val.update(update_whiteboard_whoami_follow(email, update, whiteboard_data))
         else:
             rtn_val['status'] = False
-            rtn_val['message'] = "Unknown contrent type"
+            rtn_val['message'] = "Unknown content type"
 
     return rtn_val
 

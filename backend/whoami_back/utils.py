@@ -16,6 +16,7 @@ from whoami_back.models.whiteboard_data import WhiteboardData
 from whoami_back.models.user_profile import UserProfile
 from whoami_back.models.user_profile_data import UserProfileData
 from whoami_back.models.follow import Follow
+from whoami_back.models.user_follow_data import UserFollowData
 import whoami_back.config as config
 
 
