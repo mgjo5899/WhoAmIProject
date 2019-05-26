@@ -570,7 +570,7 @@ def add_whiteboard_facebook(email, new_content):
             rtn_val['id'] = whiteboard_data_id
     else:
         rtn_val['status'] = False
-        rtn_Val['message'] = "Unknown content type"
+        rtn_val['message'] = "Unknown content type"
 
     rtn_val['type'] = new_content['type']
     rtn_val['medium'] = medium
@@ -619,7 +619,7 @@ def add_whiteboard_instagram(email, new_content):
             rtn_val['id'] = whiteboard_data_id
     else:
         rtn_val['status'] = False
-        rtn_Val['message'] = "Unknown content type"
+        rtn_val['message'] = "Unknown content type"
 
     rtn_val['type'] = new_content['type']
     rtn_val['medium'] = medium
@@ -651,11 +651,6 @@ def update_whiteboard_whoami_profile(email, update, whiteboard_data):
 
     return rtn_val
 
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# HERE
 def update_whiteboard_whoami_follow(email, update, whiteboard_data):
     rtn_val = {}
 
@@ -665,10 +660,10 @@ def update_whiteboard_whoami_follow(email, update, whiteboard_data):
 
     if profile_data == None:
         rtn_val['status'] = False
-        rtn_val['message'] = "There is no user profile data with the given id"
+        rtn_val['message'] = "There is no user follow data with the given id"
     else:
-        profile_data.curr_width = specifics['curr_width']
-        profile_data.curr_height = specifics['curr_height']
+        follow_data.curr_width = specifics['curr_width']
+        follow_data.curr_height = specifics['curr_height']
         whiteboard_data.pos_x = update['pos_x']
         whiteboard_data.pos_y = update['pos_y']
         whiteboard_data.last_modified = datetime.now()
@@ -679,11 +674,6 @@ def update_whiteboard_whoami_follow(email, update, whiteboard_data):
         rtn_val['type'] = whiteboard_data.type
 
     return rtn_val
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# HERE
 
 def update_whiteboard_whoami(email, update):
     rtn_val = {'id':update['id'], 'email':email}
@@ -785,7 +775,7 @@ def update_whiteboard_instagram(email, update):
 
     return rtn_val
 
-def delete_facebook_content(whiteboard_data_id):
+def delete_whiteboard_facebook(whiteboard_data_id):
     rtn_val = {}
 
     facebook_data = db.query(FacebookData).filter(FacebookData.whiteboard_data_id == \
@@ -798,15 +788,15 @@ def delete_facebook_content(whiteboard_data_id):
         db.delete(facebook_data)
         db.commit()
         rtn_val['status'] = True
-        rtn_val['medium'] = 'facebook'
+        rtn_val['medium'] = whiteboard_data.medium
 
     return rtn_val
 
-def delete_instagram_content(whiteboard_data_id):
+def delete_whiteboard_instagram(whiteboard_data):
     rtn_val = {}
 
     instagram_data = db.query(InstagramData).filter(InstagramData.whiteboard_data_id == \
-                                                    whiteboard_data_id).first()
+                                                    whiteboard_data.id).first()
 
     if instagram_data == None:
         rtn_val['status'] = False
@@ -815,17 +805,16 @@ def delete_instagram_content(whiteboard_data_id):
         db.delete(instagram_data)
         db.commit()
         rtn_val['status'] = True
-        rtn_val['medium'] = 'instagram'
+        rtn_val['medium'] = whiteboard_data.medium
 
     return rtn_val
 
-def delete_whoami_content(whiteboard_data_id):
+def delete_whiteboard_whoami_profile(whiteboard_data):
     rtn_val = {}
 
     profile_data = db.query(UserProfileData)\
-                                 .filter(UserProfileData.whiteboard_data_id == \
-                                         whiteboard_data_id)\
-                                 .first()
+                      .filter(UserProfileData.whiteboard_data_id == whiteboard_data.id)\
+                      .first()
 
     if profile_data == None:
         rtn_val['status'] = False
@@ -834,7 +823,38 @@ def delete_whoami_content(whiteboard_data_id):
         db.delete(profile_data)
         db.commit()
         rtn_val['status'] = True
-        rtn_val['medium'] = 'whoami'
+        rtn_val['medium'] = whiteboard_data.medium
+
+    return rtn_val
+
+def delete_whiteboard_whoami_follow(whiteboard_data):
+    rtn_val = {}
+
+    profile_data = db.query(UserFollowData)\
+                      .filter(UserFollowData.whiteboard_data_id == whiteboard_data.id)\
+                      .first()
+
+    if profile_data == None:
+        rtn_val['status'] = False
+        rtn_val['message'] = "There is no user follow data with the given id"
+    else:
+        db.delete(profile_data)
+        db.commit()
+        rtn_val['status'] = True
+        rtn_val['medium'] = whiteboard_data.medium
+
+    return rtn_val
+
+def delete_whiteboard_whoami(whiteboard_data):
+    rtn_val = {}
+
+    if whiteboard_data.type == 'profile':
+        rtn_val = delete_whiteboard_whoami_profile(whiteboard_data)
+    elif whiteboard_data.type == 'follow':
+        rtn_val = delete_whiteboard_whoami_follow(whiteboard_data)
+    else:
+        rtn_val['status'] = False
+        rtn_val['message'] = "Unknown content type"
 
     return rtn_val
 
@@ -849,11 +869,11 @@ def delete_whiteboard_content(email, whiteboard_data_id):
         rtn_val['message'] = "There is no whiteboard data with the given id"
     else:
         if whiteboard_data.medium == 'instagram':
-            rtn_val = delete_instagram_content(whiteboard_data_id)
+            rtn_val = delete_whiteboard_instagram(whiteboard_data)
         elif whiteboard_data.medium == 'facebook':
-            rtn_val = delete_facebook_content(whiteboard_data_id)
+            rtn_val = delete_whiteboard_facebook(whiteboard_data)
         elif whiteboard_data.medium == 'whoami':
-            rtn_val = delete_whoami_content(whiteboard_data_id)
+            rtn_val = delete_whiteboard_whoami(whiteboard_data)
         else:
             # Medium provided not found
             rtn_val['status'] = False
