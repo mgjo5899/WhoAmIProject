@@ -6,7 +6,6 @@ import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE, SERVER } from
 import { ConnectTo, Spread } from '../dashboard';
 import ProfileContents from './profile_contents';
 import Axios from 'axios';
-import { withRouter } from 'react-router-dom';
 
 const Profile = ({ auth, showImages }) => {
 
@@ -198,4 +197,4 @@ const Profile = ({ auth, showImages }) => {
     );
 }
 
-export default withRouter(Profile);
+export default Profile;

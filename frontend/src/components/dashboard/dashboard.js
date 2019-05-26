@@ -57,8 +57,11 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
                 0: toggle,
                 1: editDelete
             }
-            // setting images forming to right elements
-            setImages(showImages(data.existing, mapFunc[flag], flag));
+            const imageFunc = (async () => {
+                // setting images forming to right elements
+                setImages(await showImages(data.existing, mapFunc[flag], flag));
+            });
+            imageFunc();
             settingHeight();
         }
     }, [data.existing]);
@@ -185,6 +188,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
                     })).data;
                     // if status is false, throw error to print to console output
                     if (!status) throw new Error(message);
+                    setIsFollowing(false);
                 } else {
                     // if it is currently not following, follow the user
                     const { status, message } = (await Axios.post(SERVER + '/user/following_users', {
@@ -192,6 +196,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
                     })).data;
                     // if status is false, throw error to print to console output
                     if (!status) throw new Error(message);
+                    setIsFollowing(true);
                 }
             }
             catch (error) {
