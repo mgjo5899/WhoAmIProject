@@ -9,7 +9,22 @@ import { SERVER, DEFAULT_PROFILE_FONT_SIZE, DEFAULT_PROFILE_SIZE_VALUE, SOCIAL_M
  * @param {function} clickFunc - operate function when click
  * @param {int} flag - 0 ==> dashboard 1 ==> image spread 2 ==> profile spread 3 ==> follow spread
  */
-export const showImages = (imageData, clickFunc, flag) => {
+export const showImages = async (imageData, clickFunc, flag) => {
+
+    let followersNumber = 0;
+    let followingNumber = 0;
+
+    try {
+        const followersData = (await Axios.get(SERVER + '/user/followers')).data;
+        if (!followersData.status) throw new Error(followersData.message);
+        followersNumber = followersData.followers.length;
+        const followingData = (await Axios.get(SERVER + '/user/following_users')).data;
+        if (!followingData.status) throw new Error(followingData.message);
+        followingNumber = followingData.following_users.length;
+    } catch (error) {
+        console.log(error);
+    }
+
     return imageData.map((image, index) => {
 
         let className = 'position-absolute rounded';
@@ -33,7 +48,7 @@ export const showImages = (imageData, clickFunc, flag) => {
                             followers
                         </div>
                         <div className="followers-number">
-                            0
+                            {followersNumber}
                         </div>
                     </div>
                     <div className="float-right text-center" >
@@ -41,7 +56,7 @@ export const showImages = (imageData, clickFunc, flag) => {
                             following
                         </div>
                         <div className="following-number">
-                            0
+                            {followingNumber}
                         </div>
                     </div>
                 </div>
