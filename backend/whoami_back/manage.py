@@ -212,7 +212,7 @@ def add_whiteboard_whoami_profile(email, new_content):
     elif not ('curr_width' in specifics and 'curr_height' in specifics):
         rtn_val['status'] = False
         rtn_val['message'] = "Not enough information for a whoami content"
-    elif len(get_whiteboard_data(email=email, medium=medium['medium'])['whiteboard_data']) > 0:
+    elif len(get_whiteboard_data(email=email, medium=new_content['medium'])['whiteboard_data']) > 0:
         rtn_val['status'] = False
         rtn_val['message'] = "User profile data already exists as a whiteboard content"
     else:
@@ -237,7 +237,7 @@ def add_whiteboard_whoami_profile(email, new_content):
 
     return rtn_val
 
-def add_whiteboard_whomai_follow(email, new_content):
+def add_whiteboard_whoami_follow(email, new_content):
     rtn_val = {}
     specifics = new_content['specifics']
 
