@@ -6,9 +6,9 @@ utils.reset_db()
 
 # Populating fake user table
 users = {
-            'user1':['mgjo5899@gmail.com', '1000'],
-            'user2':['mcho14@illinois.edu', '1000'],
-            'user3':['mkc.k2580@google.com', '1000']
+            'user1':['user1@gmail.com', '1000'],
+            'user2':['user2@gmail.com', '1000'],
+            'user3':['user3@gmail.com', '1000']
         }
 
 for name in users:
