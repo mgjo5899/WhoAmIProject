@@ -132,31 +132,40 @@ def get_user_profile(email=None, username=None, internal_use=False):
         if user['status'] == False:
             rtn_val = user
         else:
-            user_profile = db.query(UserProfile).filter(UserProfile.email == email).first()
+            user = user['data']
+            user_profile = db.query(UserProfile).filter(UserProfile.email == \
+                                                        user['email']).first()
 
             if user_profile == None:
-                rtn_val['status'] = False
-                rtn_val['message'] = "Could not find a profile for the given user"
-            else:
-                rtn_val['status'] = True
-                rtn_val['email'] = email
-                rtn_val['profile'] = {}
+                user_profile = UserProfile(email=email, profile_image_url='', \
+                                           bio='', company='', location='', \
+                                           website='', include_email=False)
+                db.add(user_profile)
+                db.commit()
+                # Junwon asked to be able to publish User Profile without save
+                # So we are omitting this part for now
+                #rtn_val['status'] = False
+                #rtn_val['message'] = "Could not find a profile for the given user"
 
-                if internal_use == True:
-                    rtn_val['profile']['id'] = user_profile.id
+            rtn_val['status'] = True
+            rtn_val['email'] = user['email']
+            rtn_val['profile'] = {}
 
-                if user_profile.bio != '':
-                    rtn_val['profile']['bio'] = user_profile.bio
-                if user_profile.company != '':
-                    rtn_val['profile']['company'] = user_profile.company
-                if user_profile.location != '':
-                    rtn_val['profile']['location'] = user_profile.location
-                if user_profile.website != '':
-                    rtn_val['profile']['website'] = user_profile.website
-                if user_profile.profile_image_url != '':
-                    rtn_val['profile']['profile_image_url'] = user_profile.profile_image_url
-                if user_profile.include_email == True:
-                    rtn_val['profile']['email'] = user_profile.email
+            if internal_use == True:
+                rtn_val['profile']['id'] = user_profile.id
+
+            if user_profile.bio != '':
+                rtn_val['profile']['bio'] = user_profile.bio
+            if user_profile.company != '':
+                rtn_val['profile']['company'] = user_profile.company
+            if user_profile.location != '':
+                rtn_val['profile']['location'] = user_profile.location
+            if user_profile.website != '':
+                rtn_val['profile']['website'] = user_profile.website
+            if user_profile.profile_image_url != '':
+                rtn_val['profile']['profile_image_url'] = user_profile.profile_image_url
+            if user_profile.include_email == True:
+                rtn_val['profile']['email'] = user_profile.email
 
     return rtn_val
 
@@ -630,6 +639,7 @@ def update_whiteboard_whoami_profile(email, update, whiteboard_data):
     profile_data = db.query(UserProfileData)\
                       .filter(UserProfileData.whiteboard_data_id==update['id'])\
                       .first()
+    specifics = update['specifics']
 
     if profile_data == None:
         rtn_val['status'] = False
@@ -643,7 +653,7 @@ def update_whiteboard_whoami_profile(email, update, whiteboard_data):
         db.commit()
 
         rtn_val['status'] = True
-        rtn_val['medium'] = medium
+        rtn_val['medium'] = update['medium']
         rtn_val['type'] = whiteboard_data.type
 
     return rtn_val
@@ -654,6 +664,7 @@ def update_whiteboard_whoami_follow(email, update, whiteboard_data):
     follow_data = db.query(UserFollowData)\
                       .filter(UserFollowData.whiteboard_data_id==update['id'])\
                       .first()
+    specifics = update['specifics']
 
     if profile_data == None:
         rtn_val['status'] = False
@@ -667,7 +678,7 @@ def update_whiteboard_whoami_follow(email, update, whiteboard_data):
         db.commit()
 
         rtn_val['status'] = True
-        rtn_val['medium'] = medium
+        rtn_val['medium'] = update['medium']
         rtn_val['type'] = whiteboard_data.type
 
     return rtn_val
@@ -675,12 +686,10 @@ def update_whiteboard_whoami_follow(email, update, whiteboard_data):
 def update_whiteboard_whoami(email, update):
     rtn_val = {'id':update['id'], 'email':email}
 
-    medium = update['medium']
-    specifics = update['specifics']
     whiteboard_data = db.query(WhiteboardData)\
                           .filter(and_(WhiteboardData.email == email, \
                                        WhiteboardData.id == update['id']))\
-                          .filter(WhiteboardData.medium == medium)\
+                          .filter(WhiteboardData.medium == update['medium'])\
                           .first()
 
     if whiteboard_data == None:
@@ -700,12 +709,11 @@ def update_whiteboard_whoami(email, update):
 
 def update_whiteboard_facebook(email, update):
     rtn_val = {'id':update['id'], 'email':email}
-    medium = update['medium']
     specifics = update['specifics']
     whiteboard_data = db.query(WhiteboardData)\
                           .filter(and_(WhiteboardData.email == email, \
                                        WhiteboardData.id == update['id']))\
-                          .filter(WhiteboardData.medium == medium)\
+                          .filter(WhiteboardData.medium == update['medium'])\
                           .first()
 
     if whiteboard_data == None:
@@ -730,19 +738,18 @@ def update_whiteboard_facebook(email, update):
                 db.commit()
 
                 rtn_val['status'] = True
-                rtn_val['medium'] = medium
+                rtn_val['medium'] = update['medium']
                 rtn_val['type'] = whiteboard_data.type
 
     return rtn_val
 
 def update_whiteboard_instagram(email, update):
     rtn_val = {'id':update['id'], 'email':email}
-    medium = update['medium']
     specifics = update['specifics']
     whiteboard_data = db.query(WhiteboardData)\
                           .filter(and_(WhiteboardData.email == email, \
                                        WhiteboardData.id == update['id']))\
-                          .filter(WhiteboardData.medium == medium)\
+                          .filter(WhiteboardData.medium == update['medium'])\
                           .first()
 
     if whiteboard_data == None:
@@ -767,7 +774,7 @@ def update_whiteboard_instagram(email, update):
                 db.commit()
 
                 rtn_val['status'] = True
-                rtn_val['medium'] = medium
+                rtn_val['medium'] = update['medium']
                 rtn_val['type'] = whiteboard_data.type
 
     return rtn_val
