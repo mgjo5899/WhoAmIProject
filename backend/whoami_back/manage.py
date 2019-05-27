@@ -204,9 +204,6 @@ def update_user_profile(email, profile_image_url, bio, company, location, websit
 
 def add_whiteboard_whoami_profile(email, new_content):
     rtn_val = {}
-    #############################################################################
-    #############################################################################
-    # TODO: Discuss with Junwon to see where he's getting those user profile UX flow
     user_profile = get_user_profile(email=email, internal_use=True)
     specifics = new_content['specifics']
 
@@ -775,11 +772,11 @@ def update_whiteboard_instagram(email, update):
 
     return rtn_val
 
-def delete_whiteboard_facebook(whiteboard_data_id):
+def delete_whiteboard_facebook(whiteboard_data):
     rtn_val = {}
 
     facebook_data = db.query(FacebookData).filter(FacebookData.whiteboard_data_id == \
-                                                  whiteboard_data_id).first()
+                                                  whiteboard_data.id).first()
 
     if facebook_data == None:
         rtn_val['status'] = False
