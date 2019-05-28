@@ -41,7 +41,7 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
 
     const addData = async () => {
         try {
-            (await Axios.post(SERVER + '/whiteboard/user_data', {
+            const result = (await Axios.post(SERVER + '/whiteboard/user_data', {
                 new_contents: data.new.map(elem => ({
                     type: elem.type,
                     medium: elem.medium,
@@ -56,7 +56,9 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
                         curr_height: changed[elem.id] ? changed[elem.id].height : (elem.orig_height / elem.orig_width * 200)
                     }
                 }))
-            }));
+            })).data;
+            console.log(result);
+            if (!result.status) throw new Error(result.message);
         } catch (error) {
             console.log(error);
         }

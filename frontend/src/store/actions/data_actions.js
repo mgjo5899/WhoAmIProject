@@ -43,20 +43,20 @@ export const showImages = async (imageData, clickFunc, flag) => {
             ),
             follow: (
                 <div style={{ fontSize: 16 * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
-                    <div className="float-left text-center" >
-                        <div className="followers">
-                            followers
-                        </div>
-                        <div className="followers-number">
+                    <div className="float-left text-center ml-2 mb-1" >
+                        <div className="followers-number font-weight-bold">
                             {followersNumber}
                         </div>
-                    </div>
-                    <div className="float-right text-center" >
-                        <div className="following">
-                            following
+                        <div className="followers text-secondary">
+                            followers
                         </div>
-                        <div className="following-number">
+                    </div>
+                    <div className="float-right text-center mr-2 mb-1" >
+                        <div className="following-number font-weight-bold">
                             {followingNumber}
+                        </div>
+                        <div className="following text-secondary">
+                            following
                         </div>
                     </div>
                 </div>

@@ -106,6 +106,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
 
     const settingHeight = () => {
         let maxHeight = 0;
+        console.log(data.existing)
         data.existing.forEach(elem => {
             maxHeight = Math.max(maxHeight, elem.pos_y + elem.specifics.curr_height + 100);
         });
