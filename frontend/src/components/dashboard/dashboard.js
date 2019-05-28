@@ -30,6 +30,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
             setDeleted([]);
             (async () => {
                 await getExistingImages(auth, username, history);
+                console.log('here');
                 await getFollowingData();
             })();
             // getExistingImages(auth, username, history);
@@ -43,6 +44,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
         try {
             // get all following data, and find if the username is included in this data
             const { status, following_users, message } = (await Axios.get(SERVER + '/user/following_users')).data;
+            console.log('haha')
             if (!status) throw new Error(message);
             // if we find the index of following user, set isFollowing true, else false 
             following_users.findIndex(user => user === username) !== -1 ? setIsFollowing(true) : setIsFollowing(false);

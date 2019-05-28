@@ -76,7 +76,9 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
 
     const handleNext = async () => {
         try {
-            await Promise.all([addData(), changeData(), deleteData(data.delete)]);
+            await addData();
+            await changeData();
+            await deleteData(data.delete);
             next();
         } catch (error) {
             console.log(error);
