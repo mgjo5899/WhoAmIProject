@@ -389,6 +389,8 @@ def get_whiteboard_data_follow(user):
         follow_relationship['last_modified'] = follow_data[0].last_modified
         follow_relationship['status'] = follow_data[0].status
         follow_relationship['specifics'] = {}
+        follow_relationship['specifics']['curr_width'] = follow_data[1].curr_width
+        follow_relationship['specifics']['curr_height'] = follow_data[1].curr_height
         followers = get_followers(user['username'])['followers']
         following_users = get_following_users(user['username'])['following_users']
         follow_relationship['specifics']['number_of_followers'] = len(followers)
@@ -519,7 +521,7 @@ def get_whiteboard_data(username=None, email=None, medium=None):
 def mark_content_unavailable(content_id):
     rtn_val = {}
 
-    content = db.query(WhiteboardData).filter(whiteboardData.id == content_id).first()
+    content = db.query(WhiteboardData).filter(WhiteboardData.id == content_id).first()
 
     if content:
         content.status = 3
@@ -666,7 +668,7 @@ def update_whiteboard_whoami_follow(email, update, whiteboard_data):
                       .first()
     specifics = update['specifics']
 
-    if profile_data == None:
+    if follow_data == None:
         rtn_val['status'] = False
         rtn_val['message'] = "There is no user follow data with the given id"
     else:
