@@ -5,6 +5,7 @@
 - [Instagram](#instagram)
 - [Facebook](#facebook)
 - [User Data](#user-data)
+- [Utils](#utils)
 
 ## Authentication
 
@@ -330,6 +331,21 @@ This API returns whiteboard contents data related to the given user.
                         "website": "https://somewebsite.com",
                         "email": "mgjo5899@gmail.com"
                     }
+                },
+                {
+                    "id": 3,
+                    "medium": "whoami",
+                    "type": "follow",
+                    "pos_x": 33,
+                    "pos_y": 33,
+                    "status": 1,
+                    "last_modified": "Thu, 25 Apr 2019 16:35:16 GMT",
+                    "specifics": {
+                        "curr_height": 100,
+                        "curr_width": 100,
+                        "number_of_followers": 3,
+                        "number_of_following_users": 3
+                    }
                 }
             ]
         }
@@ -547,6 +563,37 @@ This API returns whiteboard contents data related to the given user.
 
 ## User Data
 
+## Follow Relationships [/user/follow_relationships]
+
+### Get follow relationships with other users [POST]
+
+(Credential in session required) It returns follow relationships of the given user with the credential against the given users.
+
++ Request Body (application/json)
+    
+        {
+            "usernames": [
+                "user1",
+                "user2"
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "status": true,
+            "follow_relationships": [
+                {
+                    "username": "user1",
+                    "following": true
+                },
+                {
+                    "username": "user2",
+                    "following": false
+                }
+            ]
+        }
+
 ## Follower [/user/followers]
 
 ### Get the followers [GET]
@@ -710,4 +757,35 @@ This API returns whiteboard contents data related to the given user.
             "email": "mgjo5899@gmail.com",
             "status": true,
             "message": "Successfully updated the user profile"
+        }
+
+## Utils
+
+## Get Profile Images [POST]
+This API returns the given users profile images as a list.
+
++ Request Body (application/json)
+
+        {
+            "secret_key": "somesecretkey",
+            "usernames": [
+                "user1",
+                "user2"
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "status": true,
+            "profile_images": [
+                {
+                    "username": "user1",
+                    "profile_image_url": "https://some_url_for_profile.com"
+                },
+                {
+                    "username": "user2",
+                    "profile_image_url": "https://some_url_for_profile.com"
+                }
+            ]
         }

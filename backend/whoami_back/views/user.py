@@ -8,6 +8,24 @@ import whoami_back.utils as utils
 user = Blueprint('user', __name__)
 
 
+@user.route('/user/follow_relationships', methods=['POST'])
+def get_follow_relationships():
+    rtn_val = {}
+    req = utils.get_req_data()
+
+    if 'email' not in session or 'username' not in session:
+        rtn_val['status'] = False
+        rtn_val['message'] = "Could not find the user credential in the session cookie"
+    else:
+        if request.method == 'POST':
+            if 'usernames' not in req:
+                rtn_val['status'] = False
+                rtn_val['message'] = "Request is missing necessary data"
+            else:
+                rtn_val = manage.get_follow_relationships(session['username'], req['usernames'])
+
+    return jsonify(rtn_val)
+
 @user.route('/user/followers', methods=['GET', 'DELETE'])
 def user_follower():
     rtn_val = {}
