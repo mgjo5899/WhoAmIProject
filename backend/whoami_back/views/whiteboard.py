@@ -17,12 +17,11 @@ def get_published_whiteboard_data():
     if not ('username' in req or 'secret_key' in req):
         rtn_val['status'] = False
         rtn_val['message'] = "Request is missing either username or secret_key"
+    elif utils.check_secret_api_key(req['secret_key']) == False:
+        rtn_val['status'] = False
+        rtn_val['message'] = "Given secret_key is incorrect"
     else:
-        if utils.check_secret_api_key(req['secret_key']) == False:
-            rtn_val['status'] = False
-            rtn_val['message'] = "Given secret_key is incorrect"
-        else:
-            rtn_val = manage.get_whiteboard_data(username=req['username'])
+        rtn_val = manage.get_whiteboard_data(username=req['username'])
 
     return jsonify(rtn_val)
 
