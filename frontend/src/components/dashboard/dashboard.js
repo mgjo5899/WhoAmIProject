@@ -8,7 +8,7 @@ import InputForm from '../profile/input_form';
 import InfiniteScroll from 'react-infinite-scroller';
 import { resetChanged, setChanged } from '../../store/actions/changed_actions';
 import Axios from 'axios';
-import { showImages, updateData, deleteData, getFollowersFollowingNumbers } from '../../store/actions/data_actions';
+import { showImages, updateData, deleteData } from '../../store/actions/data_actions';
 
 
 const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, auth, history, changed, resetChanged, resetData, images, setImages }) => {
@@ -30,7 +30,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
             setDeleted([]);
             (async () => {
                 await getExistingImages(auth, username, history);
-                console.log('here');
                 await getFollowingData();
             })();
             // getExistingImages(auth, username, history);
@@ -44,7 +43,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
         try {
             // get all following data, and find if the username is included in this data
             const { status, following_users, message } = (await Axios.get(SERVER + '/user/following_users')).data;
-            console.log('haha')
             if (!status) throw new Error(message);
             // if we find the index of following user, set isFollowing true, else false 
             following_users.findIndex(user => user === username) !== -1 ? setIsFollowing(true) : setIsFollowing(false);
@@ -59,12 +57,8 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
                 0: toggle,
                 1: editDelete
             }
-            const imageFunc = (async () => {
-                // setting images forming to right elements
-                const [followersNumber, followingNumber] = await getFollowersFollowingNumbers();
-                setImages(showImages(data.existing, mapFunc[flag], flag, { followersNumber, followingNumber }));
-            });
-            imageFunc();
+            // setting images forming to right elements
+            setImages(showImages(data.existing, mapFunc[flag], flag));
             settingHeight();
         }
     }, [data.existing]);

@@ -9,48 +9,44 @@ import { SERVER, DEFAULT_PROFILE_FONT_SIZE, DEFAULT_PROFILE_SIZE_VALUE, SOCIAL_M
  * @param {function} clickFunc - operate function when click
  * @param {int} flag - 0 ==> dashboard 1 ==> image spread 2 ==> profile spread 3 ==> follow spread
  */
-export const showImages = (imageData, clickFunc, flag, { followersNumber, followingNumber }) => {
+export const showImages = (imageData, clickFunc, flag) => {
 
-    return imageData.map((image, index) => {
+    let className = 'position-absolute rounded';
 
-        let className = 'position-absolute rounded';
+    if ([1, 2, 3].includes(flag)) {
+        className += ' draggable resize-drag';
+    }
 
-        // const correctFlag = (flag === 1 && image.medium !== 'whoami') || (flag === 2 && image.type === 'profile');
-
-        if ([1, 2, 3].includes(flag)) {
-            className += ' draggable resize-drag';
-        }
-
-        const componentMap = {
-            profile: (
-                <span className="mx-auto" style={{ fontSize: DEFAULT_PROFILE_FONT_SIZE * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
-                    profile
-                </span>
-            ),
-            follow: (
-                <div style={{ fontSize: 16 * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
-                    <div className="float-left text-center ml-2 mb-1" >
-                        <div className="followers-number font-weight-bold">
-                            {followersNumber}
-                        </div>
-                        <div className="followers text-secondary">
-                            followers
-                        </div>
+    const componentMap = image => ({
+        profile: (
+            <span className="mx-auto" style={{ fontSize: DEFAULT_PROFILE_FONT_SIZE * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
+                profile
+            </span>
+        ),
+        follow: (
+            <div style={{ fontSize: 16 * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
+                <div className="float-left text-center ml-2 mb-1" >
+                    <div className="followers-number font-weight-bold">
+                        {image.specifics.number_of_followers}
                     </div>
-                    <div className="float-right text-center mr-2 mb-1" >
-                        <div className="following-number font-weight-bold">
-                            {followingNumber}
-                        </div>
-                        <div className="following text-secondary">
-                            following
-                        </div>
+                    <div className="followers text-secondary">
+                        followers
                     </div>
                 </div>
-                // <span className="mx-auto" style={{ fontSize: DEFAULT_PROFILE_FONT_SIZE * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
-                //     follow
-                // </span>
-            )
-        }
+                <div className="float-right text-center mr-2 mb-1" >
+                    <div className="following-number font-weight-bold">
+                        {image.specifics.number_of_following_users}
+                    </div>
+                    <div className="following text-secondary">
+                        following
+                    </div>
+                </div>
+            </div>
+        )
+    });
+
+
+    return imageData.map((image, index) => {
 
         return (
             <div
@@ -85,7 +81,7 @@ export const showImages = (imageData, clickFunc, flag, { followersNumber, follow
                         )
                         : (
                             <div className="card pt-3">
-                                {componentMap[image.type]}
+                                {componentMap(image)[image.type]}
                                 <span className="position-absolute" style={{ fontSize: 10, width: 50, top: '2%', left: '2%', opacity: 0.7, userSelect: 'none' }}>whoami</span>
                             </div>
                         )
