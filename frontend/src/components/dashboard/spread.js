@@ -4,7 +4,7 @@ import { SERVER, DEFAULT_WIDTH, DEFAULT_HEIGHT } from '../../config';
 import InfiniteScroll from 'react-infinite-scroller';
 import { WhiteBoard } from './whiteboard';
 import { connect } from 'react-redux';
-import { showImages, updateData, deleteData } from '../../store/actions/data_actions';
+import { showImages, updateData, deleteData, getFollowersFollowingNumbers } from '../../store/actions/data_actions';
 
 const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage, element, flag, changed, images, setImages }) => {
 
@@ -28,7 +28,8 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
             });
             const imagesToShow = [...data.existing.filter(img => (img.medium === 'whoami') || img.medium !== element.medium).filter(img => !deleteIdSet.has(img.id)), ...data.selected];
             (async () => {
-                setImages(await showImages(imagesToShow, handleClose, flag));
+                const [followersNumber, followingNumber] = await getFollowersFollowingNumbers();
+                setImages(showImages(imagesToShow, handleClose, flag, { followersNumber, followingNumber }));
             })();
             // set height of whiteboard based on the selected images
             // setHeight(getHeight());

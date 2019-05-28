@@ -8,7 +8,7 @@ import InputForm from '../profile/input_form';
 import InfiniteScroll from 'react-infinite-scroller';
 import { resetChanged, setChanged } from '../../store/actions/changed_actions';
 import Axios from 'axios';
-import { showImages, updateData, deleteData } from '../../store/actions/data_actions';
+import { showImages, updateData, deleteData, getFollowersFollowingNumbers } from '../../store/actions/data_actions';
 
 
 const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, auth, history, changed, resetChanged, resetData, images, setImages }) => {
@@ -59,7 +59,8 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
             }
             const imageFunc = (async () => {
                 // setting images forming to right elements
-                setImages(await showImages(data.existing, mapFunc[flag], flag));
+                const [followersNumber, followingNumber] = await getFollowersFollowingNumbers();
+                setImages(showImages(data.existing, mapFunc[flag], flag, { followersNumber, followingNumber }));
             });
             imageFunc();
             settingHeight();
@@ -106,7 +107,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
 
     const settingHeight = () => {
         let maxHeight = 0;
-        console.log(data.existing)
         data.existing.forEach(elem => {
             maxHeight = Math.max(maxHeight, elem.pos_y + elem.specifics.curr_height + 100);
         });

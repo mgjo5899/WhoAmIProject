@@ -9,21 +9,7 @@ import { SERVER, DEFAULT_PROFILE_FONT_SIZE, DEFAULT_PROFILE_SIZE_VALUE, SOCIAL_M
  * @param {function} clickFunc - operate function when click
  * @param {int} flag - 0 ==> dashboard 1 ==> image spread 2 ==> profile spread 3 ==> follow spread
  */
-export const showImages = async (imageData, clickFunc, flag) => {
-
-    let followersNumber = 0;
-    let followingNumber = 0;
-
-    try {
-        const followersData = (await Axios.get(SERVER + '/user/followers')).data;
-        if (!followersData.status) throw new Error(followersData.message);
-        followersNumber = followersData.followers.length;
-        const followingData = (await Axios.get(SERVER + '/user/following_users')).data;
-        if (!followingData.status) throw new Error(followingData.message);
-        followingNumber = followingData.following_users.length;
-    } catch (error) {
-        console.log(error);
-    }
+export const showImages = (imageData, clickFunc, flag, { followersNumber, followingNumber }) => {
 
     return imageData.map((image, index) => {
 
@@ -141,6 +127,22 @@ export const updateData = async (changed, images) => {
                 }
             }))
         });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getFollowersFollowingNumbers = async () => {
+    let followersNumber = 0;
+    let followingNumber = 0;
+    try {
+        const followersData = (await Axios.get(SERVER + '/user/followers')).data;
+        if (!followersData.status) throw new Error(followersData.message);
+        followersNumber = followersData.followers.length;
+        const followingData = (await Axios.get(SERVER + '/user/following_users')).data;
+        if (!followingData.status) throw new Error(followingData.message);
+        followingNumber = followingData.following_users.length;
+        return [followersNumber, followingNumber];
     } catch (error) {
         console.log(error);
     }
