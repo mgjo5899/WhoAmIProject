@@ -128,17 +128,18 @@ export const updateData = async (changed, images) => {
     }
 }
 
-export const getFollowersFollowingNumbers = async () => {
-    let followersNumber = 0;
-    let followingNumber = 0;
+export const getFollowersFollowingUsers = async () => {
     try {
         const followersData = (await Axios.get(SERVER + '/user/followers')).data;
         if (!followersData.status) throw new Error(followersData.message);
-        followersNumber = followersData.followers.length;
+        const followers = followersData.followers;
         const followingData = (await Axios.get(SERVER + '/user/following_users')).data;
         if (!followingData.status) throw new Error(followingData.message);
-        followingNumber = followingData.following_users.length;
-        return [followersNumber, followingNumber];
+        const followingUsers = followingData.following_users;
+        return {
+            followers,
+            followingUsers
+        };
     } catch (error) {
         console.log(error);
     }
