@@ -9,6 +9,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { resetChanged, setChanged } from '../../store/actions/changed_actions';
 import Axios from 'axios';
 import { showImages, updateData, deleteData } from '../../store/actions/data_actions';
+import FollowingFollowersDisplay from '../follow/following_followers_display';
 
 
 const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, auth, history, changed, resetChanged, resetData, images, setImages }) => {
@@ -21,6 +22,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
     const [flag, setFlag] = useState(0);
     const [deleted, setDeleted] = useState([]);
     const [isFollowing, setIsFollowing] = useState(false);
+    const [followClicked, setFollowClicked] = useState(false);
 
     useEffect(() => {
         if (activeIndex === contentsIndex.dashboard) {
@@ -67,11 +69,14 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
         if (modal) {
             setCurrentImage({});
             setModalContent(null);
+            setFollowClicked(false);
             // setModalContent(null);
         }
         else {
             if (image.type === 'profile') {
                 toggleProfile(image);
+            } else if (image.type === 'follow') {
+                toggleFollow(image);
             } else {
                 toggleImage(image);
             }
@@ -91,11 +96,26 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
         );
     }, [currentImage]);
 
-    const toggleProfile = async image => {
+    const toggleProfile = image => {
         setModalContent(
             <div className="card">
                 <div className="card-body">
                     <InputForm auth={auth} readOnly={true} profile={image.specifics} />
+                </div>
+            </div>
+        )
+    }
+
+    const toggleFollow = image => {
+        const contentsIndex = {
+            following_followers: 0
+        };
+        const activeIndex = 0;
+        setFollowClicked(true);
+        setModalContent(
+            <div className="card">
+                <div className="card-body">
+                    <FollowingFollowersDisplay {...{ activeIndex, contentsIndex }} />
                 </div>
             </div>
         )
@@ -215,7 +235,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
                     <button className="btn btn-outline-primary btn-sm mx-2" onClick={next}>add</button>
                 </div>
             </div>
-            <Modal isOpen={modal} centered={true} toggle={toggle} contentClassName="border-0">
+            <Modal isOpen={modal} centered={true} toggle={toggle} contentClassName="border-0" size={followClicked ? "xl" : undefined}>
                 {modalContent}
             </Modal>
             {
