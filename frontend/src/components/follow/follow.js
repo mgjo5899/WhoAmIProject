@@ -25,8 +25,6 @@ const Follow = () => {
 
     const [data, setData] = useState(resetData());
     const [loaded, setLoaded] = useState(false);
-    const [items, setItems] = useState([]);
-    const [slides, setSlides] = useState([]);
 
     const next = () => {
         setActiveIndex(activeIndex => (activeIndex + 1) % 2);
@@ -54,50 +52,21 @@ const Follow = () => {
         });
     }
 
+    const contentsIndex = {
+        following_followers: 0,
+        spread: 1
+    }
+
     useEffect(() => {
         if (activeIndex === contentsIndex.following_followers) {
             setLoaded(false);
             selectedBackup();
             (async () => {
                 await getOwnerExistingImages();
-                setItems([
-                    <FollowingFollowers
-                        {...{
-                            next,
-                            previous,
-                            activeIndex,
-                            contentsIndex
-                        }}
-                    />,
-                    <Spread
-                        {...{
-                            next,
-                            previous,
-                            data,
-                            activeIndex,
-                            contentsIndex,
-                            element: { medium: 'whoami' },
-                            setData,
-                            deleteImage: deleteFollow,
-                            flag: 3
-                        }}
-                    />
-                ]);
                 setLoaded(true);
             })();
         }
     }, [activeIndex]);
-
-    useEffect(() => {
-        setSlides(items.map((item, index) => (
-            <CarouselItem key={index}>
-                {item}
-            </CarouselItem>)));
-    }, [items]);
-
-    useEffect(() => {
-        console.log(data)
-    }, [data]);
 
     useEffect(() => {
         if (loaded) {
@@ -129,11 +98,6 @@ const Follow = () => {
 
     }, [loaded]);
 
-    const contentsIndex = {
-        following_followers: 0,
-        spread: 1
-    }
-
     const getOwnerExistingImages = async () => {
         const data = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
         const { status, whiteboard_data, message } = data;
@@ -143,6 +107,40 @@ const Follow = () => {
             ...data,
             existing: whiteboard_data
         }));
+    }
+
+    let items = [];
+    let slides = [];
+
+    if (loaded) {
+        items = [
+            <FollowingFollowers
+                {...{
+                    next,
+                    previous,
+                    activeIndex,
+                    contentsIndex
+                }}
+            />,
+            <Spread
+                {...{
+                    next,
+                    previous,
+                    data,
+                    activeIndex,
+                    contentsIndex,
+                    element: { medium: 'whoami' },
+                    setData,
+                    deleteImage: deleteFollow,
+                    flag: 3
+                }}
+            />
+        ];
+
+        slides = items.map((item, index) => (
+            <CarouselItem key={index}>
+                {item}
+            </CarouselItem>));
     }
 
     return (
