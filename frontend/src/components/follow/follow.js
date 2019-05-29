@@ -24,8 +24,9 @@ const Follow = () => {
     });
 
     const [data, setData] = useState(resetData());
-
     const [loaded, setLoaded] = useState(false);
+    const [items, setItems] = useState([]);
+    const [slides, setSlides] = useState([]);
 
     const next = () => {
         setActiveIndex(activeIndex => (activeIndex + 1) % 2);
@@ -59,10 +60,40 @@ const Follow = () => {
             selectedBackup();
             (async () => {
                 await getOwnerExistingImages();
+                setItems([
+                    <FollowingFollowers
+                        {...{
+                            next,
+                            previous,
+                            activeIndex,
+                            contentsIndex
+                        }}
+                    />,
+                    <Spread
+                        {...{
+                            next,
+                            previous,
+                            data,
+                            activeIndex,
+                            contentsIndex,
+                            element: { medium: 'whoami' },
+                            setData,
+                            deleteImage: deleteFollow,
+                            flag: 3
+                        }}
+                    />
+                ]);
                 setLoaded(true);
             })();
         }
     }, [activeIndex]);
+
+    useEffect(() => {
+        setSlides(items.map((item, index) => (
+            <CarouselItem key={index}>
+                {item}
+            </CarouselItem>)));
+    }, [items]);
 
     useEffect(() => {
         console.log(data)
@@ -113,35 +144,6 @@ const Follow = () => {
             existing: whiteboard_data
         }));
     }
-
-    // list of components to use programmatically
-    const items = [
-        <FollowingFollowers
-            {...{
-                next,
-                previous
-            }}
-        />,
-        <Spread
-            {...{
-                next,
-                previous,
-                data,
-                activeIndex,
-                contentsIndex,
-                element: { medium: 'whoami' },
-                setData,
-                deleteImage: deleteFollow,
-                flag: 3
-            }}
-        />
-    ];
-
-    const slides = items.map((item, index) => (
-        <CarouselItem key={index}>
-            {item}
-        </CarouselItem>
-    ))
 
     return (
         <div className="container">
