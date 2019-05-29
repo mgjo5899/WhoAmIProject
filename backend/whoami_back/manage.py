@@ -15,31 +15,6 @@ from whoami_back.config import HASH_METHOD
 from whoami_back.utils import get_pw_hash, check_pw_hash
 
 
-def get_profile_images(target_usernames):
-    rtn_val = {}
-    rtn_val['status'] = True
-    rtn_val['profile_images'] = []
-
-    for target_username in target_usernames:
-        curr_user = { 'username': target_username }
-        user = get_user(username=target_username)
-
-        if user['status'] == False:
-            curr_user.update(user)
-        else:
-            user = user['data']
-            user_profile = db.query(UserProfile).filter(UserProfile.email == \
-                                                        user['email']).first()
-
-            if user_profile == None or user_profile.profile_image_url == '':
-                curr_user['profile_image_url'] = ''
-            else:
-                curr_user['profile_image_url'] = user_profile.profile_image_url
-
-        rtn_val['profile_images'].append(curr_user)
-
-    return rtn_val
-
 def get_follow_relationships(username, target_usernames):
     rtn_val = {}
     following_users = get_following_users(username)
@@ -53,7 +28,22 @@ def get_follow_relationships(username, target_usernames):
 
         for target_username in target_usernames:
             curr_user = { 'username':target_username }
-            curr_user['following'] = (target_username in following_users)
+            user = get_user(username=target_username)
+
+            if user['status'] == False:
+                curr_user.update(user)
+            else:
+                curr_user['status'] = True
+                curr_user['following'] = (target_username in following_users)
+                user = user['data']
+                user_profile = db.query(UserProfile).filter(UserProfile.email == \
+                                                            user['email']).first()
+
+                if user_profile != None:
+                    curr_user['profile_image_url'] = user_profile.profile_image_url
+                else:
+                    curr_user['profile_image_url'] = ''
+
             rtn_val['follow_relationships'].append(curr_user)
 
     return rtn_val

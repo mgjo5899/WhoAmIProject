@@ -5,7 +5,6 @@
 - [Instagram](#instagram)
 - [Facebook](#facebook)
 - [User Data](#user-data)
-- [Utils](#utils)
 
 ## Authentication
 
@@ -584,12 +583,21 @@ This API returns whiteboard contents data related to the given user.
             "status": true,
             "follow_relationships": [
                 {
+                    "status": true,
                     "username": "user1",
-                    "following": true
+                    "following": true,
+                    "profile_image_url": "https://someurl.com"
                 },
                 {
+                    "status": true,
                     "username": "user2",
-                    "following": false
+                    "following": false,
+                    "profile_image_url": "https://someurl.com"
+                },
+                {
+                    "status": false,
+                    "username": "user4",
+                    "message": "Could not find a user with the given information"
                 }
             ]
         }
@@ -757,35 +765,4 @@ This API returns whiteboard contents data related to the given user.
             "email": "mgjo5899@gmail.com",
             "status": true,
             "message": "Successfully updated the user profile"
-        }
-
-## Utils
-
-## Get Profile Images [POST]
-This API returns the given users profile images as a list.
-
-+ Request Body (application/json)
-
-        {
-            "secret_key": "somesecretkey",
-            "usernames": [
-                "user1",
-                "user2"
-            ]
-        }
-
-+ Response 200 (application/json)
-
-        {
-            "status": true,
-            "profile_images": [
-                {
-                    "username": "user1",
-                    "profile_image_url": "https://some_url_for_profile.com"
-                },
-                {
-                    "username": "user2",
-                    "profile_image_url": "https://some_url_for_profile.com"
-                }
-            ]
         }
