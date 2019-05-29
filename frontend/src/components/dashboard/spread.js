@@ -21,6 +21,7 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
     useEffect(() => {
         if (activeIndex === contentsIndex.spread) {
             setHeight(DEFAULT_HEIGHT);
+            console.log('here')
             // create set for putting deleted data id
             const deleteIdSet = new Set();
             data.delete.forEach(img => {
