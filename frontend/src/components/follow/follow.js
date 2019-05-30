@@ -5,8 +5,9 @@ import { Spread } from '../dashboard';
 import uuidv4 from 'uuid/v4';
 import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE, SERVER } from '../../config';
 import Axios from 'axios';
+import { getFollowers, getFollowingUsers } from '../../store/actions/data_actions';
 
-const Follow = () => {
+const Follow = ({ auth }) => {
 
     const [backup, setBackup] = useState({
         delete: [],
@@ -25,6 +26,9 @@ const Follow = () => {
 
     const [data, setData] = useState(resetData());
     const [loaded, setLoaded] = useState(false);
+
+    const [numberOfFollowers, setNumberOfFollowers] = useState(0);
+    const [numberOfFollowingUsers, setNumberOfFollowingUsers] = useState(0);
 
     const next = () => {
         setActiveIndex(activeIndex => (activeIndex + 1) % 2);
@@ -63,6 +67,8 @@ const Follow = () => {
             selectedBackup();
             (async () => {
                 await getOwnerExistingImages();
+                setNumberOfFollowers((await getFollowers(auth.user.username)).length);
+                setNumberOfFollowingUsers((await getFollowingUsers(auth.user.username)).length);
                 setLoaded(true);
             })();
         }
@@ -86,6 +92,8 @@ const Follow = () => {
                         orig_height: 150,
                         curr_width: existingFollowData ? existingFollowData.specifics.curr_width : 150,
                         curr_height: existingFollowData ? existingFollowData.specifics.curr_height : 150,
+                        number_of_followers: numberOfFollowers,
+                        number_of_following_users: numberOfFollowingUsers
                     },
                     selected: true
                 };
@@ -119,7 +127,9 @@ const Follow = () => {
                     next,
                     previous,
                     activeIndex,
-                    contentsIndex
+                    contentsIndex,
+                    auth,
+                    username: auth.user.username
                 }}
             />,
             <Spread
