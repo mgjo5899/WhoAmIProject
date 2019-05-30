@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import AnonymousUser from '../../images/anonymous/anonymous_user.png';
 import Infinite from 'react-infinite';
-import { getFollowersFollowingUsers } from '../../store/actions/data_actions';
+import { getFollowers, getFollowingUsers } from '../../store/actions/data_actions';
 import { SECRET_KEY, SERVER } from '../../config';
 
 
-const FollowingFollowersDisplay = ({ activeIndex, contentsIndex }) => {
+const FollowingFollowersDisplay = ({ activeIndex, contentsIndex, auth, username }) => {
 
     const [followersList, setFollowersList] = useState([]);
     const [followingUsersList, setFollowingUsersList] = useState([]);
@@ -29,7 +29,9 @@ const FollowingFollowersDisplay = ({ activeIndex, contentsIndex }) => {
     const setUpFollowersFollwingUsers = async () => {
         try {
             // from data action file, get followers and following users to use
-            const { followers, followingUsers } = await getFollowersFollowingUsers();
+            // const { followers, followingUsers } = await getFollowersFollowingUsers();
+            const followers = await getFollowers(username);
+            const followingUsers = await getFollowingUsers(username);
             // make axios call
             const followersProfileImages = (await Axios.post(SERVER + '/user/follow_relationships', {
                 secret_key: SECRET_KEY,
@@ -60,9 +62,11 @@ const FollowingFollowersDisplay = ({ activeIndex, contentsIndex }) => {
                 <div className="col-3 p-0">
                     <img className="m-2 rounded-circle" src={follow.profile_image_url ? follow.profile_image_url : AnonymousUser} style={{ height: 80 }} alt="" />
                 </div>
-                <div className="col-6 p-0 text-center my-auto" style={{ fontSize: 30 }}>{follow.username}</div>
+                <div className="col-6 p-0 text-center my-auto" style={{ fontSize: 30, userSelect: 'none' }} onClick={() => window.open(follow.username)}>{follow.username}</div>
                 <div className="col-3 p-0 h-50 my-auto">
-                    <button className={"btn d-block float-right mr-2 border" + (follow.following ? ' btn-light' : ' btn-primary')} onClick={() => handleFollowUnfollow(follow)}>
+                    <button className={"btn float-right mr-2 border" +
+                        (follow.following ? ' btn-light' : ' btn-primary') +
+                        (follow.username === auth.user.username ? ' d-none' : ' d-block')} onClick={() => handleFollowUnfollow(follow)}>
                         {follow.following ? 'following' : 'follow'}
                     </button>
                 </div>
