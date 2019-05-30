@@ -5,6 +5,7 @@
 - [Instagram](#instagram)
 - [Facebook](#facebook)
 - [User Data](#user-data)
+- [Utils](#utils)
 
 ## Authentication
 
@@ -765,4 +766,54 @@ This API returns whiteboard contents data related to the given user.
             "email": "mgjo5899@gmail.com",
             "status": true,
             "message": "Successfully updated the user profile"
+        }
+
+## Utils
+
+## Get Followers [/utils/get_followers]
+
+### Get followers of the target user [POST]
+This API gives a list of followers of the given target user with the API key.
+
+
++ Request Body (application/json)
+    
+        {
+            "secret_key": "somesecretkey",
+            "username": "someusername"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "status": true,
+            "followers": [
+                "user1",
+                "user2",
+                "user3"
+            ]
+        }
+
+## Get Following Users [/utils/get_following_users]
+
+### Get following users of the target user [POST]
+This API gives a list of following users of the given target user with the API key.
+
+
++ Request Body (application/json)
+    
+        {
+            "secret_key": "somesecretkey",
+            "username": "someusername"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "status": true,
+            "following_users": [
+                "user1",
+                "user2",
+                "user3"
+            ]
         }
