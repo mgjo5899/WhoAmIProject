@@ -115,7 +115,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
         setModalContent(
             <div className="card">
                 <div className="card-body">
-                    <FollowingFollowersDisplay {...{ activeIndex, contentsIndex }} />
+                    <FollowingFollowersDisplay {...{ activeIndex, contentsIndex, auth, username }} />
                 </div>
             </div>
         )
