@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import Axios from 'axios';
-import { SERVER, DEFAULT_PROFILE_FONT_SIZE, DEFAULT_PROFILE_SIZE_VALUE, SOCIAL_MEDIA_CONFIG } from '../../config';
+import { SERVER, DEFAULT_PROFILE_FONT_SIZE, DEFAULT_PROFILE_SIZE_VALUE, SOCIAL_MEDIA_CONFIG, SECRET_KEY } from '../../config';
 
 // showing the images to the end users
 /**
@@ -140,6 +140,32 @@ export const getFollowersFollowingUsers = async () => {
             followers,
             followingUsers
         };
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getFollowers = async username => {
+    try {
+        const { status, message, followers } = (await Axios.post(SERVER + '/utils/get_followers', {
+            secret_key: SECRET_KEY,
+            username
+        })).data;
+        if (!status) throw new Error(message);
+        return followers;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getFollowingUsers = async username => {
+    try {
+        const { status, message, following_users } = (await Axios.post(SERVER + '/utils/get_following_users', {
+            secret_key: SECRET_KEY,
+            username
+        })).data;
+        if (!status) throw new Error(message);
+        return following_users;
     } catch (error) {
         console.log(error);
     }
