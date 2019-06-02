@@ -224,7 +224,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
 
     return (
         <Fragment>
-            <div className="d-flex justify-content-end">
+            <div className="d-flex justify-content-end mt-1">
                 <div className={(isOwner(auth, username) ? 'invisible' : undefined)}>
                     <button className="btn btn-outline-primary btn-sm mx-2" onClick={handleFollow}>
                         {!isFollowing ? 'follow' : 'unfollow'}
