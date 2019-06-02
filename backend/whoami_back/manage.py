@@ -62,7 +62,18 @@ def get_following_users(follower_username):
         rtn_val['following_users'] = []
 
         for following_user in following_users:
-            rtn_val['following_users'].append(following_user.followed_user_username)
+            curr_following_user = {}
+            curr_following_user['username'] = following_user.followed_user_username
+            curr_following_user['profile_image_url'] = ''
+            following_user_profile = \
+                    get_user_profile(username=following_user.followed_user_username)
+
+            if following_user_profile['status'] == True and \
+                                     'profile_image_url' in following_user_profile['profile']:
+                curr_following_user['profile_image_url'] = \
+                                        following_user_profile['profile']['profile_image_url']
+
+            rtn_val['following_users'].append(curr_following_user)
 
     return rtn_val
 
@@ -80,7 +91,17 @@ def get_followers(followed_user_username):
         rtn_val['followers'] = []
 
         for follower in followers:
-            rtn_val['followers'].append(follower.follower_username)
+            curr_follower = {}
+            curr_follower['username'] = follower.follower_username
+            curr_follower['profile_image_url'] = ''
+            follower_profile = get_user_profile(username=follower.follower_username)
+
+            if follower_profile['status'] == True and \
+                                     'profile_image_url' in follower_profile['profile']:
+                curr_follower['profile_image_url'] = \
+                                        follower_profile['profile']['profile_image_url']
+
+            rtn_val['followers'].append(curr_follower)
 
     return rtn_val
 

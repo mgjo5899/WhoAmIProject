@@ -788,9 +788,14 @@ This API gives a list of followers of the given target user with the API key.
         {
             "status": true,
             "followers": [
-                "user1",
-                "user2",
-                "user3"
+                {
+                    "username": "user1",
+                    "profile_image_url": "https://user1_profile_image_url.com"
+                },
+                {
+                    "username": "user2",
+                    "profile_image_url": "https://user2_profile_image_url.com"
+                }
             ]
         }
 
@@ -812,8 +817,13 @@ This API gives a list of following users of the given target user with the API k
         {
             "status": true,
             "following_users": [
-                "user1",
-                "user2",
-                "user3"
+                {
+                    "username": "user1",
+                    "profile_image_url": "https://user1_profile_image_url.com"
+                },
+                {
+                    "username": "user2",
+                    "profile_image_url": "https://user2_profile_image_url.com"
+                }
             ]
         }
