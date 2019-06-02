@@ -11,7 +11,7 @@ import { SERVER, DEFAULT_PROFILE_FONT_SIZE, DEFAULT_PROFILE_SIZE_VALUE, SOCIAL_M
  */
 export const showImages = (imageData, clickFunc, flag) => {
 
-    let className = 'position-absolute rounded';
+    let className = 'position-absolute rounded p-0';
 
     if ([1, 2, 3].includes(flag)) {
         className += ' draggable resize-drag';
@@ -80,7 +80,7 @@ export const showImages = (imageData, clickFunc, flag) => {
                             </Fragment>
                         )
                         : (
-                            <div className="card pt-3">
+                            <div className="card">
                                 {componentMap(image)[image.type]}
                                 <span className="position-absolute" style={{ fontSize: 10, width: 50, top: '2%', left: '2%', opacity: 0.7, userSelect: 'none' }}>whoami</span>
                             </div>
