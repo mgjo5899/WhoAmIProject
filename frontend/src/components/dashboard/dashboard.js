@@ -42,11 +42,16 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
 
     const getFollowingData = async () => {
         try {
-            // get all following data, and find if the username is included in this data
-            const { status, following_users, message } = (await Axios.get(SERVER + '/user/following_users')).data;
-            if (!status) throw new Error(message);
-            // if we find the index of following user, set isFollowing true, else false 
-            following_users.findIndex(user => user === username) !== -1 ? setIsFollowing(true) : setIsFollowing(false);
+            // if there's user credential in the page
+            if (auth.user.username) {
+                // get all following data, and find if the username is included in this data
+                const { status, following_users, message } = (await Axios.get(SERVER + '/user/following_users')).data;
+                if (!status) throw new Error(message);
+                // if we find the index of following user, set isFollowing true, else false 
+                following_users.findIndex(user => user === username) !== -1 ? setIsFollowing(true) : setIsFollowing(false);
+            } else {
+                setIsFollowing(false);
+            }
         } catch (error) {
             console.log(error);
         }
