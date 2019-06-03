@@ -22,7 +22,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
     const [flag, setFlag] = useState(0);
     const [deleted, setDeleted] = useState([]);
     const [isFollowing, setIsFollowing] = useState(false);
-    const [followClicked, setFollowClicked] = useState(false);
 
     useEffect(() => {
         if (activeIndex === contentsIndex.dashboard) {
@@ -69,7 +68,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
         if (modal) {
             setCurrentImage({});
             setModalContent(null);
-            setFollowClicked(false);
             // setModalContent(null);
         }
         else {
@@ -111,11 +109,10 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
             following_followers: 0
         };
         const activeIndex = 0;
-        setFollowClicked(true);
         setModalContent(
             <div className="card">
                 <div className="card-body">
-                    <FollowingFollowersDisplay {...{ activeIndex, contentsIndex, auth, username }} />
+                    <FollowingFollowersDisplay {...{ activeIndex, contentsIndex, auth, username, dashboard: true }} />
                 </div>
             </div>
         )
@@ -235,7 +232,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
                     <button className="btn btn-outline-primary btn-sm mx-2" onClick={next}>add</button>
                 </div>
             </div>
-            <Modal isOpen={modal} centered={true} toggle={toggle} contentClassName="border-0" size={followClicked ? "xl" : undefined}>
+            <Modal isOpen={modal} centered={true} toggle={toggle} contentClassName="border-0">
                 {modalContent}
             </Modal>
             {

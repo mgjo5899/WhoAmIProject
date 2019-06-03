@@ -6,7 +6,7 @@ import { getFollowers, getFollowingUsers } from '../../store/actions/data_action
 import { SECRET_KEY, SERVER } from '../../config';
 
 
-const FollowingFollowersDisplay = ({ activeIndex, contentsIndex, auth, username }) => {
+const FollowingFollowersDisplay = ({ activeIndex, contentsIndex, auth, username, dashboard }) => {
 
     const [followersList, setFollowersList] = useState([]);
     const [followingUsersList, setFollowingUsersList] = useState([]);
@@ -63,7 +63,7 @@ const FollowingFollowersDisplay = ({ activeIndex, contentsIndex, auth, username 
                     <img className="m-2 rounded-circle" src={follow.profile_image_url ? follow.profile_image_url : AnonymousUser} style={{ height: 80 }} alt="" />
                 </div>
                 <div className="col-6 p-0 text-center my-auto" style={{ fontSize: 30, userSelect: 'none' }} onClick={() => window.open(follow.username)}>{follow.username}</div>
-                <div className="col-3 p-0 h-50 my-auto">
+                <div className={"col-3 p-0 h-50 my-auto" + (follow.following === undefined ? ' d-none' : '')}>
                     <button className={"btn float-right mr-2 border" +
                         (follow.following ? ' btn-light' : ' btn-primary') +
                         (follow.username === auth.user.username ? ' d-none' : ' d-block')} onClick={() => handleFollowUnfollow(follow)}>
@@ -130,7 +130,7 @@ const FollowingFollowersDisplay = ({ activeIndex, contentsIndex, auth, username 
             </div>
             <div className="col-sm-6">
                 <h5>Following</h5>
-                <div className="card followers p-2" style={{ height: 500 }}>
+                <div className="card followers p-2">
                     <Infinite
                         containerHeight={500}
                         elementHeight={100}
