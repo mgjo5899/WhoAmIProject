@@ -22,7 +22,7 @@ def get_follow_relationships(username, target_usernames):
     if following_users['status'] == False:
         rtn_val = following_users
     else:
-        following_users = following_users['following_users']
+        following_users = [user['username'] for user in following_users['following_users']]
         rtn_val['status'] = True
         rtn_val['follow_relationships'] = []
 
@@ -34,6 +34,8 @@ def get_follow_relationships(username, target_usernames):
                 curr_user.update(user)
             else:
                 curr_user['status'] = True
+                print('target_username:', target_username)
+                print('following_users:', following_users)
                 curr_user['following'] = (target_username in following_users)
                 user = user['data']
                 user_profile = db.query(UserProfile).filter(UserProfile.email == \

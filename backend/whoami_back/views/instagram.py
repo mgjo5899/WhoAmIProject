@@ -69,13 +69,12 @@ def refine_raw_data(raw_contents_data):
             content['content_url'] = raw_content['link']
             content['type'] = raw_content['type']
             contents.append(content)
-# For now, we don't support video
-#        elif raw_content['type'] == 'video':
-#            content['orig_width'] = raw_content['videos']['standard_resolution']['width']
-#            content['orig_height'] = raw_content['videos']['standard_resolution']['height']
-#            content['raw_content_url'] = raw_content['videos']['standard_resolution']['url']
-#            content['content_url'] = raw_content['link']
-#            content['type'] = raw_content['type']
+        elif raw_content['type'] == 'video':
+            content['orig_width'] = raw_content['videos']['standard_resolution']['width']
+            content['orig_height'] = raw_content['videos']['standard_resolution']['height']
+            content['raw_content_url'] = raw_content['videos']['standard_resolution']['url']
+            content['content_url'] = raw_content['link']
+            content['type'] = raw_content['type']
 
     return contents
 
