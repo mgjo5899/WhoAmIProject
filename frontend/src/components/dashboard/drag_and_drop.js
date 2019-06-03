@@ -54,8 +54,10 @@ export const Drag = setChanged => {
             },
 
             // minimum size
+            // 135 is the minimum width that can sustain following followers card to proper form width
+            // will make it 150
             restrictSize: {
-                min: { width: 100, height: 'auto' },
+                min: { width: 150, height: 'auto' },
             },
 
             inertia: true,

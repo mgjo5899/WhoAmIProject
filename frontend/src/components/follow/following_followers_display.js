@@ -37,7 +37,7 @@ const FollowingFollowersDisplay = ({ activeIndex, contentsIndex, auth, username,
             if (auth.user.username) {
                 const followersProfileImages = (await Axios.post(SERVER + '/user/follow_relationships', {
                     secret_key: SECRET_KEY,
-                    usernames: followers
+                    usernames: followers.map(follower => follower.username)
                 })).data;
                 // handle if status is false
                 if (!followersProfileImages.status) throw new Error(followersProfileImages.message);
@@ -53,7 +53,7 @@ const FollowingFollowersDisplay = ({ activeIndex, contentsIndex, auth, username,
             if (auth.user.username) {
                 const followingUsersProfileImages = (await Axios.post(SERVER + '/user/follow_relationships', {
                     secret_key: SECRET_KEY,
-                    usernames: followingUsers
+                    usernames: followingUsers.map(followingUser => followingUser.username)
                 })).data;
                 // handle if status is false
                 if (!followingUsersProfileImages.status) throw new Error(followingUsersProfileImages.message);
