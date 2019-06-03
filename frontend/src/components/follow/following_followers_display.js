@@ -32,6 +32,7 @@ const FollowingFollowersDisplay = ({ activeIndex, contentsIndex, auth, username,
             // const { followers, followingUsers } = await getFollowersFollowingUsers();
             const followers = await getFollowers(username);
             const followingUsers = await getFollowingUsers(username);
+            console.log(followers, followingUsers)
             // make axios call
             // check the credential, if it is logged in, call follow_relationships api
             if (auth.user.username) {
@@ -57,6 +58,8 @@ const FollowingFollowersDisplay = ({ activeIndex, contentsIndex, auth, username,
                 })).data;
                 // handle if status is false
                 if (!followingUsersProfileImages.status) throw new Error(followingUsersProfileImages.message);
+                console.log(followingUsersProfileImages)
+                setFollowingUsersList([...followingUsersProfileImages.follow_relationships]);
             } else {
                 // if it is not logged in, manually put the data inside of followingUsersList
                 setFollowingUsersList([...followingUsers]);
@@ -106,6 +109,7 @@ const FollowingFollowersDisplay = ({ activeIndex, contentsIndex, auth, username,
 
     const handleFollowUser = async user => {
         // if it is currently not following, follow the user
+        console.log('here')
         const { status, message } = (await Axios.post(SERVER + '/user/following_users', {
             followed_user_username: user.username
         })).data;
