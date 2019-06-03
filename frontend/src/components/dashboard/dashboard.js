@@ -40,6 +40,10 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
         }
     }, [activeIndex, flag]);
 
+    useEffect(() => {
+        console.log(height)
+    }, [height])
+
     const getFollowingData = async () => {
         try {
             // if there's user credential in the page
@@ -125,6 +129,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
 
     const settingHeight = () => {
         let maxHeight = 0;
+        console.log(data.existing)
         data.existing.forEach(elem => {
             maxHeight = Math.max(maxHeight, elem.pos_y + elem.specifics.curr_height + 100);
         });
