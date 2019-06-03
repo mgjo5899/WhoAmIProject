@@ -52,7 +52,7 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
                         orig_width: elem.specifics.orig_width,
                         orig_height: elem.specifics.orig_height,
                         curr_width: changed[elem.id] ? changed[elem.id].width : 200,
-                        curr_height: changed[elem.id] ? changed[elem.id].height : (elem.orig_height / elem.orig_width * 200)
+                        curr_height: changed[elem.id] ? changed[elem.id].height : (elem.specifics.orig_height / elem.specifics.orig_width * 200)
                     }
                 }))
             })).data;

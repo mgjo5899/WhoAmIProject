@@ -23,6 +23,7 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
     useEffect(() => {
         // make the form for making gallery
         // setting contents which would display on the screen
+        console.log(data.images)
         setContents(
             data.images.map(image => ({
                 id: image.id,
