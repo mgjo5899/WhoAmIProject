@@ -52,7 +52,8 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
                 const { status, following_users, message } = (await Axios.get(SERVER + '/user/following_users')).data;
                 if (!status) throw new Error(message);
                 // if we find the index of following user, set isFollowing true, else false 
-                following_users.findIndex(user => user === username) !== -1 ? setIsFollowing(true) : setIsFollowing(false);
+                console.log(following_users, username)
+                following_users.findIndex(user => user.username === username) !== -1 ? setIsFollowing(true) : setIsFollowing(false);
             } else {
                 setIsFollowing(false);
             }
