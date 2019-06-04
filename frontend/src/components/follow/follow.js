@@ -154,17 +154,15 @@ const Follow = ({ auth }) => {
     }
 
     return (
-        <div className="container">
-            <Carousel
-                activeIndex={activeIndex}
-                next={next}
-                previous={previous}
-                interval={false}
-                keyboard={false}
-            >
-                {slides}
-            </Carousel>
-        </div>
+        <Carousel
+            activeIndex={activeIndex}
+            next={next}
+            previous={previous}
+            interval={false}
+            keyboard={false}
+        >
+            {slides}
+        </Carousel>
     );
 }
 

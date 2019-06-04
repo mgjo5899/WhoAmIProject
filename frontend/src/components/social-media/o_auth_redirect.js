@@ -5,8 +5,13 @@ const OAuthRedirect = props => {
     const parsed = queryString.parse(props.location.search);
     const { status } = parsed;
     if (status === 'true') {
-        window.opener.checkAuthorizedSocialMedia();
-        window.close();
+        try {
+            window.opener.checkAuthorizedSocialMedia();
+            window.close();
+        } catch (error) {
+            console.log(error);
+            props.history.push('/');
+        }
     } else if (status === 'false') {
         console.log('err');
     }

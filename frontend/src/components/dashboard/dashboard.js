@@ -40,10 +40,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
         }
     }, [activeIndex, flag]);
 
-    useEffect(() => {
-        console.log(height)
-    }, [height])
-
     const getFollowingData = async () => {
         try {
             // if there's user credential in the page
@@ -52,7 +48,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
                 const { status, following_users, message } = (await Axios.get(SERVER + '/user/following_users')).data;
                 if (!status) throw new Error(message);
                 // if we find the index of following user, set isFollowing true, else false 
-                console.log(following_users, username)
                 following_users.findIndex(user => user.username === username) !== -1 ? setIsFollowing(true) : setIsFollowing(false);
             } else {
                 setIsFollowing(false);

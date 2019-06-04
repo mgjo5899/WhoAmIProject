@@ -75,7 +75,7 @@ const FollowingFollowersDisplay = ({ activeIndex, contentsIndex, auth, username,
         followList.map((follow, index) => (
             <div key={index} style={{ height: 100 }} className="border row m-2">
                 <div className="col-3 p-0">
-                    <img className="m-2 rounded-circle" src={follow.profile_image_url ? follow.profile_image_url : AnonymousUser} style={{ height: 80 }} alt="" />
+                    <img className="m-2 rounded-circle" src={follow.profile_image_url ? follow.profile_image_url : AnonymousUser} style={{ width: 80, height: 80, objectFit: 'cover' }} alt="" />
                 </div>
                 <div className="col-6 p-0 text-center my-auto" style={{ fontSize: 30, userSelect: 'none' }} onClick={() => window.open(follow.username)}>{follow.username}</div>
                 {
