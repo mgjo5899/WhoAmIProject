@@ -1,9 +1,10 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import AnonymousUser from '../../images/anonymous/anonymous_user.png';
 import Infinite from 'react-infinite';
 import { getFollowers, getFollowingUsers } from '../../store/actions/data_actions';
 import { SECRET_KEY, SERVER } from '../../config';
+import { Nav, NavItem, NavLink } from 'reactstrap';
 
 
 const FollowingFollowersDisplay = ({ activeIndex, contentsIndex, auth, username, dashboard }) => {
@@ -132,39 +133,35 @@ const FollowingFollowersDisplay = ({ activeIndex, contentsIndex, auth, username,
 
     const mapRender = dashboardFlag => {
         if (dashboardFlag) {
+
+            const followingFollowersTabRender = follow => (
+                <div className="card p-2 followers w-100">
+                    <Infinite
+                        containerHeight={500}
+                        elementHeight={100}
+                        infiniteLoadBeginEdgeOffset={200}
+                        onInfiniteLoad={handleFollowersInfiniteLoad}
+                    >
+                        {followersFollowingUsersRender(follow === 'followers' ? followersList : followingUsersList)}
+                    </Infinite>
+                </div>
+            )
+
+            const [tab, setTab] = useState('followers');
+
             return (
-                <Fragment>
-                    <div className="row">
-                        <div className="col-12 border-right">
-                            <h5>Followers</h5>
-                            <div className="card p-2 followers">
-                                <Infinite
-                                    containerHeight={500}
-                                    elementHeight={100}
-                                    infiniteLoadBeginEdgeOffset={200}
-                                    onInfiniteLoad={handleFollowersInfiniteLoad}
-                                >
-                                    {followersFollowingUsersRender(followersList)}
-                                </Infinite>
-                            </div>
-                        </div>
+                <Nav className="border-0" tabs>
+                    <div className="row mx-auto">
+                        <NavItem>
+                            <NavLink tag={'button'} className="btn btn-link" active={tab === 'followers'} onClick={() => setTab('followers')}>Followers</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink tag={'button'} className="btn btn-link" active={tab === 'following'} onClick={() => setTab('following')}>Following</NavLink>
+                        </NavItem>
                     </div>
-                    <div className="row mt-5">
-                        <div className="col-12">
-                            <h5>Following</h5>
-                            <div className="card followers p-2">
-                                <Infinite
-                                    containerHeight={500}
-                                    elementHeight={100}
-                                    infiniteLoadBeginEdgeOffset={200}
-                                    onInfiniteLoad={handleFollowingInfiniteLoad}
-                                >
-                                    {followersFollowingUsersRender(followingUsersList)}
-                                </Infinite>
-                            </div>
-                        </div>
-                    </div>
-                </Fragment>
+                    {followingFollowersTabRender(tab)}
+                </Nav>
+
             )
         } else {
             return (
