@@ -68,13 +68,13 @@ def refine_raw_data(raw_contents_data):
             content['raw_content_url'] = raw_content['images']['standard_resolution']['url']
             content['content_url'] = raw_content['link']
             content['type'] = raw_content['type']
-            contents.append(content)
         elif raw_content['type'] == 'video':
             content['orig_width'] = raw_content['videos']['standard_resolution']['width']
             content['orig_height'] = raw_content['videos']['standard_resolution']['height']
             content['raw_content_url'] = raw_content['videos']['standard_resolution']['url']
             content['content_url'] = raw_content['link']
             content['type'] = raw_content['type']
+        contents.append(content)
 
     return contents
 
@@ -132,7 +132,6 @@ def get_user_instagram_data():
                 rtn_val['contents'] = refined_contents
                 rtn_val['email'] = session['email']
 
-    print(rtn_val)
     return jsonify(rtn_val)
 
 @instagram.route('/instagram/get_access_token', methods=['GET'])
