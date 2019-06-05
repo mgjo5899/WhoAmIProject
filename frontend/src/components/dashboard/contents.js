@@ -8,6 +8,8 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
 
     const [markedImage, setMarkedImage] = useState(false);
     const [spinner, setSpinner] = useState(false);
+    const [videoUrlList, setVideoUrlList] = useState([]);
+    const [gallery, setGallery] = useState(null);
 
     // load images
     useEffect(() => {
@@ -77,6 +79,11 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
             selected: contents.filter(content => content.isSelected)
         });
         setMarkedImage(true);
+        setGallery(<Gallery
+            images={contents}
+            onSelectImage={onSelectImage}
+            backdropClosesModal={true}
+        />);
     }
 
     //fetch image function
@@ -88,6 +95,11 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
             console.log(userData)
             // fetching contents
             const contentsData = userData.contents;
+            contentsData.forEach(content => {
+                if (content.type === 'video') {
+                    setVideoUrlList(videoUrlList => [...videoUrlList, content.raw_content_url]);
+                }
+            });
             setData({
                 ...data,
                 images: (
@@ -120,6 +132,29 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
         deleteImage(img);
     }
 
+    useEffect(() => {
+        // convert img data to video if necessary
+        const videoUrlSet = new Set(videoUrlList);
+        console.log(videoUrlSet)
+        if (videoUrlList.length !== 0) {
+            console.log(this)
+            console.log(document.getElementsByTagName('img').length)
+            // while (document.getElementsByTagName('img').length <= 3);
+            console.log(document.getElementsByTagName('img'));
+            for (const imgTag of document.getElementsByTagName('img')) {
+                if (videoUrlSet.has(imgTag.currentSrc)) {
+                    console.log('hi')
+                }
+            }
+            // document.getElementsByTagName('img').forEach(imgTag => {
+            // console.log(imgTag)
+            // if (videoUrlSet.has(imgTag.currentSrc)) {
+
+            // }
+            // });
+        }
+    }, [gallery]);
+
     return (
         <Fragment>
             <div className="d-flex justify-content-center m-2">
@@ -141,12 +176,13 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
                             overflow: "auto",
                             marginBottom: 100
                         }}>
-                            {markedImage && (
+                            {/* {markedImage && (
                                 <Gallery
                                     images={contents}
                                     onSelectImage={onSelectImage}
                                     backdropClosesModal={true}
-                                />
+                                /> */}
+                            {gallery}
                             )}
                         </div>
                     )

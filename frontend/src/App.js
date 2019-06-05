@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { SERVER, DEFAULT_WIDTH } from './config';
+import { SERVER } from './config';
 import { connect } from 'react-redux';
 import { storeUser } from './store/actions/auth_actions';
 import Routing from './routing';
@@ -27,7 +27,7 @@ class App extends Component {
 
   render() {
     return this.state.loaded && (
-      <div className="App overflow-auto" style={{ minWidth: DEFAULT_WIDTH }}>
+      <div className="App">
         <Routing auth={this.props.auth} />
       </div>
     )

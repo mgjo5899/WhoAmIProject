@@ -8,6 +8,7 @@ import Profile from './components/profile/profile';
 import Home from './components/home/home';
 import Follow from './components/follow/follow';
 import Setting from './components/setting/setting';
+import Test from './test/test';
 
 const Routing = ({ auth }) => {
     return (
@@ -20,6 +21,7 @@ const Routing = ({ auth }) => {
                 <Route exact path="/reset_pw" component={ResetPasswordComponent} />
                 <Route exact path="/profile" component={Profile} />
                 <Route exact path="/follow" component={Follow} />
+                <Route exact path="/test" component={Test} />
                 <Route exact path="/:username" component={MainPage} />
             </Switch>
         </BrowserRouter>
