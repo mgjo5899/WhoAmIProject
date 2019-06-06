@@ -95,8 +95,8 @@ const Test = () => {
         toggle();
         e.persist();
         setModalContent(
-            <div className="d-flex" onClick={() => window.open(e.target.previousSibling.src)}>
-                <video src={e.target.previousSibling.src} className="w-100 h-100" controls />
+            <div className="d-flex" >
+                <video src={e.target.nextSibling.src} className="w-100 h-100" controls />
             </div>
         )
     }
@@ -107,16 +107,16 @@ const Test = () => {
             image: <img onClick={handleImageClick} className="w-100 h-100" draggable={false} src={content.raw_content_url} alt="" />,
             video: (
                 <Fragment>
-                    <video className="w-100 h-100" src={content.raw_content_url} onClick={e => { e.target.play(); e.target.muted = true }} />
                     <img
                         className="position-absolute mx-auto my-auto"
                         draggable={false} src={PlayButton}
-                        style={{ left: 0, right: 0, top: 0, bottom: 0, cursor: 'pointer', width: 50, opacity: 0.5 }}
+                        style={{ left: 0, right: 0, top: 0, bottom: 0, cursor: 'pointer', width: 50, opacity: 0.5, zIndex: 1 }}
                         alt=""
                         onMouseEnter={e => { e.target.style.opacity = 1 }}
                         onMouseLeave={e => { e.target.style.opacity = 0.5 }}
                         onClick={handleVideoClick}
                     />
+                    <video className="w-100 h-100" src={content.raw_content_url} muted={true} onClick={e => { e.target.paused ? e.target.play() : e.target.pause() }} />
                 </Fragment>
             )
         }
