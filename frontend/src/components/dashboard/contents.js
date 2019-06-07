@@ -144,7 +144,7 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
         e.persist();
         setModalContent(
             <div className="d-flex" onClick={() => window.open(e.target.src)}>
-                <img src={e.target.src} alt="" className="w-100 h-100" />
+                <img src={e.currentTarget.children[0].src} alt="" className="w-100 h-100" />
             </div>
         )
     }
@@ -154,42 +154,62 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
         e.persist();
         setModalContent(
             <div className="d-flex" >
-                <video src={e.target.nextSibling.src} className="w-100 h-100" controls />
+                <video src={e.currentTarget.children[1].src} className="w-100 h-100" controls />
             </div>
         )
+    }
+
+    const onMouseEnterHandle = e => {
+        e.currentTarget.children[0].style.opacity = 0.8;
+        e.currentTarget.children[1].play();
+    }
+
+    const onMouseLeaveHandle = e => {
+        e.currentTarget.children[0].style.opacity = 0.5;
+        e.currentTarget.children[1].pause();
     }
 
     const tagMap = (content, key) => {
 
         const tagElement = {
-            image: <img
-                id={content.id}
-                onClick={handleImageClick}
-                className="w-100 h-100"
-                draggable={false}
-                src={content.specifics.raw_content_url}
-                alt=""
-            // style={{ opacity: (content.selected ? 0.5 : 1) }}
-            />,
+            image: (
+                <div
+                    className="position-relative"
+                    onClick={handleImageClick}
+                >
+                    <img
+                        id={content.id}
+
+                        className="w-100 h-100"
+                        draggable={false}
+                        src={content.specifics.raw_content_url}
+                        alt=""
+                    // style={{ opacity: (content.selected ? 0.5 : 1) }}
+                    />
+                </div>
+            ),
             video: (
                 <Fragment>
-                    <img
-                        className="position-absolute mx-auto my-auto"
-                        draggable={false}
-                        src={PlayButton}
-                        style={{ left: 0, right: 0, top: 0, bottom: 0, cursor: 'pointer', width: 50, opacity: 0.5, zIndex: 1 }}
-                        alt=""
-                        onMouseEnter={e => { e.target.style.opacity = 1 }}
-                        onMouseLeave={e => { e.target.style.opacity = 0.5 }}
+                    <div
+                        className="position-relative"
+                        onMouseEnter={onMouseEnterHandle}
+                        onMouseLeave={onMouseLeaveHandle}
                         onClick={handleVideoClick}
-                    />
-                    <video
-                        id={content.id}
-                        className="w-100 h-100"
-                        src={content.specifics.raw_content_url}
-                        muted={true}
-                        onClick={e => { e.target.paused ? e.target.play() : e.target.pause() }}
-                    />
+                    >
+                        <img
+                            className="position-absolute mx-auto my-auto"
+                            draggable={false}
+                            src={PlayButton}
+                            style={{ left: 0, right: 0, top: 0, bottom: 0, cursor: 'pointer', width: 50, opacity: 0.5, zIndex: 1 }}
+                            alt=""
+                        />
+                        <video
+                            id={content.id}
+                            className="w-100 h-100"
+                            src={content.specifics.raw_content_url}
+                            muted={true}
+                        />
+                    </div>
                 </Fragment>
             )
         }
@@ -214,8 +234,7 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
     }
 
     const handleSelectImage = e => {
-        // console.log(e.target.previousSibling.children
-        const content = contents.find(content => content.id.toString() === e.target.previousSibling.children[e.target.previousSibling.children.length - 1].id);
+        const content = contents.find(content => content.id.toString() === e.target.previousSibling.children[0].children[e.target.previousSibling.children[0].children.length - 1].id);
         deleteImage(content);
     }
 
