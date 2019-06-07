@@ -1,15 +1,18 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { SERVER, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE } from '../../config';
 import Axios from 'axios';
-import Gallery from 'react-grid-gallery';
 import uuidv4 from 'uuid/v4';
+import { Modal } from 'reactstrap';
+import PlayButton from '../../images/playbutton/play-button.png';
 
 const Contents = ({ next, previous, element, contents, setContents, data, setData, activeIndex, contentsIndex, deleteImage }) => {
 
     const [markedImage, setMarkedImage] = useState(false);
     const [spinner, setSpinner] = useState(false);
-    const [videoUrlList, setVideoUrlList] = useState([]);
-    const [gallery, setGallery] = useState(null);
+    const [modal, setModal] = useState(false);
+    const [modalContent, setModalContent] = useState(null);
+    const [width, setWidth] = useState(0);
+
 
     // load images
     useEffect(() => {
@@ -18,6 +21,11 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
             // set spinner while loading
             setSpinner(true);
             fetchImage();
+            // for the responsive view, get the element of container
+            setWidth(document.getElementById('main-container').offsetWidth);
+            window.addEventListener('resize', () => {
+                setWidth(document.getElementById('main-container').offsetWidth);
+            });
         }
     }, [activeIndex]);
 
@@ -28,15 +36,11 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
         setContents(
             data.images.map(image => ({
                 id: image.id,
-                src: image.specifics.raw_content_url,
-                thumbnail: image.specifics.raw_content_url,
-                thumbnailWidth: image.specifics.orig_width,
-                thumbnailHeight: image.specifics.orig_height,
                 posX: image.pos_x !== undefined ? image.pos_x : Math.floor(Math.random() * (DEFAULT_WIDTH - DEFAULT_SUBTRACTING_VALUE)),
                 posY: image.pos_y !== undefined ? image.pos_y : Math.floor(Math.random() * (DEFAULT_HEIGHT - DEFAULT_SUBTRACTING_VALUE)),
-                isSelected: false,
                 medium: image.medium,
                 type: image.type,
+                selected: false,
                 specifics: {
                     orig_width: image.specifics.orig_width,
                     orig_height: image.specifics.orig_height,
@@ -66,24 +70,19 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
         });
         // check the url using previous set if it should be marked or not
         setContents(
-            contents.map(image => {
+            [...contents.map(image => {
                 if (existingIdSet.has(image.id)) {
-                    image.isSelected = true;
+                    image.selected = true;
                 }
                 return image;
-            })
+            })]
         );
         // selected marking from contents
         setData({
             ...data,
-            selected: contents.filter(content => content.isSelected)
+            selected: contents.filter(content => content.selected)
         });
         setMarkedImage(true);
-        setGallery(<Gallery
-            images={contents}
-            onSelectImage={onSelectImage}
-            backdropClosesModal={true}
-        />);
     }
 
     //fetch image function
@@ -95,11 +94,6 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
             console.log(userData)
             // fetching contents
             const contentsData = userData.contents;
-            contentsData.forEach(content => {
-                if (content.type === 'video') {
-                    setVideoUrlList(videoUrlList => [...videoUrlList, content.raw_content_url]);
-                }
-            });
             setData({
                 ...data,
                 images: (
@@ -127,69 +121,120 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
         }
     }
 
-    const onSelectImage = index => {
-        const img = contents[index];
-        deleteImage(img);
+    const mediaRender = contents => {
+        const mediaGroup = [];
+        for (let i = 0; i < contents.length; i += 3) {
+            mediaGroup.push(contents.slice(i, i + 3));
+        }
+
+        return mediaGroup.map((group, key) => (
+            <div key={key} className="row justify-content-center">
+                {group.map((content, key) => tagMap(content, key))}
+            </div>
+        ));
     }
 
-    useEffect(() => {
-        // convert img data to video if necessary
-        const videoUrlSet = new Set(videoUrlList);
-        console.log(videoUrlSet)
-        if (videoUrlList.length !== 0) {
-            console.log(this)
-            console.log(document.getElementsByTagName('img').length)
-            // while (document.getElementsByTagName('img').length <= 3);
-            console.log(document.getElementsByTagName('img'));
-            for (const imgTag of document.getElementsByTagName('img')) {
-                if (videoUrlSet.has(imgTag.currentSrc)) {
-                    console.log('hi')
-                }
-            }
-            // document.getElementsByTagName('img').forEach(imgTag => {
-            // console.log(imgTag)
-            // if (videoUrlSet.has(imgTag.currentSrc)) {
+    const toggle = () => {
+        setModal(!modal);
+        setModalContent(null);
+    }
 
-            // }
-            // });
+    const handleImageClick = e => {
+        toggle();
+        e.persist();
+        setModalContent(
+            <div className="d-flex" onClick={() => window.open(e.target.src)}>
+                <img src={e.target.src} alt="" className="w-100 h-100" />
+            </div>
+        )
+    }
+
+    const handleVideoClick = e => {
+        toggle();
+        e.persist();
+        setModalContent(
+            <div className="d-flex" >
+                <video src={e.target.nextSibling.src} className="w-100 h-100" controls />
+            </div>
+        )
+    }
+
+    const tagMap = (content, key) => {
+
+        const tagElement = {
+            image: <img
+                id={content.id}
+                onClick={handleImageClick}
+                className="w-100 h-100"
+                draggable={false}
+                src={content.specifics.raw_content_url}
+                alt=""
+            // style={{ opacity: (content.selected ? 0.5 : 1) }}
+            />,
+            video: (
+                <Fragment>
+                    <img
+                        className="position-absolute mx-auto my-auto"
+                        draggable={false}
+                        src={PlayButton}
+                        style={{ left: 0, right: 0, top: 0, bottom: 0, cursor: 'pointer', width: 50, opacity: 0.5, zIndex: 1 }}
+                        alt=""
+                        onMouseEnter={e => { e.target.style.opacity = 1 }}
+                        onMouseLeave={e => { e.target.style.opacity = 0.5 }}
+                        onClick={handleVideoClick}
+                    />
+                    <video
+                        id={content.id}
+                        className="w-100 h-100"
+                        src={content.specifics.raw_content_url}
+                        muted={true}
+                        onClick={e => { e.target.paused ? e.target.play() : e.target.pause() }}
+                    />
+                </Fragment>
+            )
         }
-    }, [gallery]);
+        const elementWidth = 31 / 100 * width;
+
+        return (
+            <div
+                className="d-inline-block mb-1 ml-1 p-0 d-flex position-relative"
+                style={{ width: elementWidth, height: elementWidth, backgroundColor: 'white', cursor: 'pointer' }}
+                key={key}
+            >
+                <div style={{ backgroundColor: 'black', opacity: (content.selected ? 0.5 : 1) }}>
+                    {tagElement[content.type]}
+                </div>
+                <span
+                    className={"border-white rounded-circle position-absolute" + (content.selected ? ' bg-primary' : '')}
+                    style={{ backgroundColor: 'rgba(255,255,255,0.5)', borderWidth: 2, borderStyle: 'solid', width: 50, height: 50, top: '4%', right: '4%', cursor: 'pointer' }}
+                    onClick={handleSelectImage}
+                />
+            </div>
+        );
+    }
+
+    const handleSelectImage = e => {
+        // console.log(e.target.previousSibling.children
+        const content = contents.find(content => content.id.toString() === e.target.previousSibling.children[e.target.previousSibling.children.length - 1].id);
+        deleteImage(content);
+    }
 
     return (
         <Fragment>
+            <Modal isOpen={modal} toggle={toggle} contentClassName="border-0" centered={true}>
+                {modalContent}
+            </Modal>
             <div className="d-flex justify-content-center m-2">
                 {element && <img src={element.src} alt={element.name} className="w-25 h-25" />}
             </div>
             <hr />
             <h5 className="d-flex justify-content-center m-2">Select the image</h5>
             <hr />
-            {
-                spinner ? (
-                    <div className="spinner-border d-block mx-auto my-auto" role="status" />
-                )
-                    : (
-                        <div style={{
-                            display: "block",
-                            minHeight: "1px",
-                            width: "100%",
-                            border: "1px solid #ddd",
-                            overflow: "auto",
-                            marginBottom: 100
-                        }}>
-                            {/* {markedImage && (
-                                <Gallery
-                                    images={contents}
-                                    onSelectImage={onSelectImage}
-                                    backdropClosesModal={true}
-                                /> */}
-                            {gallery}
-                            )}
-                        </div>
-                    )
-            }
+            {spinner && <div className="spinner-border d-block mx-auto my-auto" role="status" />}
+            {mediaRender(contents)}
             <div className="fixed-bottom card-footer bg-secondary d-flex justify-content-center" style={{ opacity: 0.9 }}>
-                <button className="btn btn-danger mx-auto" onClick={previous}>Cancel</button>
-                <button className="btn btn-primary mx-auto" onClick={next}>Done</button>
+                <button className="btn btn-danger mx-auto" onClick={previous}>cancel</button>
+                <button className="btn btn-primary mx-auto" onClick={next}>publish</button>
             </div>
         </Fragment>
     );

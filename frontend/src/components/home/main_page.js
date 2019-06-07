@@ -35,16 +35,19 @@ const MainPage = ({ match }) => {
         spread: 3
     }
     const deleteImage = img => {
+        console.log(img)
         // handle the case when it is not previously selected medium
-        const selectedMedium = img.isSelected !== undefined;
-        if (selectedMedium) img.isSelected = !img.isSelected;
+        // const selectedMedium = img.selected;
+        // if (selectedMedium) img.selected = !img.selected;
         // everything based on src
         // find existing index
+        img.selected = !img.selected;
         const existingIndex = data.existing.findIndex(elem => elem.id === img.id) !== -1;
-        if (!selectedMedium) {
-            // if the image is not from the selected medium, and if the user clicks delete button, then add the image to delete data
-            setData(data => ({ ...data, delete: [...data.delete, img] }));
-        } else if (img.isSelected) {
+        // if (!selectedMedium) {
+        //     // if the image is not from the selected medium, and if the user clicks delete button, then add the image to delete data
+        //     setData(data => ({ ...data, delete: [...data.delete, img] }));
+        // } else if (img.selected) {
+        if (img.selected) {
             // selected
             // check if it is in existing one, if it is, then erase from delete, if it is not, then add the object to add state
             if (existingIndex) {
@@ -62,7 +65,9 @@ const MainPage = ({ match }) => {
             }
         }
         // update to data and contents
-        setData(data => ({ ...data, selected: contents.filter(content => content.isSelected) }));
+        setData(data => ({ ...data, selected: contents.filter(content => content.selected) }));
+        // const contentIndex = contents.findIndex(content => content.id === img.id);
+        // setContents([...contents.slice(0, contentIndex), img, ...contents.slice(contentIndex + 1)]);
         setContents(contents);
     }
 
@@ -117,7 +122,7 @@ const MainPage = ({ match }) => {
     return (
         <Fragment>
             <Navbar />
-            <div className="container">
+            <div id="main-container" className="container">
                 <Carousel
                     activeIndex={activeIndex}
                     next={next}

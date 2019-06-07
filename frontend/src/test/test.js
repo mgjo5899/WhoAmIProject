@@ -149,11 +149,7 @@ const Test = () => {
             e.target.className = "border-white rounded-circle position-absolute"
             e.target.previousSibling.style.opacity = 1;
         }
-        // e.target.setAttribute(selected,true);
-        // console.log(e.target.parentElement)
     }
-
-    // mediaRender(contents);
 
     return (
         <Fragment>
@@ -164,9 +160,6 @@ const Test = () => {
                 {mediaRender(contents)}
             </div>
         </Fragment>
-        // videoUrlList.map((videoUrl, index) => (
-        //     <video key={index} src={videoUrl} autoPlay={true} muted={true} loop={true} />
-        // ))
     )
 }
 
