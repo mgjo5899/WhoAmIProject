@@ -7,7 +7,6 @@ import PlayButton from '../../images/playbutton/play-button.png';
 
 const Contents = ({ next, previous, element, contents, setContents, data, setData, activeIndex, contentsIndex, deleteImage }) => {
 
-    const [markedImage, setMarkedImage] = useState(false);
     const [spinner, setSpinner] = useState(false);
     const [modal, setModal] = useState(false);
     const [modalContent, setModalContent] = useState(null);
@@ -19,6 +18,7 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
         if (activeIndex === contentsIndex.contents) {
             // store images from api to data image
             // set spinner while loading
+            setContents([]);
             setSpinner(true);
             fetchImage();
             // for the responsive view, get the element of container
@@ -33,6 +33,7 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
     useEffect(() => {
         // make the form for making gallery
         // setting contents which would display on the screen
+
         setContents(
             data.images.map(image => ({
                 id: image.id,
@@ -40,7 +41,6 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
                 posY: image.pos_y !== undefined ? image.pos_y : Math.floor(Math.random() * (DEFAULT_HEIGHT - DEFAULT_SUBTRACTING_VALUE)),
                 medium: image.medium,
                 type: image.type,
-                selected: false,
                 specifics: {
                     orig_width: image.specifics.orig_width,
                     orig_height: image.specifics.orig_height,
@@ -51,16 +51,18 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
                 }
             }))
         );
-        // give signal to contents
-        setMarkedImage(false);
         // turn off spinner
         setSpinner(false);
     }, [data.images]);
 
-    useEffect(() => {
-        // get the images that already registered, and mark as checked if it is a same source
-        if (!markedImage && contents.length > 0) markExistingImages();
-    }, [contents, markedImage]);
+    // useEffect(() => {
+    //     // selected marking from contents
+    //     console.log(contents)
+    //     setData({
+    //         ...data,
+    //         selected: contents.filter(content => content.selected)
+    //     });
+    // }, [contents]);
 
     const markExistingImages = async () => {
         // add whiteboard data url into the set
@@ -70,19 +72,18 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
         });
         // check the url using previous set if it should be marked or not
         setContents(
-            [...contents.map(image => {
+            contents.map(image => {
                 if (existingIdSet.has(image.id)) {
                     image.selected = true;
                 }
                 return image;
-            })]
+            })
         );
         // selected marking from contents
         setData({
             ...data,
             selected: contents.filter(content => content.selected)
         });
-        setMarkedImage(true);
     }
 
     //fetch image function
@@ -114,7 +115,8 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
                             }
                         }
                     ))
-                )
+                ),
+                selected: contentsData
             });
         } catch (error) {
             console.log(error);
@@ -170,7 +172,7 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
     }
 
     const tagMap = (content, key) => {
-
+        const selected = data.selected.findIndex(selected => selected.id === content.id) !== -1;
         const tagElement = {
             image: (
                 <div
@@ -218,14 +220,14 @@ const Contents = ({ next, previous, element, contents, setContents, data, setDat
         return (
             <div
                 className="d-inline-block mb-1 ml-1 p-0 d-flex position-relative"
-                style={{ width: elementWidth, height: elementWidth, backgroundColor: 'white', cursor: 'pointer' }}
+                style={{ maxWidth: elementWidth, maxHeight: elementWidth, backgroundColor: 'white', cursor: 'pointer' }}
                 key={key}
             >
-                <div style={{ backgroundColor: 'black', opacity: (content.selected ? 0.5 : 1) }}>
+                <div className="" style={{ backgroundColor: 'black', opacity: (selected ? 0.5 : 1) }}>
                     {tagElement[content.type]}
                 </div>
                 <span
-                    className={"border-white rounded-circle position-absolute" + (content.selected ? ' bg-primary' : '')}
+                    className={"border-white rounded-circle position-absolute" + (selected ? ' bg-primary' : '')}
                     style={{ backgroundColor: 'rgba(255,255,255,0.5)', borderWidth: 2, borderStyle: 'solid', width: 50, height: 50, top: '4%', right: '4%', cursor: 'pointer' }}
                     onClick={handleSelectImage}
                 />
