@@ -125,7 +125,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
 
     const settingHeight = () => {
         let maxHeight = 0;
-        console.log(data.existing)
         data.existing.forEach(elem => {
             maxHeight = Math.max(maxHeight, elem.pos_y + elem.specifics.curr_height + 100);
         });
@@ -167,8 +166,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
     const isOwner = (auth, username) => (auth.user.username === username);
 
     const getOwnerExistingImages = async () => {
-        const data = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
-        const { status, whiteboard_data, message } = data;
+        const { status, whiteboard_data, message } = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
         if (!status) throw new Error(message);
         setData({
             ...resetData(),
@@ -191,7 +189,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
     }
 
     const handleFollow = async () => {
-        console.log(auth);
         // if it is not authorized, then move to the home page
         if (!auth.user.email) {
             history.push('/');

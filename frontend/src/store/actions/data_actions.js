@@ -12,7 +12,6 @@ import { SERVER, DEFAULT_PROFILE_FONT_SIZE, DEFAULT_PROFILE_SIZE_VALUE, SOCIAL_M
 export const showImages = (imageData, clickFunc, flag) => {
 
     let className = 'position-absolute rounded p-0';
-
     if ([1, 2, 3].includes(flag)) {
         className += ' draggable resize-drag';
     }
@@ -60,11 +59,11 @@ export const showImages = (imageData, clickFunc, flag) => {
                 style={{
                     width: image.specifics.curr_width || 200,
                     height: 'auto',
-                    WebkitTransform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`,
-                    transform: `translate(${image.posX || image.pos_x}px, ${image.posY || image.pos_y}px)`
+                    WebkitTransform: `translate(${image.pos_x}px, ${image.pos_y}px)`,
+                    transform: `translate(${image.pos_x}px, ${image.pos_y}px)`
                 }}
-                data-x={image.posX || image.pos_x}
-                data-y={image.posY || image.pos_y}
+                data-x={image.pos_x}
+                data-y={image.pos_y}
                 onClick={flag === 0 ? (() => clickFunc(image)) : undefined}
             >
                 {

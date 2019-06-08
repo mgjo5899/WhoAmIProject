@@ -14,25 +14,24 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
 
     const [height, setHeight] = useState(0);
 
-    const handleClose = image => {
-        deleteImage(image);
-    }
 
     useEffect(() => {
+        console.log(data)
         if (activeIndex === contentsIndex.spread) {
             setHeight(DEFAULT_HEIGHT);
-            console.log('here')
             // create set for putting deleted data id
             const deleteIdSet = new Set();
             data.delete.forEach(img => {
                 deleteIdSet.add(img.id);
             });
-            const imagesToShow = [...data.existing.filter(img => (img.medium === 'whoami') || img.medium !== element.medium).filter(img => !deleteIdSet.has(img.id)), ...data.selected];
-            setImages(showImages(imagesToShow, handleClose, flag));
+            // const imagesToShow = [...data.existing.filter(img => (img.medium === 'whoami') || img.medium !== element.medium).filter(img => !deleteIdSet.has(img.id)), ...data.selected];
+            // console.log(imagesToShow)
+            // setImages(showImages(imagesToShow, handleClose, flag));
+            setImages(showImages(data.selected, deleteImage, flag));
             // set height of whiteboard based on the selected images
             // setHeight(getHeight());
         }
-    }, [activeIndex, data.selected]);
+    }, [activeIndex]);
 
     const handleLoadMore = () => {
         setHeight(height + 100);
