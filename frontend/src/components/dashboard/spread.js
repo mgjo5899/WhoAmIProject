@@ -4,9 +4,9 @@ import { SERVER, DEFAULT_WIDTH, DEFAULT_HEIGHT } from '../../config';
 import InfiniteScroll from 'react-infinite-scroller';
 import { WhiteBoard } from './whiteboard';
 import { connect } from 'react-redux';
-import { showImages, updateData, deleteData } from '../../store/actions/data_actions';
+import { updateData, deleteData } from '../../store/actions/data_actions';
 
-const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage, element, flag, changed, images, setImages }) => {
+const Spread = ({ next, previous, data, activeIndex, contentsIndex, flag, changed, images, setImages }) => {
 
     if (!images && !setImages) {
         [images, setImages] = useState([]);
@@ -42,8 +42,8 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
                 new_contents: data.new.map(elem => ({
                     type: elem.type,
                     medium: elem.medium,
-                    pos_x: changed[elem.id] ? changed[elem.id].posX : elem.posX,
-                    pos_y: changed[elem.id] ? changed[elem.id].posY : elem.posY,
+                    pos_x: changed[elem.id] ? changed[elem.id].pos_x : elem.pos_x,
+                    pos_y: changed[elem.id] ? changed[elem.id].pos_y : elem.pos_y,
                     specifics: {
                         raw_content_url: elem.specifics.raw_content_url,
                         content_url: elem.specifics.content_url,

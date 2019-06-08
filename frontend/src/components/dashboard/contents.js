@@ -6,7 +6,7 @@ import { Modal } from 'reactstrap';
 import PlayButton from '../../images/playbutton/play-button.png';
 import { showImages } from '../../store/actions/data_actions';
 
-const Contents = ({ next, previous, element, data, setData, activeIndex, contentsIndex, deleteImage, setImages, flag,prevElementMedium, setPrevElementMedium}) => {
+const Contents = ({ next, previous, element, data, setData, activeIndex, contentsIndex, deleteImage, setImages, flag, prevElementMedium, setPrevElementMedium }) => {
 
     const [spinner, setSpinner] = useState(false);
     const [modal, setModal] = useState(false);
@@ -131,24 +131,24 @@ const Contents = ({ next, previous, element, data, setData, activeIndex, content
         const tagElement = {
             image: (
                 <div
-                    className="position-relative"
+                    className="d-flex"
                     onClick={handleImageClick}
                     style={{ width: elementWidth, height: elementWidth }}
                 >
                     <img
                         id={content.id}
-                        className="d-block mx-auto"
+                        className="position-absolute"
                         draggable={false}
                         src={content.specifics.raw_content_url}
                         alt=""
-                        style={{ maxWidth: '100%', maxHeight: '100%' }}
+                        style={{ maxWidth: '100%', maxHeight: '100%', top:0, bottom:0, left:0, right:0, margin:'auto' }}
                     />
                 </div>
             ),
             video: (
                 <Fragment>
                     <div
-                        className="position-relative"
+                        className="d-flex"
                         onMouseEnter={onMouseEnterHandle}
                         onMouseLeave={onMouseLeaveHandle}
                         onClick={handleVideoClick}
@@ -163,10 +163,10 @@ const Contents = ({ next, previous, element, data, setData, activeIndex, content
                         />
                         <video
                             id={content.id}
-                            className="d-block mx-auto"
+                            className="position-absolute"
                             src={content.specifics.raw_content_url}
                             muted={true}
-                            style={{ maxWidth: '100%', maxHeight: '100%' }}
+                            style={{ maxWidth: '100%', maxHeight: '100%', top:0, bottom:0, left:0, right:0, margin:'auto'  }}
                         />
                     </div>
                 </Fragment>
@@ -179,7 +179,7 @@ const Contents = ({ next, previous, element, data, setData, activeIndex, content
                 style={{ backgroundColor: 'white', cursor: 'pointer' }}
                 key={key}
             >
-                <div className="" style={{ backgroundColor: 'black', opacity: (selected ? 0.5 : 1) }}>
+                <div style={{ backgroundColor: 'black', opacity: (selected ? 0.5 : 1) }}>
                     {tagElement[content.type]}
                 </div>
                 <span
