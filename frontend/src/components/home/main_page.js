@@ -7,6 +7,7 @@ const MainPage = ({ match }) => {
 
     // this component contains many children components, which requires multiple states to use
     const [element, setElement] = useState(null);
+    const [prevElementMedium, setPrevElementMedium] = useState(null);
     const resetData = () => ({
         new: [],
         images: [],
@@ -79,14 +80,23 @@ const MainPage = ({ match }) => {
                 resetData,
                 username: match.params.username,
                 images,
-                setImages
+                setImages,
+                setPrevElementMedium
             }}
         />,
         <ConnectTo {...props} setElement={setElement} />,
         <Contents
-            {...props}
-            element={element}
-            deleteImage={deleteImage}
+            {...{
+                ...props,
+                element,
+                deleteImage,
+                setImages,
+                flag: 1,
+                prevElementMedium,
+                setPrevElementMedium
+            }}
+        // element={element}
+        // deleteImage={deleteImage}
         />,
         <Spread
             {...{

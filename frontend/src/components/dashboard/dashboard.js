@@ -12,7 +12,7 @@ import { showImages, updateData, deleteData } from '../../store/actions/data_act
 import FollowingFollowersDisplay from '../follow/following_followers_display';
 
 
-const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, auth, history, changed, resetChanged, resetData, images, setImages }) => {
+const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, auth, history, changed, resetChanged, resetData, images, setImages, setPrevElementMedium }) => {
 
     // const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
@@ -27,6 +27,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
         if (activeIndex === contentsIndex.dashboard) {
             // when first loaded to dashboard, get existing data from server
             setHeight(DEFAULT_HEIGHT);
+            setPrevElementMedium(null);
             resetChanged();
             setDeleted([]);
             (async () => {
@@ -35,8 +36,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
             })();
             // getExistingImages(auth, username, history);
             // getFollowingData();
-        } else if (activeIndex === contentsIndex.contents) {
-            setImages([]);
         }
     }, [activeIndex, flag]);
 

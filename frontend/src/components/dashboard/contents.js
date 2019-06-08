@@ -4,22 +4,26 @@ import Axios from 'axios';
 import uuidv4 from 'uuid/v4';
 import { Modal } from 'reactstrap';
 import PlayButton from '../../images/playbutton/play-button.png';
+import { showImages } from '../../store/actions/data_actions';
 
-const Contents = ({ next, previous, element, data, setData, activeIndex, contentsIndex, deleteImage }) => {
+const Contents = ({ next, previous, element, data, setData, activeIndex, contentsIndex, deleteImage, setImages, flag,prevElementMedium, setPrevElementMedium}) => {
 
     const [spinner, setSpinner] = useState(false);
     const [modal, setModal] = useState(false);
     const [modalContent, setModalContent] = useState(null);
     const [width, setWidth] = useState(0);
 
-
     // load images
     useEffect(() => {
+        console.log(prevElementMedium)
         if (activeIndex === contentsIndex.contents) {
             // store images from api to data image
             // set spinner while loading
-            setSpinner(true);
-            fetchImage();
+            if (prevElementMedium !== element.medium) {
+                setPrevElementMedium(element.medium);
+                setSpinner(true);
+                fetchImage();
+            }
             // for the responsive view, get the element of container
             setWidth(document.getElementById('main-container').offsetWidth);
             window.addEventListener('resize', () => {
@@ -69,8 +73,9 @@ const Contents = ({ next, previous, element, data, setData, activeIndex, content
     }
 
     useEffect(() => {
-        console.log(data)
-    }, [data]);
+        console.log(data.selected)
+        setImages(showImages(data.selected, deleteImage, flag));
+    }, [data.selected]);
 
     const mediaRender = contents => {
         const mediaGroup = [];
