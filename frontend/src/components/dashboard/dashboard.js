@@ -168,11 +168,11 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
     const getOwnerExistingImages = async () => {
         const { status, whiteboard_data, message } = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
         if (!status) throw new Error(message);
-        setData({
-            ...resetData(),
+        setData(resetData());
+        setData(data => ({
             ...data,
             existing: whiteboard_data
-        });
+        }));
     }
 
     const getUserExistingImages = async username => {
@@ -181,11 +181,11 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
             secret_key: SECRET_KEY
         })).data;
         if (!status) throw new Error(message);
-        setData({
-            ...resetData(),
+        setData(resetData());
+        setData(data => ({
             ...data,
             existing: whiteboard_data
-        });
+        }));
     }
 
     const handleFollow = async () => {

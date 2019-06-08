@@ -16,14 +16,13 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, deleteImage,
 
 
     useEffect(() => {
-        console.log(data)
         if (activeIndex === contentsIndex.spread) {
             setHeight(DEFAULT_HEIGHT);
             // create set for putting deleted data id
-            const deleteIdSet = new Set();
-            data.delete.forEach(img => {
-                deleteIdSet.add(img.id);
-            });
+            // const deleteIdSet = new Set();
+            // data.delete.forEach(img => {
+            //     deleteIdSet.add(img.id);
+            // });
             // const imagesToShow = [...data.existing.filter(img => (img.medium === 'whoami') || img.medium !== element.medium).filter(img => !deleteIdSet.has(img.id)), ...data.selected];
             // console.log(imagesToShow)
             // setImages(showImages(imagesToShow, handleClose, flag));

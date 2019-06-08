@@ -34,7 +34,8 @@ const Contents = ({ next, previous, element, data, setData, activeIndex, content
         try {
             const userData = (await Axios.get(SERVER + element.link)).data;
             if (!userData.status) throw new Error(userData.message);
-            console.log(userData)
+            console.log(userData.contents)
+            console.log(data)
             // fetching contents
             const contentsData = userData.contents;
             const refineData = list => (
@@ -50,8 +51,8 @@ const Contents = ({ next, previous, element, data, setData, activeIndex, content
                             orig_height: content.orig_height || content.specifics.orig_height,
                             raw_content_url: content.raw_content_url || content.specifics.raw_content_url,
                             content_url: content.content_url || content.specifics.content_url,
-                            curr_width: content.curr_width || 200,
-                            curr_height: content.curr_height || (content.orig_height / content.orig_width * 200) || (content.specifics.orig_height / content.specifics.orig_width * 200)
+                            curr_width: content.curr_width || (content.specifics && content.specifics.curr_width) || 200,
+                            curr_height: content.curr_height || (content.specifics && content.specifics.curr_height) || (content.orig_height / content.orig_width * 200) || (content.specifics.orig_height / content.specifics.orig_width * 200)
                         }
                     }
                 ))
@@ -66,6 +67,10 @@ const Contents = ({ next, previous, element, data, setData, activeIndex, content
             console.log(error);
         }
     }
+
+    useEffect(() => {
+        console.log(data)
+    }, [data]);
 
     const mediaRender = contents => {
         const mediaGroup = [];
