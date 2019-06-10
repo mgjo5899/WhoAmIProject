@@ -277,28 +277,35 @@ def add_whiteboard_whoami_profile(email, new_content):
     elif not ('curr_width' in specifics and 'curr_height' in specifics):
         rtn_val['status'] = False
         rtn_val['message'] = "Not enough information for a whoami content"
-    elif len(get_whiteboard_data(email=email, medium=new_content['medium'])['whiteboard_data']) > 0:
-        rtn_val['status'] = False
-        rtn_val['message'] = "User profile data already exists as a whiteboard content"
     else:
-        new_whiteboard_content = WhiteboardData(email=email, type=new_content['type'], \
-                                                medium=new_content['medium'], status=1, \
-                                                pos_x=new_content['pos_x'], \
-                                                pos_y=new_content['pos_y'])
-        db.add(new_whiteboard_content)
-        db.commit()
+        existing_content = db.query(WhiteboardData)\
+                          .filter(WhiteboardData.email==email)\
+                          .filter(WhiteboardData.medium==new_content['medium'])\
+                          .filter(WhiteboardData.type==new_content['type'])\
+                          .first()
 
-        whiteboard_data_id = new_whiteboard_content.id
+        if existing_content != None:
+            rtn_val['status'] = False
+            rtn_val['message'] = "User profile data already exists as a whiteboard content"
+        else:
+            new_whiteboard_content = WhiteboardData(email=email, type=new_content['type'], \
+                                                    medium=new_content['medium'], status=1, \
+                                                    pos_x=new_content['pos_x'], \
+                                                    pos_y=new_content['pos_y'])
+            db.add(new_whiteboard_content)
+            db.commit()
 
-        new_profile_data = UserProfileData(whiteboard_data_id=whiteboard_data_id, \
-                                           user_profile_id=user_profile['profile']['id'], \
-                                           curr_width=specifics['curr_width'], \
-                                           curr_height=specifics['curr_height'])
-        db.add(new_profile_data)
-        db.commit()
+            whiteboard_data_id = new_whiteboard_content.id
 
-        rtn_val['status'] = True
-        rtn_val['id'] = whiteboard_data_id
+            new_profile_data = UserProfileData(whiteboard_data_id=whiteboard_data_id, \
+                                               user_profile_id=user_profile['profile']['id'], \
+                                               curr_width=specifics['curr_width'], \
+                                               curr_height=specifics['curr_height'])
+            db.add(new_profile_data)
+            db.commit()
+
+            rtn_val['status'] = True
+            rtn_val['id'] = whiteboard_data_id
 
     return rtn_val
 
@@ -310,23 +317,33 @@ def add_whiteboard_whoami_follow(email, new_content):
         rtn_val['status'] = False
         rtn_val['message'] = "Not enough information for a whoami content"
     else:
-        new_whiteboard_content = WhiteboardData(email=email, type=new_content['type'], \
-                                                medium=new_content['medium'], status=1, \
-                                                pos_x=new_content['pos_x'], \
-                                                pos_y=new_content['pos_y'])
-        db.add(new_whiteboard_content)
-        db.commit()
+        existing_content = db.query(WhiteboardData)\
+                          .filter(WhiteboardData.email==email)\
+                          .filter(WhiteboardData.medium==new_content['medium'])\
+                          .filter(WhiteboardData.type==new_content['type'])\
+                          .first()
 
-        whiteboard_data_id = new_whiteboard_content.id
+        if existing_content != None:
+            rtn_val['status'] = False
+            rtn_val['message'] = "User follow data already exists as a whiteboard content"
+        else:
+            new_whiteboard_content = WhiteboardData(email=email, type=new_content['type'], \
+                                                    medium=new_content['medium'], status=1, \
+                                                    pos_x=new_content['pos_x'], \
+                                                    pos_y=new_content['pos_y'])
+            db.add(new_whiteboard_content)
+            db.commit()
 
-        new_follow_data = UserFollowData(whiteboard_data_id=whiteboard_data_id, \
-                                         curr_width=specifics['curr_width'], \
-                                         curr_height=specifics['curr_height'])
-        db.add(new_follow_data)
-        db.commit()
+            whiteboard_data_id = new_whiteboard_content.id
 
-        rtn_val['status'] = True
-        rtn_val['id'] = whiteboard_data_id
+            new_follow_data = UserFollowData(whiteboard_data_id=whiteboard_data_id, \
+                                             curr_width=specifics['curr_width'], \
+                                             curr_height=specifics['curr_height'])
+            db.add(new_follow_data)
+            db.commit()
+
+            rtn_val['status'] = True
+            rtn_val['id'] = whiteboard_data_id
 
     return rtn_val
 
@@ -648,7 +665,7 @@ def add_whiteboard_instagram(email, new_content):
     medium = new_content['medium']
 
     # Keep adding types for Instagram contents
-    if new_content['type'] == 'image':
+    if new_content['type'] == 'image' or new_content['type'] == 'video':
         if not ('raw_content_url' in specifics and 'content_url' in specifics and \
                 'orig_width' in specifics and 'orig_height' in specifics and \
                 'curr_width' in specifics and 'curr_height' in specifics):
@@ -815,7 +832,7 @@ def update_whiteboard_instagram(email, update):
         rtn_val['message'] = "No matching whiteboard data found"
     else:
         # Keep adding types for Instagram contents
-        if whiteboard_data.type == 'image':
+        if whiteboard_data.type == 'image' or whiteboard_data.type == 'video':
             instagram_data = db.query(InstagramData)\
                                 .filter(InstagramData.whiteboard_data_id == update['id'])\
                                 .first()
