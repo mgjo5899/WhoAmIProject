@@ -97,8 +97,8 @@ export const Drag = setChanged => {
 const changePosAndSize = (changed, event, x, y) => ({
     ...changed,
     [event.target.id]: {
-        posX: x,
-        posY: y,
+        pos_x: x,
+        pos_y: y,
         width: event.target.offsetWidth,
         height: event.target.offsetHeight
     }

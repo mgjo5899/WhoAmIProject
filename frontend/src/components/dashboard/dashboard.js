@@ -166,6 +166,7 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
 
     const getOwnerExistingImages = async () => {
         const { status, whiteboard_data, message } = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
+        console.log(whiteboard_data)
         if (!status) throw new Error(message);
         setData(resetData());
         setData(data => ({

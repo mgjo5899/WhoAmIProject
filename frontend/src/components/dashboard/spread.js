@@ -37,6 +37,8 @@ const Spread = ({ next, previous, data, activeIndex, contentsIndex, flag, change
     }
 
     const addData = async () => {
+        console.log(data.new)
+        console.log(changed)
         try {
             const result = (await Axios.post(SERVER + '/whiteboard/user_data', {
                 new_contents: data.new.map(elem => ({

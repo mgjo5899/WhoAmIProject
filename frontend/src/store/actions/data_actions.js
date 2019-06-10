@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import Axios from 'axios';
-import { SERVER, DEFAULT_PROFILE_FONT_SIZE, DEFAULT_PROFILE_SIZE_VALUE, SOCIAL_MEDIA_CONFIG, SECRET_KEY } from '../../config';
+import { SERVER, DEFAULT_PROFILE_FONT_SIZE, DEFAULT_PROFILE_SIZE_VALUE, SECRET_KEY } from '../../config';
+import PlayButton from '../../images/playbutton/play-button.png';
 
 // showing the images to the end users
 /**
@@ -43,7 +44,46 @@ export const showImages = (imageData, clickFunc, flag) => {
             </div>
         )
     });
-    console.log(imageData)
+
+    const onMouseEnterHandle = e => {
+        e.currentTarget.play();
+    }
+
+    const onMouseLeaveHandle = e => {
+        e.currentTarget.pause();
+    }
+
+    const imageVideoMap = image => {
+        if (image.type === 'image') {
+            return (
+                <img
+                    className="w-100 h-100"
+                    src={image.specifics.raw_content_url}
+                    alt=""
+                />
+            )
+        } else {
+            return (
+                <Fragment>
+                    <img
+                        className="position-absolute mx-auto my-auto"
+                        draggable={false}
+                        src={PlayButton}
+                        style={{ left: 0, right: 0, top: 0, bottom: 0, width: 50, opacity: 0.8, zIndex: 1 }}
+                        alt=""
+                    />
+                    <video
+                        id={image.id}
+                        className="w-100 h-100"
+                        src={image.specifics.raw_content_url}
+                        muted={true}
+                        onMouseEnter={onMouseEnterHandle}
+                        onMouseLeave={onMouseLeaveHandle}
+                    />
+                </Fragment>
+            )
+        }
+    }
 
     return imageData.map((image, index) => {
 
@@ -68,16 +108,8 @@ export const showImages = (imageData, clickFunc, flag) => {
             >
                 {
                     image.medium !== 'whoami'
-                        ? (
-                            <Fragment>
-                                <img
-                                    className="w-100 h-100"
-                                    src={image.specifics.raw_content_url}
-                                    alt=""
-                                />
-                                <img className="position-absolute" alt="" src={SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium).logo} style={{ width: 20, top: '2%', left: '2%', opacity: 0.7 }} />
-                            </Fragment>
-                        )
+                        ?
+                        imageVideoMap(image)
                         : (
                             <div className="card">
                                 {componentMap(image)[image.type]}
