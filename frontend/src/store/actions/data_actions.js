@@ -60,6 +60,7 @@ export const showImages = (imageData, clickFunc, flag) => {
                     className="w-100 h-100"
                     src={image.specifics.raw_content_url}
                     alt=""
+                    draggable={false}
                 />
             )
         } else {
@@ -73,7 +74,6 @@ export const showImages = (imageData, clickFunc, flag) => {
                         alt=""
                     />
                     <video
-                        id={image.id}
                         className="w-100 h-100"
                         src={image.specifics.raw_content_url}
                         muted={true}
@@ -111,7 +111,7 @@ export const showImages = (imageData, clickFunc, flag) => {
                         ?
                         <Fragment>
                             {imageVideoMap(image)}
-                            <img className="position-absolute" alt="" src={SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium).logo} style={{ width: 20, top: '2%', left: '2%', opacity: 0.7 }} />
+                            <img draggable={false} className="position-absolute" alt="" src={SOCIAL_MEDIA_CONFIG.find(socialMedia => socialMedia.medium === image.medium).logo} style={{ width: 20, top: '2%', left: '2%', opacity: 0.7 }} />
                         </Fragment>
                         : (
                             <div className="card">

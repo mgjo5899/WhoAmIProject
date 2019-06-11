@@ -17,7 +17,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
     // const [images, setImages] = useState([]);
     const [height, setHeight] = useState(0);
     const [modal, setModal] = useState(false);
-    const [currentImage, setCurrentImage] = useState({});
     const [modalContent, setModalContent] = useState(null);
     const [flag, setFlag] = useState(0);
     const [deleted, setDeleted] = useState([]);
@@ -70,15 +69,15 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
 
     const toggle = image => {
         if (modal) {
-            setCurrentImage({});
             setModalContent(null);
-            // setModalContent(null);
         }
         else {
             if (image.type === 'profile') {
                 toggleProfile(image);
             } else if (image.type === 'follow') {
                 toggleFollow(image);
+            } else if (image.type === 'video') {
+                toggleVideo(image);
             } else {
                 toggleImage(image);
             }
@@ -87,16 +86,20 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
     }
 
     const toggleImage = image => {
-        setCurrentImage({ ...currentImage, image: image.specifics.raw_content_url, source: image.specifics.content_url });
+        setModalContent(
+            <div className="d-flex" onClick={() => window.open(image.specifics.content_url)}>
+                <img src={image.specifics.raw_content_url} alt="" className="w-100 h-100" />
+            </div>
+        )
     }
 
-    useEffect(() => {
+    const toggleVideo = image => {
         setModalContent(
-            <div className="d-flex" onClick={() => window.open(currentImage.source)}>
-                <img src={currentImage.image} alt="" className="w-100 h-100" />
+            <div className="d-flex" onClick={() => window.open(image.specifics.content_url)}>
+                <video src={image.specifics.raw_content_url} alt="" className="w-100 h-100" controls />
             </div>
         );
-    }, [currentImage]);
+    }
 
     const toggleProfile = image => {
         setModalContent(
@@ -166,7 +169,6 @@ const Dashboard = ({ next, activeIndex, contentsIndex, data, username, setData, 
 
     const getOwnerExistingImages = async () => {
         const { status, whiteboard_data, message } = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
-        console.log(whiteboard_data)
         if (!status) throw new Error(message);
         setData(resetData());
         setData(data => ({

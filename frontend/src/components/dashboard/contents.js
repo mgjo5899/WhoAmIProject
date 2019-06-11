@@ -37,8 +37,6 @@ const Contents = ({ next, previous, element, data, setData, activeIndex, content
         try {
             const userData = (await Axios.get(SERVER + element.link)).data;
             if (!userData.status) throw new Error(userData.message);
-            console.log(userData.contents)
-            console.log(data)
             // fetching contents
             const contentsData = userData.contents;
             const refineData = list => (
@@ -75,7 +73,6 @@ const Contents = ({ next, previous, element, data, setData, activeIndex, content
     }
 
     useEffect(() => {
-        console.log(data.selected)
         setImages(showImages(data.selected, deleteImage, flag));
     }, [data.selected]);
 
