@@ -15,7 +15,6 @@ const Contents = ({ next, previous, element, data, setData, activeIndex, content
 
     // load images
     useEffect(() => {
-        console.log(prevElementMedium)
         if (activeIndex === contentsIndex.contents) {
             // store images from api to data image
             // set spinner while loading
@@ -141,7 +140,7 @@ const Contents = ({ next, previous, element, data, setData, activeIndex, content
                         draggable={false}
                         src={content.specifics.raw_content_url}
                         alt=""
-                        style={{ maxWidth: '100%', maxHeight: '100%', top:0, bottom:0, left:0, right:0, margin:'auto' }}
+                        style={{ maxWidth: '100%', maxHeight: '100%', top: 0, bottom: 0, left: 0, right: 0, margin: 'auto' }}
                     />
                 </div>
             ),
@@ -166,7 +165,7 @@ const Contents = ({ next, previous, element, data, setData, activeIndex, content
                             className="position-absolute"
                             src={content.specifics.raw_content_url}
                             muted={true}
-                            style={{ maxWidth: '100%', maxHeight: '100%', top:0, bottom:0, left:0, right:0, margin:'auto'  }}
+                            style={{ maxWidth: '100%', maxHeight: '100%', top: 0, bottom: 0, left: 0, right: 0, margin: 'auto' }}
                         />
                     </div>
                 </Fragment>

@@ -7,7 +7,7 @@ import { ConnectTo, Spread } from '../dashboard';
 import ProfileContents from './profile_contents';
 import Axios from 'axios';
 
-const Profile = ({ auth, showImages }) => {
+const Profile = ({ auth, showImages, images, setImages }) => {
 
     const [loaded, setLoaded] = useState(false);
     const [backup, setBackup] = useState(null);
@@ -85,7 +85,6 @@ const Profile = ({ auth, showImages }) => {
         const data = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
         const { status, whiteboard_data, message } = data;
         if (!status) throw new Error(message);
-        resetData();
         setData(data => ({
             ...data,
             existing: whiteboard_data
@@ -102,8 +101,8 @@ const Profile = ({ auth, showImages }) => {
                 const existingProfileData = data.existing.find(existingData => existingData.type === 'profile');
                 const profileElement = {
                     id: existingProfileData ? existingProfileData.id : uuidv4(),
-                    posX: existingProfileData ? existingProfileData.pos_x : Math.floor(Math.random() * (DEFAULT_WIDTH - DEFAULT_SUBTRACTING_VALUE)),
-                    posY: existingProfileData ? existingProfileData.pos_y : Math.floor(Math.random() * (DEFAULT_HEIGHT - DEFAULT_SUBTRACTING_VALUE)),
+                    pos_x: existingProfileData ? existingProfileData.pos_x : Math.floor(Math.random() * (DEFAULT_WIDTH - DEFAULT_SUBTRACTING_VALUE)),
+                    pos_y: existingProfileData ? existingProfileData.pos_y : Math.floor(Math.random() * (DEFAULT_HEIGHT - DEFAULT_SUBTRACTING_VALUE)),
                     medium: 'whoami',
                     type: 'profile',
                     specifics: {
@@ -121,6 +120,10 @@ const Profile = ({ auth, showImages }) => {
             }
         }
     }, [loaded]);
+
+    useEffect(() => {
+        setImages(showImages(data.selected, deleteProfile, 2));
+    }, [data.selected]);
 
     const contentsIndex = {
         profile: 0,
@@ -162,7 +165,6 @@ const Profile = ({ auth, showImages }) => {
         />,
         <Spread
             {...{
-                showImages,
                 next,
                 previous: next,
                 data,
@@ -170,7 +172,7 @@ const Profile = ({ auth, showImages }) => {
                 contentsIndex,
                 element: { medium: 'whoami' },
                 setData,
-                deleteImage: deleteProfile,
+                // deleteImage: deleteProfile,
                 flag: 2
             }}
         />

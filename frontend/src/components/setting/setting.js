@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import Navbar from '../layout/navbar';
 import Profile from '../profile/profile';
 import Follow from '../follow/follow';
@@ -10,8 +10,11 @@ import queryString from 'query-string';
 
 const Setting = ({ auth, history, location }) => {
 
+    const [images, setImages] = useState([]);
+
     useEffect(() => {
         signedInSecure({ auth, history }, '/');
+        // for the responsive view, get the element of container
     }, []);
 
     const idMap = {
@@ -44,18 +47,18 @@ const Setting = ({ auth, history, location }) => {
 
     const componentMap = tab => {
         if (tab === 'follow') {
-            return <Follow auth={auth} />;
+            return <Follow auth={auth} images={images} setImages={setImages} />;
         } else if (tab === 'change_password') {
             return <ChangePassword />;
         } else {
-            return <Profile auth={auth} />;
+            return <Profile auth={auth} images={images} setImages={setImages} />;
         }
     }
 
     return (
         <Fragment>
             <Navbar />
-            <div className="container-fluid">
+            <div id="main-container" className="container-fluid">
                 <div className="row">
                     <div className="side-bar col-sm-2 mx-2 border-right p-2">
                         <div className="nav flex-column nav-pills">
