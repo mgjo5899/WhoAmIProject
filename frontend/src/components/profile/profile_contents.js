@@ -7,10 +7,10 @@ import PlayButton from '../../images/playbutton/play-button.png';
 const ProfileContents = ({ activeIndex, contentsIndex, element, previous, profile, setProfile }) => {
 
     const [spinner, setSpinner] = useState(false);
-    const [contents, setContents] = useState([]);
     const [width, setWidth] = useState(0);
     const [modal, setModal] = useState(false);
     const [modalContent, setModalContent] = useState(null);
+    const [contents, setContents] = useState([]);
 
     // load images
     useEffect(() => {

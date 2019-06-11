@@ -6,29 +6,11 @@ import { WhiteBoard } from './whiteboard';
 import { connect } from 'react-redux';
 import { updateData, deleteData } from '../../store/actions/data_actions';
 
-const Spread = ({ next, previous, data, activeIndex, contentsIndex, flag, changed, images, setImages }) => {
-
-    if (!images && !setImages) {
-        [images, setImages] = useState([]);
-    }
-
+const Spread = ({ next, previous, data, activeIndex, contentsIndex, changed, images }) => {
     const [height, setHeight] = useState(0);
-
-
     useEffect(() => {
         if (activeIndex === contentsIndex.spread) {
             setHeight(DEFAULT_HEIGHT);
-            // create set for putting deleted data id
-            // const deleteIdSet = new Set();
-            // data.delete.forEach(img => {
-            //     deleteIdSet.add(img.id);
-            // });
-            // const imagesToShow = [...data.existing.filter(img => (img.medium === 'whoami') || img.medium !== element.medium).filter(img => !deleteIdSet.has(img.id)), ...data.selected];
-            // console.log(imagesToShow)
-            // setImages(showImages(imagesToShow, handleClose, flag));
-            // setImages(showImages(data.selected, deleteImage, flag));
-            // set height of whiteboard based on the selected images
-            // setHeight(getHeight());
         }
     }, [activeIndex]);
 

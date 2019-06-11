@@ -149,8 +149,8 @@ export const updateData = async (changed, images) => {
             updated_contents: images.map(image => ({
                 id: image.props.id,
                 medium: image.props.medium,
-                pos_x: changed[image.props.id].posX,
-                pos_y: changed[image.props.id].posY,
+                pos_x: changed[image.props.id].pos_x,
+                pos_y: changed[image.props.id].pos_y,
                 specifics: {
                     curr_width: changed[image.props.id].width,
                     curr_height: changed[image.props.id].height

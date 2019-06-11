@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import signedInSecure from '../../secure/signed_in_secure';
 import queryString from 'query-string';
+import { showImages } from '../../store/actions/data_actions';
 
 const Setting = ({ auth, history, location }) => {
 
@@ -51,7 +52,7 @@ const Setting = ({ auth, history, location }) => {
         } else if (tab === 'change_password') {
             return <ChangePassword />;
         } else {
-            return <Profile auth={auth} images={images} setImages={setImages} />;
+            return <Profile showImages={showImages} auth={auth} images={images} setImages={setImages} />;
         }
     }
 

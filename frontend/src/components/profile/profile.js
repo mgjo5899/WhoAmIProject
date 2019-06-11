@@ -10,10 +10,9 @@ import Axios from 'axios';
 const Profile = ({ auth, showImages, images, setImages }) => {
 
     const [loaded, setLoaded] = useState(false);
-    const [backup, setBackup] = useState(null);
     const [element, setElement] = useState(null);
-    const [profileUrlBackup, setProfileUrlBackup] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
+
 
     const [profile, setProfile] = useState({
         profile_image_url: '',
@@ -35,9 +34,11 @@ const Profile = ({ auth, showImages, images, setImages }) => {
     const [data, setData] = useState(resetData());
 
     const setExistingProfileData = async () => {
-        const { profile: profileData } = (await Axios.get(SERVER + '/user/profile')).data;
-        if (profileData) {
-            setProfile({ ...profile, ...profileData, include_email: profileData.email ? true : false });
+        if (!loaded) {
+            const { profile: profileData } = (await Axios.get(SERVER + '/user/profile')).data;
+            if (profileData) {
+                setProfile({ ...profile, ...profileData, include_email: profileData.email ? true : false });
+            }
         }
     }
 
@@ -49,15 +50,6 @@ const Profile = ({ auth, showImages, images, setImages }) => {
             setData(data => ({ ...data, new: data.new.filter(elem => elem.id !== profile.id) }));
         }
         setData(data => ({ ...data, selected: data.selected.filter(selectedData => selectedData.id !== profile.id) }));
-    }
-
-    const getProfileSelectedBackUp = () => {
-        setBackup({
-            delete: [...data.delete],
-            selected: [...data.selected],
-            new: [...data.new]
-        });
-        setProfileUrlBackup({ profile_image_url: profile.profile_image_url });
     }
 
     const next = () => {
@@ -72,7 +64,7 @@ const Profile = ({ auth, showImages, images, setImages }) => {
         if (activeIndex === contentsIndex.profile) {
             setLoaded(false);
             setData(resetData());
-            getProfileSelectedBackUp();
+            // getProfileSelectedBackUp();
             (async () => {
                 await setExistingProfileData();
                 await getOwnerExistingImages();
@@ -82,41 +74,35 @@ const Profile = ({ auth, showImages, images, setImages }) => {
     }, [activeIndex]);
 
     const getOwnerExistingImages = async () => {
-        const data = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
-        const { status, whiteboard_data, message } = data;
+        const { status, whiteboard_data, message } = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
         if (!status) throw new Error(message);
         setData(data => ({
             ...data,
-            existing: whiteboard_data
+            existing: whiteboard_data,
+            selected: whiteboard_data
         }));
     }
 
     useEffect(() => {
         if (loaded) {
-            // when data exists, execute the command, giving conditions to useEffect
-            if (backup && backup.selected.length > 0) {
-                setData(data => ({ ...data, ...backup }));
-                setProfile({ ...profile, ...profileUrlBackup });
-            } else {
-                const existingProfileData = data.existing.find(existingData => existingData.type === 'profile');
-                const profileElement = {
-                    id: existingProfileData ? existingProfileData.id : uuidv4(),
-                    pos_x: existingProfileData ? existingProfileData.pos_x : Math.floor(Math.random() * (DEFAULT_WIDTH - DEFAULT_SUBTRACTING_VALUE)),
-                    pos_y: existingProfileData ? existingProfileData.pos_y : Math.floor(Math.random() * (DEFAULT_HEIGHT - DEFAULT_SUBTRACTING_VALUE)),
-                    medium: 'whoami',
-                    type: 'profile',
-                    specifics: {
-                        orig_width: 150,
-                        orig_height: 150,
-                        curr_width: existingProfileData ? existingProfileData.specifics.curr_width : 150,
-                        curr_height: existingProfileData ? existingProfileData.specifics.curr_height : 150,
-                    },
-                    selected: true
-                };
-                if (!existingProfileData) {
-                    setData(data => ({ ...data, new: [...data.new, profileElement] }));
-                    setData(data => ({ ...data, selected: [...data.selected, profileElement] }));
-                }
+            const existingProfileData = data.existing.find(existingData => existingData.type === 'profile');
+            const profileElement = {
+                id: existingProfileData ? existingProfileData.id : uuidv4(),
+                pos_x: existingProfileData ? existingProfileData.pos_x : Math.floor(Math.random() * (DEFAULT_WIDTH - DEFAULT_SUBTRACTING_VALUE)),
+                pos_y: existingProfileData ? existingProfileData.pos_y : Math.floor(Math.random() * (DEFAULT_HEIGHT - DEFAULT_SUBTRACTING_VALUE)),
+                medium: 'whoami',
+                type: 'profile',
+                specifics: {
+                    orig_width: 150,
+                    orig_height: 150,
+                    curr_width: existingProfileData ? existingProfileData.specifics.curr_width : 150,
+                    curr_height: existingProfileData ? existingProfileData.specifics.curr_height : 150,
+                },
+                selected: true
+            };
+            if (!existingProfileData) {
+                setData(data => ({ ...data, new: [...data.new, profileElement] }));
+                setData(data => ({ ...data, selected: [...data.selected, profileElement] }));
             }
         }
     }, [loaded]);
@@ -172,8 +158,7 @@ const Profile = ({ auth, showImages, images, setImages }) => {
                 contentsIndex,
                 element: { medium: 'whoami' },
                 setData,
-                // deleteImage: deleteProfile,
-                flag: 2
+                images
             }}
         />
     ];

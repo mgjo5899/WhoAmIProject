@@ -5,15 +5,10 @@ import { Spread } from '../dashboard';
 import uuidv4 from 'uuid/v4';
 import { DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SUBTRACTING_VALUE, SERVER } from '../../config';
 import Axios from 'axios';
-import { getFollowers, getFollowingUsers } from '../../store/actions/data_actions';
+import { getFollowers, getFollowingUsers, showImages } from '../../store/actions/data_actions';
 
-const Follow = ({ auth }) => {
+const Follow = ({ auth, images, setImages }) => {
 
-    const [backup, setBackup] = useState({
-        delete: [],
-        selected: [],
-        new: []
-    });
     const [activeIndex, setActiveIndex] = useState(0);
 
     const resetData = () => ({
@@ -48,14 +43,6 @@ const Follow = ({ auth }) => {
         setData(data => ({ ...data, selected: data.selected.filter(selectedData => selectedData.id !== follow.id) }));
     }
 
-    const selectedBackup = () => {
-        setBackup({
-            delete: [...data.delete],
-            selected: [...data.selected],
-            new: [...data.new]
-        });
-    }
-
     const contentsIndex = {
         following_followers: 0,
         spread: 1
@@ -64,7 +51,6 @@ const Follow = ({ auth }) => {
     useEffect(() => {
         if (activeIndex === contentsIndex.following_followers) {
             setLoaded(false);
-            selectedBackup();
             (async () => {
                 await getOwnerExistingImages();
                 setNumberOfFollowers((await getFollowers(auth.user.username)).length);
@@ -76,35 +62,33 @@ const Follow = ({ auth }) => {
 
     useEffect(() => {
         if (loaded) {
-            // when data exists, execute the command, giving conditions to useEffect
-            if (backup.selected.length > 0) {
-                setData(data => ({ ...data, ...backup }));
-            } else {
-                const existingFollowData = data.existing.find(existingData => existingData.type === 'follow');
-                const followElement = {
-                    id: existingFollowData ? existingFollowData.id : uuidv4(),
-                    posX: existingFollowData ? existingFollowData.pos_x : Math.floor(Math.random() * (DEFAULT_WIDTH - DEFAULT_SUBTRACTING_VALUE)),
-                    posY: existingFollowData ? existingFollowData.pos_y : Math.floor(Math.random() * (DEFAULT_HEIGHT - DEFAULT_SUBTRACTING_VALUE)),
-                    medium: 'whoami',
-                    type: 'follow',
-                    specifics: {
-                        orig_width: 150,
-                        orig_height: 150,
-                        curr_width: existingFollowData ? existingFollowData.specifics.curr_width : 150,
-                        curr_height: existingFollowData ? existingFollowData.specifics.curr_height : 150,
-                        number_of_followers: numberOfFollowers,
-                        number_of_following_users: numberOfFollowingUsers
-                    },
-                    selected: true
-                };
-                if (!existingFollowData) {
-                    setData(data => ({ ...data, new: [...data.new, followElement] }));
-                    setData(data => ({ ...data, selected: [...data.selected, followElement] }));
-                }
+            const existingFollowData = data.existing.find(existingData => existingData.type === 'follow');
+            const followElement = {
+                id: existingFollowData ? existingFollowData.id : uuidv4(),
+                posX: existingFollowData ? existingFollowData.pos_x : Math.floor(Math.random() * (DEFAULT_WIDTH - DEFAULT_SUBTRACTING_VALUE)),
+                posY: existingFollowData ? existingFollowData.pos_y : Math.floor(Math.random() * (DEFAULT_HEIGHT - DEFAULT_SUBTRACTING_VALUE)),
+                medium: 'whoami',
+                type: 'follow',
+                specifics: {
+                    orig_width: 150,
+                    orig_height: 150,
+                    curr_width: existingFollowData ? existingFollowData.specifics.curr_width : 150,
+                    curr_height: existingFollowData ? existingFollowData.specifics.curr_height : 150,
+                    number_of_followers: numberOfFollowers,
+                    number_of_following_users: numberOfFollowingUsers
+                },
+                selected: true
+            };
+            if (!existingFollowData) {
+                setData(data => ({ ...data, new: [...data.new, followElement] }));
+                setData(data => ({ ...data, selected: [...data.selected, followElement] }));
             }
         }
-
     }, [loaded]);
+
+    useEffect(() => {
+        setImages(showImages(data.selected, deleteFollow, 3));
+    }, [data.selected]);
 
     const getOwnerExistingImages = async () => {
         const data = (await Axios.get(SERVER + '/whiteboard/user_data')).data;
@@ -113,7 +97,8 @@ const Follow = ({ auth }) => {
         setData(resetData());
         setData(data => ({
             ...data,
-            existing: whiteboard_data
+            existing: whiteboard_data,
+            selected: whiteboard_data
         }));
     }
 
@@ -141,8 +126,7 @@ const Follow = ({ auth }) => {
                     contentsIndex,
                     element: { medium: 'whoami' },
                     setData,
-                    deleteImage: deleteFollow,
-                    flag: 3
+                    images
                 }}
             />
         ];

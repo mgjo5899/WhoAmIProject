@@ -55,7 +55,10 @@ const Contents = ({ next, previous, element, data, setData, activeIndex, content
                             raw_content_url: content.raw_content_url || content.specifics.raw_content_url,
                             content_url: content.content_url || content.specifics.content_url,
                             curr_width: content.curr_width || (content.specifics && content.specifics.curr_width) || 200,
-                            curr_height: content.curr_height || (content.specifics && content.specifics.curr_height) || (content.orig_height / content.orig_width * 200) || (content.specifics.orig_height / content.specifics.orig_width * 200)
+                            curr_height: content.curr_height || (content.specifics && content.specifics.curr_height) || (content.orig_height / content.orig_width * 200) || (content.specifics.orig_height / content.specifics.orig_width * 200),
+                            // it has number of followers and following users if it is followers
+                            number_of_followers: content.specifics && content.specifics.number_of_followers,
+                            number_of_following_users: content.specifics && content.specifics.number_of_following_users,
                         }
                     }
                 ))
