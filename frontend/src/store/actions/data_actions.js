@@ -19,12 +19,12 @@ export const showImages = (imageData, clickFunc, flag) => {
 
     const componentMap = image => ({
         profile: (
-            <span className="mx-auto" style={{ fontSize: DEFAULT_PROFILE_FONT_SIZE * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
+            <span className="mx-auto" style={{ fontSize: DEFAULT_PROFILE_FONT_SIZE * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none', cursor: flag === 0 ? 'pointer' : undefined }}>
                 profile
             </span>
         ),
         follow: (
-            <div style={{ fontSize: 16 * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none' }}>
+            <div style={{ fontSize: 16 * image.specifics.curr_width / DEFAULT_PROFILE_SIZE_VALUE, userSelect: 'none', cursor: flag === 0 ? 'pointer' : undefined }}>
                 <div className="float-left text-center ml-2 mb-1" >
                     <div className="followers-number font-weight-bold">
                         {image.specifics.number_of_followers}
@@ -47,10 +47,12 @@ export const showImages = (imageData, clickFunc, flag) => {
 
     const onMouseEnterHandle = e => {
         e.currentTarget.play();
+        e.currentTarget.previousSibling.style.opacity = 0.8;
     }
 
     const onMouseLeaveHandle = e => {
         e.currentTarget.pause();
+        e.currentTarget.previousSibling.style.opacity = 0.5;
     }
 
     const imageVideoMap = image => {
@@ -61,6 +63,7 @@ export const showImages = (imageData, clickFunc, flag) => {
                     src={image.specifics.raw_content_url}
                     alt=""
                     draggable={false}
+                    style={{ cursor: flag === 0 ? 'pointer' : undefined }}
                 />
             )
         } else {
@@ -70,8 +73,9 @@ export const showImages = (imageData, clickFunc, flag) => {
                         className="position-absolute mx-auto my-auto"
                         draggable={false}
                         src={PlayButton}
-                        style={{ left: 0, right: 0, top: 0, bottom: 0, width: 50, opacity: 0.8, zIndex: 1 }}
+                        style={{ left: 0, right: 0, top: 0, bottom: 0, width: 50, opacity: 0.5, zIndex: 1, cursor: flag === 0 ? 'pointer' : undefined }}
                         alt=""
+                        onMouseEnter={e => { e.target.style.opacity = 0.8; }}
                     />
                     <video
                         className="w-100 h-100"
@@ -79,6 +83,7 @@ export const showImages = (imageData, clickFunc, flag) => {
                         muted={true}
                         onMouseEnter={onMouseEnterHandle}
                         onMouseLeave={onMouseLeaveHandle}
+                        style={{ cursor: flag === 0 ? 'pointer' : undefined }}
                     />
                 </Fragment>
             )
