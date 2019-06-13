@@ -183,7 +183,7 @@ const Contents = ({ next, previous, element, data, setData, activeIndex, content
                 </div>
                 <span
                     className={"border-white rounded-circle position-absolute" + (selected ? ' bg-primary' : '')}
-                    style={{ backgroundColor: 'rgba(255,255,255,0.5)', borderWidth: 2, borderStyle: 'solid', width: 50, height: 50, top: '4%', right: '4%', cursor: 'pointer' }}
+                    style={{ backgroundColor: 'rgba(255,255,255,0.5)', borderWidth: 2, borderStyle: 'solid', width: 35, height: 35, top: '4%', right: '4%', cursor: 'pointer' }}
                     onClick={handleSelectImage}
                 />
             </div>
