@@ -161,7 +161,7 @@ const ProfileContents = ({ activeIndex, contentsIndex, element, previous, profil
                 </div>
                 <span
                     className={"border-white rounded-circle position-absolute" + (selected ? ' bg-primary' : '')}
-                    style={{ backgroundColor: 'rgba(255,255,255,0.5)', borderWidth: 2, borderStyle: 'solid', width: 50, height: 50, top: '4%', right: '4%', cursor: 'pointer' }}
+                    style={{ backgroundColor: 'rgba(255,255,255,0.5)', borderWidth: 2, borderStyle: 'solid', width: 35, height: 35, top: '4%', right: '4%', cursor: 'pointer' }}
                     onClick={handleSelectImage}
                 />
             </div>
@@ -191,6 +191,7 @@ const ProfileContents = ({ activeIndex, contentsIndex, element, previous, profil
             <hr />
             {spinner && <div className="spinner-border d-block mx-auto my-auto" role="status" />}
             {mediaRender(contents)}
+            <div style={{ marginBottom: 75 }} />
             <div className="fixed-bottom card-footer bg-secondary d-flex justify-content-center" style={{ opacity: 0.9 }}>
                 <button className="btn btn-danger mx-auto" onClick={previous}>Cancel</button>
                 <button className="btn btn-primary mx-auto" onClick={handleDone}>Done</button>

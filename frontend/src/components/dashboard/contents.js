@@ -208,6 +208,7 @@ const Contents = ({ next, previous, element, data, setData, activeIndex, content
             <hr />
             {spinner && <div className="spinner-border d-block mx-auto my-auto" role="status" />}
             {mediaRender(data.images)}
+            <div style={{ marginBottom: 75 }} />
             <div className="fixed-bottom card-footer bg-secondary d-flex justify-content-center" style={{ opacity: 0.9 }}>
                 <button className="btn btn-danger mx-auto" onClick={previous}>cancel</button>
                 <button className="btn btn-primary mx-auto" onClick={next}>publish</button>
